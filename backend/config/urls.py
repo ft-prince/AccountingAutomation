@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from config.health import health
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/health", health),
+    path("api/", include("apps.accounts.urls")),
 ]
 
 if settings.DEBUG:
