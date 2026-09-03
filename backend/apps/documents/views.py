@@ -1,11 +1,14 @@
+from django.http import StreamingHttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from apps.core.api import OrgScopedViewSet, current_org
+from apps.core.api import HasOrg, OrgScopedViewSet, current_org
 from apps.documents import storage
 from apps.documents.models import Document, DocumentStatus
 from apps.documents.serializers import DocumentSerializer
@@ -83,3 +86,21 @@ class DocumentViewSet(OrgScopedViewSet):
         return Response(
             {"url": storage.signed_get_url(doc.file), "expires_in": storage.SIGNED_URL_TTL_SECONDS}
         )
+
+
+class DocumentsZipView(APIView):
+    """GET /api/exports/documents.zip?period=YYYY-MM|fy=YYYY-YY"""
+
+    permission_classes = [IsAuthenticated, HasOrg]
+
+    def get(self, request: Request) -> StreamingHttpResponse:
+        from apps.documents.services.organise import build_zip
+
+        period = request.query_params.get("period") or None
+        fy = request.query_params.get("fy") or None
+        resp = StreamingHttpResponse(
+            build_zip(current_org(request), period=period, fy=fy), content_type="application/zip"
+        )
+        label = period or fy or "all"
+        resp["Content-Disposition"] = f'attachment; filename="documents_{label}.zip"'
+        return resp
