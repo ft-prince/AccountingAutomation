@@ -342,17 +342,22 @@ def _aging(org: Any, direction: str, as_of: date) -> dict[str, Any]:
     }
 
 
+def _as_of(period: Period, as_of: date | None) -> date:
+    """Aging is always 'as of' a real day: the period end, but never the future."""
+    return as_of or min(period.end, date.today())
+
+
 def ar_aging(org: Any, period: Period, as_of: date | None = None) -> dict[str, Any]:
-    return {**_aging(org, "outward", as_of or period.end), "meta": period.meta(org)}
+    return {**_aging(org, "outward", _as_of(period, as_of)), "meta": period.meta(org)}
 
 
 def ap_aging(org: Any, period: Period, as_of: date | None = None) -> dict[str, Any]:
-    return {**_aging(org, "inward", as_of or period.end), "meta": period.meta(org)}
+    return {**_aging(org, "inward", _as_of(period, as_of)), "meta": period.meta(org)}
 
 
 def dso_dpo(org: Any, period: Period, as_of: date | None = None) -> dict[str, Any]:
     """Trailing 90 days: DSO = AR / (sales/90); DPO = AP / (purchases/90)."""
-    as_of = as_of or period.end
+    as_of = _as_of(period, as_of)
     start = as_of - timedelta(days=89)
     win = _confirmed(org).filter(invoice_date__range=(start, as_of))
     sales = win.filter(direction="outward").aggregate(v=_sum("total"))["v"]
