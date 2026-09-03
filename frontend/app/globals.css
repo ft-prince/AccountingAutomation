@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PROJECT_SPECS §9 — light theme */
+:root {
+  --background: #f5efe6;
+  --surface: #faf7f2;
+  --border: #eadfcf;
+  --foreground: #161514;
+  --muted: #635e59;
+  --success: #2f7d4f;
+  --warning: #b7791f;
+  --danger: #b23a2e;
+  --info: #2c5f8a;
+}
+
+/* §9 — dark theme, semantics lightened one step */
+[data-theme="dark"] {
+  --background: #161514;
+  --surface: #1f1d1b;
+  --border: #2c2925;
+  --foreground: #f5efe6;
+  --muted: #a39e97;
+  --success: #4a9d6a;
+  --warning: #d29a3a;
+  --danger: #d25a4c;
+  --info: #4a80ac;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

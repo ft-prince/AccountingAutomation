@@ -1,0 +1,57 @@
+[project]
+name = "nexren-finance-backend"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1,<6",
+    "djangorestframework>=3.15",
+    "drf-spectacular>=0.27",
+    "django-environ>=0.11",
+    "psycopg[binary]>=3.2",
+    "celery[redis]>=5.4",
+    "django-celery-beat>=2.7",
+    "redis>=5.0",
+    "django-redis>=5.4",
+    "django-storages[s3]>=1.14",
+    "gunicorn>=23.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-django>=4.9",
+    "pytest-cov>=6.0",
+    "factory-boy>=3.3",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "django-stubs>=5.1",
+    "djangorestframework-stubs>=3.15",
+    "celery-types>=0.22",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = ["migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "W"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main"]
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+[[tool.mypy.overrides]]
+module = "apps.*.domain.*"
+strict = true
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py"]
+testpaths = ["tests", "apps"]
+markers = ["live: hits real external APIs; excluded by default"]
+addopts = "-m 'not live'"
