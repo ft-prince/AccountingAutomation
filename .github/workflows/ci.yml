@@ -1,0 +1,46 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_USER: nexren, POSTGRES_PASSWORD: nexren, POSTGRES_DB: nexren }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U nexren" --health-interval 5s --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    env:
+      DATABASE_URL: postgres://nexren:nexren@localhost:5432/nexren
+      REDIS_URL: redis://localhost:6379/0
+      DJANGO_SETTINGS_MODULE: config.settings.test
+    defaults: { run: { working-directory: backend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv python install 3.12 && uv sync --frozen --group dev
+      - run: uv run ruff check . && uv run ruff format --check .
+      - run: uv run mypy apps
+      - name: pytest with coverage gate and the send-call-site grep test
+        run: uv run pytest -q --cov=apps --cov-report=term --cov-fail-under=80
+      - name: domain packages must be 100% branch covered
+        run: uv run pytest -q apps/gst apps/mail apps/forecasting --cov=apps.gst.domain --cov=apps.mail.domain --cov=apps.forecasting.domain --cov-branch --cov-fail-under=100
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci --legacy-peer-deps
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
