@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     "rest_framework",
     "drf_spectacular",
     "django_celery_beat",
@@ -115,6 +116,17 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+from decimal import Decimal  # noqa: E402
+
+ANTHROPIC_API_KEY = env("ANTHROPIC_API_KEY", default="")
+ANTHROPIC_MODEL = env("ANTHROPIC_MODEL", default="claude-opus-5")
+# Pricing is DATA: override via env when it changes. USD per million tokens.
+ANTHROPIC_PRICE_USD_PER_MTOK = {
+    "input": Decimal(env("ANTHROPIC_PRICE_INPUT", default="5.00")),
+    "output": Decimal(env("ANTHROPIC_PRICE_OUTPUT", default="25.00")),
+}
+USD_INR_RATE = Decimal(env("USD_INR_RATE", default="84.00"))
 
 AWS_S3_ENDPOINT_URL = env("S3_ENDPOINT_URL", default="")
 AWS_ACCESS_KEY_ID = env("S3_ACCESS_KEY", default="")

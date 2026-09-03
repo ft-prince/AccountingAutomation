@@ -1,0 +1,506 @@
+{
+  "valid": [
+    {
+      "gstin": "27AAPFU0939F1ZV",
+      "on_date": null,
+      "note": "real"
+    },
+    {
+      "gstin": "07AAGFF2194N1Z1",
+      "on_date": null,
+      "note": "real"
+    },
+    {
+      "gstin": "08GMIPH3720YIZM",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "24XPQGH8402COZE",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "20PVBFW6402SHZY",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "97PICBY6870UOZH",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "04NRQPF2664AIZB",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "09DOIPK5788BMZZ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "12GNXJL9348XGZ8",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "27DSCCJ6703UXZW",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "37TQTCY2227O3ZY",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "20PRLCK7179F6ZW",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "04NFSAV3318QQZF",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "24AYXTE4325F8Z0",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "33AJPFB5593VLZ9",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "03VLQJA2596VMZG",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "28VMEAH8146BSZR",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "02ZDCHS2616PBZY",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "31PZTLF6696BRZA",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "26EJACS1627LXZT",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "23CWYAY3656W5ZI",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "04TIFBC6801AIZZ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "21PNDBJ8334ULZC",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "02IEOFH8495KPZN",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "27GLJAQ1109WHZJ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "35RPQLU4223ITZG",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "29QTSLG8266F5ZQ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "13BTJLD4760I9ZS",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "26DEQLH0256AAZS",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "36QZIBG0543VGZQ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "15KOWHY3375S1ZN",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "03ERDCW4594YRZE",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "01GKYFK7070EZZJ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "28JBEAE7632Q2ZR",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "02KWUAR2647DBZP",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "21DDIPK7164CEZG",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "99RGYTR1424Z7ZR",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "10ITQGU3230HHZM",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "16QPCHF2947ZTZA",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "13ZOBPG1535WTZ8",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "31PZXPF3371YJZD",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "11ARUPO3866VPZW",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "36RQCGW0222FYZA",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "28KGRFJ0993PDZD",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "36AVYAL6946U8ZM",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "20KADGE0154NZZJ",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "34AIPPW4527BHZO",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "04WNEGK3134KLZL",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "07YQJCI2371MEZA",
+      "on_date": null,
+      "note": "generated"
+    },
+    {
+      "gstin": "25BWHAT1048QCZG",
+      "on_date": "2019-06-30",
+      "note": "inactive state 25 on historical date"
+    }
+  ],
+  "invalid": [
+    {
+      "gstin": "97VNSCA8975LBZSA",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "11KJDAU9942ZGZ",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "99BIKBQ2239EWZ",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "13YNYHF9393UCZ",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "37CYXAD2572LIZ",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "08ADSLQ7475XDZ",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "31ZOBPJ6832TEZIA",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "36EWEAW1943EFZ",
+      "reason": "wrong_length",
+      "on_date": null
+    },
+    {
+      "gstin": "00SJPCP0560B1Z0",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "39JSBTA9076J1ZY",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "40QOLPS7877H1ZW",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "50XOATZ6597K1ZE",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "98DDSPZ3593S1ZL",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "96NKSJN9677L1ZP",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "00TALTR7631N1ZM",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "45AGAPU7813R1ZN",
+      "reason": "bad_state",
+      "on_date": null
+    },
+    {
+      "gstin": "13cLNAC7698NJZA",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "27UQVA12176GTZG",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "31ZGCB11084S1ZU",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "32jHKBD6822ZKZA",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "24zFQJK6305G7ZA",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "06jDECZ9335NVZA",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "32XBHP19358GAZ5",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "31MIXJ17303DHZH",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "99fCWTO5737JTZA",
+      "reason": "bad_pan",
+      "on_date": null
+    },
+    {
+      "gstin": "97EHOBD8275NFYQ",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "11UMEPP0611REY9",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "28GAEGU1397K8YA",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "33TFELT5601WRXU",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "06RGDTN0709NQAD",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "21UAJJF1343VXXI",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "99XFVPJ6257ZMXE",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "97XFRJD2014KEYP",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "29ZSHLE1748F7Y7",
+      "reason": "no_z",
+      "on_date": null
+    },
+    {
+      "gstin": "14HESFU2822ZAZT",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "16GRILE3423TSZT",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "13CQTCM5866JMZ7",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "99RZDGF5103PNZ0",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "28TVSTQ1558C9ZE",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "16NNXFT0143I6ZE",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "33SLGGF7483NVZP",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "29IEPBR0633DMZY",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "34ZPDPD0261HLZA",
+      "reason": "bad_checksum",
+      "on_date": null
+    },
+    {
+      "gstin": "25VBXFE8263CQZS",
+      "reason": "inactive_state_25",
+      "on_date": "2026-01-15"
+    },
+    {
+      "gstin": "25XXGPL9752OIZL",
+      "reason": "inactive_state_25",
+      "on_date": "2026-04-01"
+    },
+    {
+      "gstin": "25QCLAG2656OHZ6",
+      "reason": "inactive_state_25",
+      "on_date": "2020-01-26"
+    },
+    {
+      "gstin": "25LPEFS6871OJZU",
+      "reason": "inactive_state_25",
+      "on_date": "2021-07-01"
+    },
+    {
+      "gstin": "25NQCCV4439ZJZH",
+      "reason": "inactive_state_25",
+      "on_date": "2026-09-04"
+    },
+    {
+      "gstin": "25QOBGR4716HFZO",
+      "reason": "inactive_state_25",
+      "on_date": "2020-02-01"
+    },
+    {
+      "gstin": "25QXGTQ1809FFZJ",
+      "reason": "inactive_state_25",
+      "on_date": "2025-12-31"
+    }
+  ]
+}

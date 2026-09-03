@@ -71,6 +71,8 @@ def problem_exception_handler(exc: Exception, context: dict[str, Any]) -> Respon
     status = response.status_code
     title = {401: "Unauthorized", 403: "Forbidden", 404: "Not Found"}.get(status, "Request failed")
     detail = response.data.get("detail") if isinstance(response.data, dict) else None
+    if isinstance(response.data, list):
+        detail = "; ".join(str(x) for x in response.data)
     body: dict[str, Any] = {"type": "about:blank", "title": title, "status": status}
     if detail is not None:
         body["detail"] = str(detail)

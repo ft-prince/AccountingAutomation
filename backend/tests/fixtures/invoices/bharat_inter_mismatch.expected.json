@@ -1,0 +1,25 @@
+{
+ "supplier_gstin": "29AAPFU0939F1ZR",
+ "recipient_gstin": "27AAGFF2194N1ZZ",
+ "invoice_number": "BCS-1189",
+ "invoice_date": "2025-11-03",
+ "supply_type": "INTER",
+ "line_count": 1,
+ "totals": {
+  "taxable_value": "40000.00",
+  "cgst": "0",
+  "sgst": "0",
+  "igst": "7200.00",
+  "total": "47300.00"
+ },
+ "validation_issues": [
+  {
+   "code": "MISSING_FIELD",
+   "field": "recipient_address"
+  },
+  {
+   "code": "ARITHMETIC_MISMATCH",
+   "field": "stated_total"
+  }
+ ]
+}

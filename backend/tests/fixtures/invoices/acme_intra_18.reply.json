@@ -1,0 +1,79 @@
+{
+ "supplier": {
+  "name": "Acme Widgets Pvt Ltd",
+  "gstin": "27AAPFU0939F1ZV",
+  "address": "12 MIDC Road, Pune 411001, Maharashtra",
+  "state_code": "27"
+ },
+ "recipient": {
+  "name": "Nexren AI Pvt Ltd",
+  "gstin": "27AAGFF2194N1ZZ",
+  "address": "4 Tech Park, Mumbai 400001",
+  "state_code": "27"
+ },
+ "invoice": {
+  "number": "AW/25-26/0042",
+  "date": "2025-07-15",
+  "due_date": "2025-08-14",
+  "irn": "",
+  "has_qr": false,
+  "place_of_supply": "27-Maharashtra",
+  "is_reverse_charge": false,
+  "payment_terms": "30 days",
+  "currency": "INR"
+ },
+ "lines": [
+  {
+   "description": "Edge sensor module",
+   "hsn_sac": "8543",
+   "quantity": "10",
+   "uom": "nos",
+   "unit_price": "2500.00",
+   "discount": "0",
+   "taxable_value": "25000.00",
+   "rate": "18",
+   "cgst": "2250.00",
+   "sgst": "2250.00",
+   "igst": "0",
+   "cess": "0"
+  },
+  {
+   "description": "Installation service",
+   "hsn_sac": "9987",
+   "quantity": "1",
+   "uom": "nos",
+   "unit_price": "8000.00",
+   "discount": "0",
+   "taxable_value": "8000.00",
+   "rate": "18",
+   "cgst": "720.00",
+   "sgst": "720.00",
+   "igst": "0",
+   "cess": "0"
+  }
+ ],
+ "totals": {
+  "taxable_value": "33000.00",
+  "cgst": "2970.00",
+  "sgst": "2970.00",
+  "igst": "0",
+  "cess": "0",
+  "round_off": "0.00",
+  "total": "38940.00"
+ },
+ "bank_details": {
+  "bank_name": "HDFC Bank",
+  "account_number": "50200012345678",
+  "ifsc": "HDFC0000123",
+  "upi_id": ""
+ },
+ "notes": "",
+ "field_confidence": {
+  "supplier.gstin": 0.99,
+  "invoice.number": 0.98,
+  "invoice.date": 0.97,
+  "totals.total": 0.99,
+  "lines.0.taxable_value": 0.96,
+  "lines.1.taxable_value": 0.96
+ }
+}

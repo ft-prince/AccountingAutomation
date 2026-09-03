@@ -1,0 +1,61 @@
+{
+ "supplier": {
+  "name": "Bharat Cloud Services",
+  "gstin": "29AAPFU0939F1ZR",
+  "address": "Hosur Road, Bengaluru 560068, Karnataka",
+  "state_code": "29"
+ },
+ "recipient": {
+  "name": "Nexren AI Pvt Ltd",
+  "gstin": "27AAGFF2194N1ZZ",
+  "address": "",
+  "state_code": "27"
+ },
+ "invoice": {
+  "number": "BCS-1189",
+  "date": "2025-11-03",
+  "due_date": "",
+  "irn": "",
+  "has_qr": false,
+  "place_of_supply": "27",
+  "is_reverse_charge": false,
+  "payment_terms": "",
+  "currency": "INR"
+ },
+ "lines": [
+  {
+   "description": "Cloud compute Sep-25",
+   "hsn_sac": "998315",
+   "quantity": "1",
+   "uom": "nos",
+   "unit_price": "40000.00",
+   "discount": "0",
+   "taxable_value": "40000.00",
+   "rate": "18",
+   "cgst": "0",
+   "sgst": "0",
+   "igst": "7200.00",
+   "cess": "0"
+  }
+ ],
+ "totals": {
+  "taxable_value": "40000.00",
+  "cgst": "0",
+  "sgst": "0",
+  "igst": "7200.00",
+  "cess": "0",
+  "round_off": "0",
+  "total": "47300.00"
+ },
+ "bank_details": {
+  "bank_name": "",
+  "account_number": "",
+  "ifsc": "",
+  "upi_id": ""
+ },
+ "notes": "",
+ "field_confidence": {
+  "totals.total": 0.71,
+  "invoice.number": 0.95
+ }
+}

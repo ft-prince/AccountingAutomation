@@ -1,0 +1,16 @@
+{
+ "supplier_gstin": "27AAPFU0939F1ZV",
+ "recipient_gstin": "27AAGFF2194N1ZZ",
+ "invoice_number": "AW/25-26/0042",
+ "invoice_date": "2025-07-15",
+ "supply_type": "INTRA",
+ "line_count": 2,
+ "totals": {
+  "taxable_value": "33000.00",
+  "cgst": "2970.00",
+  "sgst": "2970.00",
+  "igst": "0",
+  "total": "38940.00"
+ },
+ "validation_issues": []
+}
