@@ -109,6 +109,9 @@ def test_scan_pdf_goes_as_page_images(org_a, fake_storage) -> None:  # type: ign
 def test_task_wires_extraction_and_reextract_appends(
     client_a, org_a, fake_storage, monkeypatch
 ) -> None:  # type: ignore[no-untyped-def]
+    from apps.accounts.factories import GSTINProfileFactory
+
+    GSTINProfileFactory(org=org_a.org, gstin="27AAGFF2194N1ZZ")
     doc = _doc(org_a.org, fake_storage, "acme_intra_18")
     good = json.loads((FIXTURES / "acme_intra_18.reply.json").read_text())
     monkeypatch.setattr(extraction, "_client", lambda: FakeAnthropic([good, good]))
@@ -122,6 +125,14 @@ def test_task_wires_extraction_and_reextract_appends(
     assert r.status_code == 202
     assert ExtractionRun.objects.filter(document=doc).count() == 2
     assert ExtractionRun.objects.filter(document=doc).exclude(error="").count() == 0
+    from apps.invoices.models import Invoice
+
+    assert Invoice.objects.filter(document=doc).count() == 2  # second run → duplicate
+    assert Invoice.objects.filter(document=doc, status="duplicate").count() == 1
+    from apps.invoices.models import Invoice
+
+    assert Invoice.objects.filter(document=doc).count() == 2  # second is a duplicate
+    assert Invoice.objects.filter(document=doc, status="duplicate").count() == 1
 
 
 def test_api_key_never_in_run_or_error(org_a, fake_storage, settings) -> None:  # type: ignore[no-untyped-def]

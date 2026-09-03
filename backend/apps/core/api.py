@@ -55,8 +55,12 @@ class OrgScopedViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):  # type: ignore[no-untyped-def]
         perms = list(super().get_permissions())
-        if self.request.method not in permissions.SAFE_METHODS:
+        action = getattr(self, getattr(self, "action", "") or "", None)
+        has_own = bool(getattr(action, "kwargs", {}).get("permission_classes"))
+        if self.request.method not in permissions.SAFE_METHODS and not has_own:
             perms.append(require_role(*self.write_roles)())
+        if has_own and not any(isinstance(p, HasOrg) for p in perms):
+            perms.insert(0, HasOrg())
         return perms
 
     def perform_create(self, serializer):  # type: ignore[no-untyped-def]
@@ -76,8 +80,10 @@ def problem_exception_handler(exc: Exception, context: dict[str, Any]) -> Respon
     body: dict[str, Any] = {"type": "about:blank", "title": title, "status": status}
     if detail is not None:
         body["detail"] = str(detail)
-    if isinstance(response.data, dict) and detail is None:
-        body["errors"] = response.data
+    if isinstance(response.data, dict):
+        extra = {k: v for k, v in response.data.items() if k != "detail"}
+        if extra:
+            body["errors"] = extra
     response.data = body
     response["Content-Type"] = "application/problem+json"
     return response

@@ -14,11 +14,10 @@ MAX_ATTEMPTS = 3
 def run_extraction(document: Document) -> None:
     """PROJECT_SPECS §5: model call → validated ExtractionRun → (Phase 7) invoice ingest."""
     from apps.documents.services.extraction import extract
+    from apps.invoices.services import ingest_extraction
 
     run = extract(document)
-    ingest = getattr(run, "ingest_hook", None)  # Phase 7 registers apps.invoices.services.ingest
-    if ingest:
-        ingest(run)
+    ingest_extraction(run)
 
 
 @shared_task(
