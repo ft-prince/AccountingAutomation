@@ -109,6 +109,12 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "apps.core.api.problem_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "apps.core.pagination.DefaultCursorPagination",
     "PAGE_SIZE": 50,
+    "DEFAULT_THROTTLE_RATES": {
+        "upload": env("RATE_UPLOAD", default="600/hour"),
+        "extraction": env("RATE_EXTRACTION", default="300/hour"),
+        "drafting": env("RATE_DRAFTING", default="120/hour"),
+        "forecast": env("RATE_FORECAST", default="12/hour"),
+    },
 }
 
 SPECTACULAR_SETTINGS = {
@@ -132,3 +138,11 @@ AWS_S3_ENDPOINT_URL = env("S3_ENDPOINT_URL", default="")
 AWS_ACCESS_KEY_ID = env("S3_ACCESS_KEY", default="")
 AWS_SECRET_ACCESS_KEY = env("S3_SECRET_KEY", default="")
 AWS_STORAGE_BUCKET_NAME = env("S3_BUCKET", default="nexren")
+
+# --- Mail (Phase 14/15). OAuth apps + field encryption key; all blank by default.
+GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID", default="")
+GOOGLE_OAUTH_CLIENT_SECRET = env("GOOGLE_OAUTH_CLIENT_SECRET", default="")
+MICROSOFT_OAUTH_CLIENT_ID = env("MICROSOFT_OAUTH_CLIENT_ID", default="")
+MICROSOFT_OAUTH_CLIENT_SECRET = env("MICROSOFT_OAUTH_CLIENT_SECRET", default="")
+FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY", default="")  # Fernet key (urlsafe base64)
+OAUTH_REDIRECT_BASE = env("OAUTH_REDIRECT_BASE", default="")  # e.g. http://localhost:8000

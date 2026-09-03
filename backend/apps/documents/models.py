@@ -37,7 +37,13 @@ class Document(TenantModel):
     )
     error = models.TextField(blank=True)
     attempts = models.PositiveSmallIntegerField(default=0)
-    # source_email_message FK is added in Phase 14 when EmailMessage exists.
+    source_email_message = models.ForeignKey(
+        "mail.EmailMessage",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="documents",
+    )
 
     class Meta(TenantModel.Meta):
         constraints = [models.UniqueConstraint(fields=["org", "sha256"], name="uq_document_sha256")]

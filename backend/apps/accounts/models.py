@@ -29,6 +29,7 @@ class Organization(BaseModel):
     )
     brand_display_name = models.CharField(max_length=100, default="Nexren Finance")
     settings = models.JSONField(default=dict, blank=True)  # extraction toggles, auto-confirm flag
+    deletion_requested_at = models.DateTimeField(null=True, blank=True)  # §12: purge within 30 days
 
     def __str__(self) -> str:
         return self.name
@@ -103,3 +104,22 @@ class OrgMembership(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.user} @ {self.org} ({self.role})"
+
+
+class APIKey(BaseModel):
+    """Server-side API keys (§12). Only the hash is stored; the plaintext is shown once."""
+
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="api_keys")
+    name = models.CharField(max_length=100)
+    prefix = models.CharField(max_length=8)
+    key_hash = models.CharField(max_length=64)
+    created_by = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    last_used_at = models.DateTimeField(null=True, blank=True)
+    revoked_at = models.DateTimeField(null=True, blank=True)
+
+    objects = TenantManager()
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.prefix}…)"

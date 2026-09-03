@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 
-from apps.accounts.models import GSTINProfile, Organization, OrgMembership, Role, User
+from apps.accounts.models import APIKey, GSTINProfile, Organization, OrgMembership, Role, User
 
 
 class LoginSerializer(serializers.Serializer):
@@ -91,3 +91,30 @@ class GSTINProfileSerializer(serializers.ModelSerializer):
 class MemberWriteSerializer(serializers.Serializer):
     email = serializers.EmailField()
     role = serializers.ChoiceField(choices=Role.choices)
+
+
+SETTINGS_KEYS = {
+    "auto_confirm": bool,
+    "extraction_enabled": bool,
+    "send_page_images_for_scans": bool,
+}
+
+
+class SettingsSerializer(serializers.Serializer):
+    auto_confirm = serializers.BooleanField(required=False)
+    extraction_enabled = serializers.BooleanField(required=False)
+    send_page_images_for_scans = serializers.BooleanField(required=False)
+
+
+class APIKeySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = APIKey
+        fields = ["id", "name", "prefix", "created_by", "last_used_at", "revoked_at", "created_at"]
+        read_only_fields = [
+            "id",
+            "prefix",
+            "created_by",
+            "last_used_at",
+            "revoked_at",
+            "created_at",
+        ]

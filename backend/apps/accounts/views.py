@@ -6,14 +6,17 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.models import GSTINProfile, OrgMembership, Role, User
+from apps.accounts.models import APIKey, GSTINProfile, OrgMembership, Role, User
 from apps.accounts.serializers import (
+    SETTINGS_KEYS,
+    APIKeySerializer,
     GSTINProfileSerializer,
     LoginSerializer,
     MembershipSerializer,
     MemberWriteSerializer,
     MeSerializer,
     OrganizationSerializer,
+    SettingsSerializer,
 )
 from apps.core.api import HasOrg, OrgScopedViewSet, current_membership, current_org, require_role
 
@@ -74,6 +77,80 @@ class CurrentOrgView(APIView):
         ser.is_valid(raise_exception=True)
         ser.save()
         return Response(ser.data)
+
+    def delete(self, request: Request) -> Response:
+        """§12: owner requests deletion; purge_deleted_orgs (Beat) removes S3 + DB after 30 days."""
+        membership = current_membership(request)
+        if not membership or membership.role != Role.OWNER:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        from django.utils import timezone
+
+        from apps.core.audit import record
+
+        org = current_org(request)
+        org.deletion_requested_at = timezone.now()
+        org.save(update_fields=["deletion_requested_at", "updated_at"])
+        record(org, actor=request.user, entity=org, action="org.deletion_requested")
+        return Response(
+            {"deletion_requested_at": org.deletion_requested_at, "purge_after_days": 30},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+
+class SettingsView(APIView):
+    """GET|PUT /api/settings — extraction toggles and the auto-confirm flag (§5, default OFF)."""
+
+    permission_classes = [HasOrg]
+
+    def get(self, request: Request) -> Response:
+        org = current_org(request)
+        return Response({k: org.settings.get(k, False) for k in SETTINGS_KEYS})
+
+    def put(self, request: Request) -> Response:
+        membership = current_membership(request)
+        if not membership or membership.role != Role.OWNER:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        ser = SettingsSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        org = current_org(request)
+        from apps.core.audit import record
+
+        before = dict(org.settings)
+        org.settings = {**org.settings, **ser.validated_data}
+        org.save(update_fields=["settings", "updated_at"])
+        record(
+            org,
+            actor=request.user,
+            entity=org,
+            action="org.settings",
+            before=before,
+            after=org.settings,
+        )
+        return Response({k: org.settings.get(k, False) for k in SETTINGS_KEYS})
+
+
+class APIKeyViewSet(OrgScopedViewSet):
+    queryset = APIKey.objects.none()
+    serializer_class = APIKeySerializer
+    write_roles = (Role.OWNER,)
+    http_method_names = ["get", "post", "delete", "head", "options"]
+
+    def create(self, request: Request, *args, **kwargs) -> Response:  # type: ignore[no-untyped-def]
+        from apps.accounts.api_keys import issue
+
+        name = str(request.data.get("name", "")) if isinstance(request.data, dict) else ""
+        if not name:
+            from rest_framework.exceptions import ValidationError
+
+            raise ValidationError({"name": "required"})
+        key, raw = issue(current_org(request), name, request.user)
+        return Response({**APIKeySerializer(key).data, "key": raw}, status=status.HTTP_201_CREATED)
+
+    def perform_destroy(self, instance: APIKey) -> None:
+        from django.utils import timezone
+
+        instance.revoked_at = timezone.now()
+        instance.save(update_fields=["revoked_at", "updated_at"])
 
 
 class GSTINProfileViewSet(OrgScopedViewSet):

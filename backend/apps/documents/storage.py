@@ -39,3 +39,7 @@ def signed_get_url(key: str, ttl: int = SIGNED_URL_TTL_SECONDS) -> str:
         ExpiresIn=ttl,
     )
     return url
+
+
+def delete_object(key: str) -> None:
+    _client().delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=key)

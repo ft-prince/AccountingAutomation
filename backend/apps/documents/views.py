@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.api import HasOrg, OrgScopedViewSet, current_org
+from apps.core.throttling import ExtractionThrottle, UploadThrottle
 from apps.documents import storage
 from apps.documents.models import Document, DocumentStatus
 from apps.documents.serializers import DocumentSerializer
@@ -43,6 +44,13 @@ class DocumentViewSet(OrgScopedViewSet):
         body = dict(DocumentSerializer(result.document).data)
         body["duplicate_of"] = str(result.duplicate_of.pk) if result.duplicate_of else None
         return body
+
+    def get_throttles(self):  # type: ignore[no-untyped-def]
+        if self.action in ("create", "bulk"):
+            return [UploadThrottle()]
+        if self.action == "reextract":
+            return [ExtractionThrottle()]
+        return []
 
     def create(self, request: Request, *args, **kwargs) -> Response:  # type: ignore[no-untyped-def]
         upload = request.FILES.get("file")

@@ -9,9 +9,17 @@ app = Celery("nexren")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 app.conf.beat_schedule = {
+    "purge-deleted-orgs-nightly": {
+        "task": "apps.accounts.tasks.purge_deleted_orgs",
+        "schedule": crontab(hour=2, minute=0),
+    },
     "refresh-overdue-nightly": {
         "task": "apps.payments.tasks.refresh_overdue_statuses",
         "schedule": crontab(hour=1, minute=0),
+    },
+    "sync-all-mailboxes": {
+        "task": "apps.mail.tasks.sync_all_mailboxes",
+        "schedule": 120.0,  # PROJECT_SPECS §6.3: poll every 2 minutes
     },
 }
 
