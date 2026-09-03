@@ -1,6 +1,7 @@
 from django.contrib.auth import login, logout
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -15,8 +16,10 @@ from apps.accounts.serializers import (
     MembershipSerializer,
     MemberWriteSerializer,
     MeSerializer,
+    OkSerializer,
     OrganizationSerializer,
     SettingsSerializer,
+    SwitchOrgSerializer,
 )
 from apps.core.api import HasOrg, OrgScopedViewSet, current_membership, current_org, require_role
 
@@ -26,6 +29,7 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
     authentication_classes: list[type] = []
 
+    @extend_schema(request=LoginSerializer, responses={200: OkSerializer})
     def post(self, request: Request) -> Response:
         ser = LoginSerializer(data=request.data, context={"request": request})
         ser.is_valid(raise_exception=True)
@@ -41,6 +45,7 @@ class LogoutView(APIView):
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
 class MeView(APIView):
+    @extend_schema(responses=MeSerializer)
     def get(self, request: Request) -> Response:
         memberships = OrgMembership.objects.filter(user=request.user).select_related("org")
         membership = current_membership(request)
@@ -54,6 +59,7 @@ class MeView(APIView):
         }
         return Response(MeSerializer(data).data)
 
+    @extend_schema(request=SwitchOrgSerializer, responses={200: OkSerializer})
     def post(self, request: Request) -> Response:
         """Switch current org: {"org_id": ...}"""
         org_id = request.data.get("org_id") if isinstance(request.data, dict) else None

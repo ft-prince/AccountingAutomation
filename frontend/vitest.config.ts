@@ -3,6 +3,11 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
-  test: { environment: "jsdom", include: ["**/*.test.{ts,tsx}"], exclude: ["node_modules", ".next"] },
+  test: {
+    environment: "jsdom",
+    include: ["**/*.test.{ts,tsx}"],
+    exclude: ["node_modules", ".next"],
+    setupFiles: ["./vitest.setup.ts"],
+  },
   resolve: { alias: { "@": __dirname } },
 });

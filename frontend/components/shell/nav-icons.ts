@@ -1,0 +1,30 @@
+import {
+  ArrowLeftRight,
+  Building2,
+  ClipboardCheck,
+  FileText,
+  Inbox,
+  Landmark,
+  LayoutDashboard,
+  LineChart,
+  PieChart,
+  Settings,
+  Upload,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
+
+export const NAV_ICONS: Record<string, LucideIcon> = {
+  "/dashboard": LayoutDashboard,
+  "/upload": Upload,
+  "/review": ClipboardCheck,
+  "/invoices": FileText,
+  "/payments": Wallet,
+  "/bank": Landmark,
+  "/parties": Building2,
+  "/inbox": Inbox,
+  "/reports": PieChart,
+  "/forecast": LineChart,
+  "/reconciliation": ArrowLeftRight,
+  "/settings": Settings,
+};

@@ -118,3 +118,11 @@ class APIKeySerializer(serializers.ModelSerializer):
             "revoked_at",
             "created_at",
         ]
+
+
+class OkSerializer(serializers.Serializer):
+    ok = serializers.BooleanField()
+
+
+class SwitchOrgSerializer(serializers.Serializer):
+    org_id = serializers.UUIDField()

@@ -82,7 +82,7 @@ services:
   frontend:
     build: ./frontend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      API_PROXY_URL: http://backend:8000
     volumes:
       - ./frontend:/app
       - /app/node_modules

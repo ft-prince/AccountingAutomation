@@ -2,17 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* PROJECT_SPECS §9 — light theme */
+/* PROJECT_SPECS §9 — light theme. Hex values mirror lib/tokens.ts. */
 :root {
-  --background: #f5efe6;
-  --surface: #faf7f2;
-  --border: #eadfcf;
-  --foreground: #161514;
-  --muted: #635e59;
+  --background: #f5efe6; /* cream-100 */
+  --surface: #faf7f2; /* cream-50 */
+  --border: #eadfcf; /* cream-200 */
+  --foreground: #161514; /* ink */
+  --muted: #635e59; /* ink-muted */
   --success: #2f7d4f;
   --warning: #b7791f;
   --danger: #b23a2e;
   --info: #2c5f8a;
+
+  /* shadcn/ui aliases → §9 tokens (no zinc anywhere) */
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
+  --primary: #de5d35; /* accent */
+  --primary-foreground: #faf7f2; /* cream-50 */
+  --secondary: var(--border); /* subtle fills: hover rows, skeletons, chips */
+  --secondary-foreground: var(--foreground);
+  --destructive: var(--danger);
+  --destructive-foreground: #faf7f2;
+  --input: var(--border);
+  --ring: #de5d35;
+  --radius: 12px;
 }
 
 /* §9 — dark theme, semantics lightened one step */
@@ -29,10 +44,46 @@
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* §9 hover: border darkens + 2px lift, 150 ms */
+  .lift {
+    @apply transition-[transform,border-color,background-color] duration-150 hover:-translate-y-[2px] hover:border-muted;
+  }
+
+  /* §9 underline-slide on nav links: ::after scaleX 0 → 1 in 150 ms */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.25rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 150ms ease;
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+
+  /* /login only — the single place a gradient is permitted (§9) */
+  .cream-wash {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--background) 55%, var(--border) 100%);
   }
 }
