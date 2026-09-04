@@ -1,8 +1,10 @@
 from django.db.models import Count, F, Q
+from django.http import HttpResponse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -13,6 +15,7 @@ from apps.invoices.models import Invoice, InvoiceStatus
 from apps.invoices.serializers import (
     BulkSerializer,
     DuplicateSerializer,
+    InvoiceCreateSerializer,
     InvoiceDetailSerializer,
     InvoiceListSerializer,
     InvoicePatchSerializer,
@@ -189,6 +192,45 @@ class InvoiceViewSet(OrgScopedViewSet):
                     else exc.detail
                 )
         return Response({"results": results})
+
+    def create(self, request: Request, *args, **kwargs) -> Response:  # type: ignore[no-untyped-def]
+        """Manual entry. Held to the same GST rules and recompute as an extracted invoice."""
+        from apps.invoices.manual import ManualInvoiceError, create_manual_invoice
+
+        ser = InvoiceCreateSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        payload = dict(ser.validated_data)
+        lines = [dict(line) for line in payload.pop("lines")]
+        try:
+            invoice = create_manual_invoice(
+                current_org(request), payload, lines, actor=request.user
+            )
+        except ManualInvoiceError as exc:
+            raise ValidationError(str(exc)) from exc
+        detail = self.get_queryset().get(pk=invoice.pk)
+        return Response(InvoiceDetailSerializer(detail).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=["post"], url_path="import", parser_classes=[MultiPartParser])
+    def import_csv(self, request: Request) -> Response:
+        """One row per invoice line; rows sharing an invoice_number become one invoice."""
+        from apps.invoices.manual import ManualInvoiceError, import_csv
+
+        upload = request.FILES.get("file")
+        if upload is None:
+            raise ValidationError({"file": "required"})
+        try:
+            result = import_csv(current_org(request), upload.read(), actor=request.user)
+        except ManualInvoiceError as exc:
+            raise ValidationError(str(exc)) from exc
+        return Response(result, status=status.HTTP_207_MULTI_STATUS)
+
+    @action(detail=False, methods=["get"], url_path="import-template")
+    def import_template(self, request: Request) -> HttpResponse:
+        from apps.invoices.manual import csv_template
+
+        response = HttpResponse(csv_template(), content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="invoice-import-template.csv"'
+        return response
 
     @action(detail=False, methods=["get"], url_path="review-queue")
     def review_queue(self, request: Request) -> Response:

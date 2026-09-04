@@ -169,3 +169,34 @@ class DuplicateSerializer(serializers.Serializer):
 class BulkSerializer(serializers.Serializer):
     ids = serializers.ListField(child=serializers.UUIDField(), allow_empty=False)
     force = serializers.BooleanField(required=False, default=False)
+
+
+class ManualLineSerializer(serializers.Serializer):
+    description = serializers.CharField(allow_blank=True, required=False, default="")
+    hsn_sac = serializers.CharField(allow_blank=True, required=False, default="")
+    quantity = serializers.DecimalField(max_digits=14, decimal_places=3, default=Decimal("1"))
+    uom = serializers.CharField(allow_blank=True, required=False, default="")
+    unit_price = serializers.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0"))
+    discount = serializers.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0"))
+    rate = serializers.DecimalField(max_digits=5, decimal_places=2, default=Decimal("0"))
+    cess_rate = serializers.DecimalField(max_digits=5, decimal_places=2, default=Decimal("0"))
+
+
+class InvoiceCreateSerializer(serializers.Serializer):
+    """Manual entry. Totals are never accepted from the client; they are recomputed server-side."""
+
+    party = serializers.UUIDField()
+    direction = serializers.ChoiceField(choices=["inward", "outward"])
+    invoice_number = serializers.CharField(max_length=32)
+    invoice_date = serializers.DateField()
+    due_date = serializers.DateField(required=False, allow_null=True)
+    gstin_profile = serializers.UUIDField(required=False, allow_null=True)
+    place_of_supply_state_code = serializers.CharField(
+        max_length=2, required=False, allow_blank=True
+    )
+    is_reverse_charge = serializers.BooleanField(required=False, default=False)
+    irn = serializers.CharField(max_length=64, required=False, allow_blank=True)
+    currency = serializers.CharField(max_length=3, required=False, default="INR")
+    notes = serializers.CharField(required=False, allow_blank=True)
+    payment_terms = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    lines = ManualLineSerializer(many=True, allow_empty=False)
