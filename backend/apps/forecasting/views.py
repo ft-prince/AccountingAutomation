@@ -62,6 +62,27 @@ class ForecastRunViewSet(OrgScopedViewSet):
             raise Http404
         return Response(ForecastRunSerializer(run).data)
 
+    def drivers(self, request: Request) -> Response:
+        from django.utils import timezone
+
+        from apps.forecasting.services.drivers import drivers
+
+        return Response(drivers(current_org(request), timezone.localdate()))
+
+    def narrative(self, request: Request, pk: str) -> Response:
+        """§8.8: generate (or regenerate) the labelled summary from aggregates only."""
+        from apps.forecasting.services.analytics import customer_risk
+        from apps.forecasting.services.drivers import drivers
+        from apps.forecasting.services.narrative import aggregates_for, generate_narrative
+
+        run = self.get_object()
+        high = [r["party_name"] for r in customer_risk(run.org, run.as_of) if r["band"] == "high"]
+        agg = aggregates_for(run, drivers=drivers(run.org, run.as_of), high_risk=high)
+        text = generate_narrative(run, agg)
+        return Response(
+            {"narrative": text, "generated": text is not None, "label": "Generated summary"}
+        )
+
     def backtest(self, request: Request) -> Response:
         run = latest_run(current_org(request))
         if run is None:

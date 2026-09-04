@@ -13,6 +13,11 @@ router.register("forecast/expected", views.ExpectedInvoiceViewSet, basename="for
 urlpatterns = [
     path("forecast/run", views.ForecastRunViewSet.as_view({"post": "run"})),
     path("forecast/latest", views.ForecastRunViewSet.as_view({"get": "latest"})),
+    path("forecast/drivers", views.ForecastRunViewSet.as_view({"get": "drivers"})),
+    path(
+        "forecast/runs/<uuid:pk>/narrative",
+        views.ForecastRunViewSet.as_view({"post": "narrative"}),
+    ),
     path("forecast/backtest", views.ForecastRunViewSet.as_view({"get": "backtest"})),
     path("forecast/scenarios/<uuid:pk>/run", views.ScenarioViewSet.as_view({"post": "run"})),
     path(
