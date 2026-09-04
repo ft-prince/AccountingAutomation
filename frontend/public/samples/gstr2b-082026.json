@@ -1,0 +1,86 @@
+{
+  "data": {
+    "gstin": "27AAGFF2194N1ZZ",
+    "rtnprd": "082026",
+    "docdata": {
+      "b2b": [
+        {
+          "ctin": "27AAPFU0939F1ZV",
+          "trdnm": "Acme Widgets Pvt Ltd",
+          "inv": [
+            {
+              "inum": "ACM-2026-0042",
+              "idt": "05-08-2026",
+              "val": 47200.0,
+              "pos": "27",
+              "rev": "N",
+              "itcavl": "Y",
+              "txval": 40000.0,
+              "igst": 0.0,
+              "cgst": 3600.0,
+              "sgst": 3600.0,
+              "cess": 0.0
+            }
+          ]
+        },
+        {
+          "ctin": "29AABCT1332L1ZA",
+          "trdnm": "Bharat Cloud Services",
+          "inv": [
+            {
+              "inum": "BCS/2026/1189",
+              "idt": "13-08-2026",
+              "val": 47200.0,
+              "pos": "27",
+              "rev": "N",
+              "itcavl": "Y",
+              "txval": 40000.0,
+              "igst": 7200.0,
+              "cgst": 0.0,
+              "sgst": 0.0,
+              "cess": 0.0
+            }
+          ]
+        },
+        {
+          "ctin": "24AACCR5055K1ZB",
+          "trdnm": "Robu Electronics",
+          "inv": [
+            {
+              "inum": "RBU-2026-0777",
+              "idt": "20-08-2026",
+              "val": 24100.0,
+              "pos": "27",
+              "rev": "N",
+              "itcavl": "Y",
+              "txval": 20423.73,
+              "igst": 3676.27,
+              "cgst": 0.0,
+              "sgst": 0.0,
+              "cess": 0.0
+            }
+          ]
+        },
+        {
+          "ctin": "06AABCU9603R1ZR",
+          "trdnm": "Unknown Traders",
+          "inv": [
+            {
+              "inum": "UT-2026-5510",
+              "idt": "28-08-2026",
+              "val": 17700.0,
+              "pos": "27",
+              "rev": "N",
+              "itcavl": "Y",
+              "txval": 15000.0,
+              "igst": 2700.0,
+              "cgst": 0.0,
+              "sgst": 0.0,
+              "cess": 0.0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

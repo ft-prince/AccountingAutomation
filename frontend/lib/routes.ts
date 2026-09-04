@@ -19,6 +19,7 @@ export const APP_NAV: readonly NavRoute[] = [
   { href: "/forecast", label: "Forecast" },
   { href: "/reconciliation", label: "Reconciliation" },
   { href: "/settings", label: "Settings" },
+  { href: "/guide", label: "Guide" },
 ];
 
 export const DEFAULT_BRAND_NAME = "Nexren Finance";

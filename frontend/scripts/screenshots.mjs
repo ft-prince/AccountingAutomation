@@ -7,7 +7,7 @@ import WebSocket from "next/dist/compiled/ws/index.js";
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const PORT = 9333;
-const ROUTES = ["dashboard", "inbox", "forecast", "reconciliation"];
+const ROUTES = (process.env.ROUTES ?? "dashboard,inbox,forecast,reconciliation").split(",");
 const THEMES = ["light", "dark"];
 const VIEWPORT = { width: 1440, height: 1100 };
 const SETTLE_MS = 3500;

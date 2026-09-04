@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  BookOpen,
   Building2,
   ClipboardCheck,
   FileText,
@@ -27,4 +28,5 @@ export const NAV_ICONS: Record<string, LucideIcon> = {
   "/forecast": LineChart,
   "/reconciliation": ArrowLeftRight,
   "/settings": Settings,
+  "/guide": BookOpen,
 };
