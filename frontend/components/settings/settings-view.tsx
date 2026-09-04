@@ -12,9 +12,9 @@ import { GstinsTab } from "./gstins-tab";
 import { MailTab } from "./mail-tab";
 import { MembersTab } from "./members-tab";
 import { OrgTab } from "./org-tab";
+import type { SettingsTab } from "./tabs";
 
-export type SettingsTab = "org" | "gstins" | "categories" | "members" | "extraction" | "api-keys" | "mail" | "forecast";
-export const SETTINGS_TABS: readonly SettingsTab[] = ["org", "gstins", "categories", "members", "extraction", "api-keys", "mail", "forecast"];
+export type { SettingsTab } from "./tabs";
 
 const TABS: readonly { value: SettingsTab; label: string; hint?: string }[] = [
   { value: "org", label: "Organisation" },

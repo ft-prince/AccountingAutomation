@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { SETTINGS_TABS, SettingsView, type SettingsTab } from "@/components/settings/settings-view";
+import { SettingsView } from "@/components/settings/settings-view";
+import { SETTINGS_TABS, type SettingsTab } from "@/components/settings/tabs";
 
 export const metadata: Metadata = { title: "Settings · Nexren Finance" };
 
