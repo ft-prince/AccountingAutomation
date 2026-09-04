@@ -23,6 +23,7 @@ const STATUS_OPTIONS: readonly { value: DocumentStatus | ""; label: string }[] =
   { value: "extracting", label: "Extracting" },
   { value: "extracted", label: "Extracted" },
   { value: "failed", label: "Failed" },
+  { value: "not_invoice", label: "Not an invoice" },
   { value: "superseded", label: "Superseded" },
 ];
 

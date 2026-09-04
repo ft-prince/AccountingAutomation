@@ -22,6 +22,7 @@ function invoice(id: string, number: string, overrides: Partial<InvoiceDetail> =
     id,
     invoice_number: number,
     invoice_date: "2026-08-06",
+    confidence_field: null,
     due_date: "2026-08-21",
     direction: "inward",
     party: "party-1",

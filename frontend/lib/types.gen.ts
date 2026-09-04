@@ -2101,6 +2101,12 @@ export interface components {
          * @enum {string}
          */
         AatoBracketEnum: "below_5cr" | "5_to_10cr" | "above_10cr";
+        /**
+         * @description * `manual` - Set by a human
+         *     * `inferred` - Inferred from e-invoice IRNs
+         * @enum {string}
+         */
+        AatoSourceEnum: "manual" | "inferred";
         Allocation: {
             /** Format: uuid */
             readonly id: string;
@@ -2200,9 +2206,10 @@ export interface components {
          *     * `extracted` - Extracted
          *     * `failed` - Failed
          *     * `superseded` - Superseded
+         *     * `not_invoice` - Not Invoice
          * @enum {string}
          */
-        DocumentStatusEnum: "pending" | "extracting" | "extracted" | "failed" | "superseded";
+        DocumentStatusEnum: "pending" | "extracting" | "extracted" | "failed" | "superseded" | "not_invoice" | "not_invoice";
         Draft: {
             /** Format: uuid */
             readonly id: string;
@@ -2465,6 +2472,8 @@ export interface components {
             fy: string;
             period_month: string;
             readonly issue_count: number;
+            /** @description The core field that set the headline confidence; None for manual entries. */
+            readonly confidence_field: string | null;
             /** Format: date-time */
             readonly created_at: string;
             readonly lines: components["schemas"]["Line"][];
@@ -2534,6 +2543,8 @@ export interface components {
             fy: string;
             period_month: string;
             readonly issue_count: number;
+            /** @description The core field that set the headline confidence; None for manual entries. */
+            readonly confidence_field: string | null;
             /** Format: date-time */
             readonly created_at: string;
         };
@@ -3131,6 +3142,7 @@ export interface components {
             email_domains?: string[];
             is_composition?: boolean;
             aato_bracket?: components["schemas"]["AatoBracketEnum"];
+            readonly aato_source: components["schemas"]["AatoSourceEnum"];
             /** Format: uuid */
             default_category?: string | null;
             payment_terms_days?: number;
@@ -3318,6 +3330,7 @@ export interface components {
             email_domains?: string[];
             is_composition?: boolean;
             aato_bracket?: components["schemas"]["AatoBracketEnum"];
+            readonly aato_source?: components["schemas"]["AatoSourceEnum"];
             /** Format: uuid */
             default_category?: string | null;
             payment_terms_days?: number;

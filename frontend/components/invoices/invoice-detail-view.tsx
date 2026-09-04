@@ -107,7 +107,12 @@ export function InvoiceDetailView({ id }: { id: string }) {
                 <DetailRow label="Reverse charge">{invoice.data.is_reverse_charge ? "Yes" : "No"}</DetailRow>
                 <DetailRow label="IRN">{invoice.data.irn ? <span className="break-all font-mono text-xs">{invoice.data.irn}</span> : "—"}</DetailRow>
                 <DetailRow label="ITC">{invoice.data.itc_eligible ? "Eligible" : `Blocked${invoice.data.itc_blocked_reason ? ` · ${invoice.data.itc_blocked_reason}` : ""}`}</DetailRow>
-                <DetailRow label="Confidence">{invoice.data.confidence ?? "—"}</DetailRow>
+                <DetailRow label="Confidence">
+                  {invoice.data.confidence ?? "—"}
+                  {invoice.data.confidence_field && (
+                    <span className="ml-2 text-xs text-muted">weakest · {invoice.data.confidence_field}</span>
+                  )}
+                </DetailRow>
                 <DetailRow label="Reviewed">{invoice.data.reviewed_at ? formatDate(invoice.data.reviewed_at) : "—"}</DetailRow>
               </dl>
             </Card>

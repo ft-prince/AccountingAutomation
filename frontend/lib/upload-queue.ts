@@ -18,7 +18,7 @@ export interface UploadOutcome {
   documentId: string;
   duplicateOf?: string;
   /** Server status after upload; "extracted"/"failed" short-circuit polling. */
-  status?: "pending" | "extracting" | "extracted" | "failed" | "superseded";
+  status?: "pending" | "extracting" | "extracted" | "failed" | "superseded" | "not_invoice";
 }
 
 export interface UploadQueueOptions {

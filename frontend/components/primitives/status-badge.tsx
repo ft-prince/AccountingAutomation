@@ -9,6 +9,7 @@ const TONES: Record<string, StatusTone> = {
   confirmed: "success",
   paid: "success",
   extracted: "success",
+  not_invoice: "warning",
   valid: "success",
   matched: "success",
   auto: "success",

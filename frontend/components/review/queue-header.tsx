@@ -13,7 +13,7 @@ export interface QueueHeaderProps {
   position: number;
   total: number;
   remaining: number;
-  invoice: { invoice_number: string; party_name: string; invoice_date: string; total?: string; confidence?: string } | null;
+  invoice: { invoice_number: string; party_name: string; invoice_date: string; total?: string; confidence?: string; confidence_field?: string | null } | null;
   saveStatus: SaveStatus;
   canConfirm: boolean;
   isBusy: boolean;
@@ -92,7 +92,12 @@ export function QueueHeader({ position, total, remaining, invoice, saveStatus, c
           <span>{invoice.party_name}</span>
           <span>{formatIsoDate(invoice.invoice_date)}</span>
           {invoice.total !== undefined && <MoneyText value={invoice.total} />}
-          {invoice.confidence !== undefined && <span className="tabular-nums">confidence {invoice.confidence}</span>}
+          {invoice.confidence !== undefined && (
+            <span className="tabular-nums">
+              confidence {invoice.confidence}
+              {invoice.confidence_field && <span className="text-muted"> · weakest {invoice.confidence_field}</span>}
+            </span>
+          )}
         </p>
       )}
     </header>
