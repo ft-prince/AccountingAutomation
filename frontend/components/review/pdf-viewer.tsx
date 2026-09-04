@@ -8,6 +8,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ICON_SIZE, ICON_STROKE } from "@/lib/constants";
+import { isMissingPdfError, NoDocument } from "./no-document";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
 
@@ -26,6 +27,13 @@ export function PdfViewer({ url }: PdfViewerProps) {
   const [zoom, setZoom] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [isMissing, setIsMissing] = useState(false);
+
+  useEffect(() => {
+    setError(null);
+    setIsMissing(false);
+    setPageCount(0);
+  }, [url]);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -40,6 +48,8 @@ export function PdfViewer({ url }: PdfViewerProps) {
   const step = useCallback((direction: 1 | -1) => {
     setZoom((current) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, current + direction * ZOOM_STEP)));
   }, []);
+
+  if (isMissing) return <NoDocument />;
 
   return (
     <div className="flex h-full flex-col">
@@ -65,7 +75,7 @@ export function PdfViewer({ url }: PdfViewerProps) {
             file={url}
             loading={<Skeleton className="h-[60vh] w-full" />}
             onLoadSuccess={(pdf) => setPageCount(pdf.numPages)}
-            onLoadError={(loadError) => setError(`Could not render the PDF: ${loadError.message}`)}
+            onLoadError={(loadError) => (isMissingPdfError(loadError) ? setIsMissing(true) : setError(`Could not render the PDF: ${loadError.message}`))}
           >
             {width > 0 &&
               Array.from({ length: pageCount }, (_, index) => (

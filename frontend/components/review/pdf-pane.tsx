@@ -5,12 +5,16 @@ import dynamic from "next/dynamic";
 import { EmptyState } from "@/components/primitives/empty-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ApiError } from "@/lib/api";
 import { useDocumentFile } from "@/lib/invoices";
+import { NoDocument } from "./no-document";
 
 const PdfViewer = dynamic(() => import("./pdf-viewer").then((module) => module.PdfViewer), {
   ssr: false,
   loading: () => <Skeleton className="m-3 h-[60vh]" />,
 });
+
+const HTTP_NOT_FOUND = 404;
 
 export interface PdfPaneProps {
   documentId: string | null;
@@ -20,14 +24,9 @@ export interface PdfPaneProps {
 export function PdfPane({ documentId }: PdfPaneProps) {
   const file = useDocumentFile(documentId);
 
-  if (documentId === null) {
-    return (
-      <div className="flex h-full items-center justify-center p-6">
-        <EmptyState icon={FileText} title="No source document" description="This invoice has no attached file, so there is nothing to render on this side." />
-      </div>
-    );
-  }
+  if (documentId === null) return <NoDocument />;
   if (file.isPending) return <Skeleton className="m-3 h-[60vh]" />;
+  if (file.isError && file.error instanceof ApiError && file.error.status === HTTP_NOT_FOUND) return <NoDocument />;
   if (file.isError) {
     return (
       <div className="flex h-full items-center justify-center p-6">

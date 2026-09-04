@@ -54,7 +54,7 @@ export function LineTable({ lines, computed, supplyType, issues, onChange, onAdd
   return (
     <section aria-label="Line items" className="space-y-2">
       <div className="overflow-x-auto rounded-md border border-border">
-        <table className="w-full text-xs">
+        <table className="w-full min-w-[64rem] text-xs">
           <thead className="bg-background text-left text-muted">
             <tr>
               <th className="px-2 py-1.5 font-medium">#</th>
