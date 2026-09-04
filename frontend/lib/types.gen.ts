@@ -2209,7 +2209,7 @@ export interface components {
          *     * `not_invoice` - Not Invoice
          * @enum {string}
          */
-        DocumentStatusEnum: "pending" | "extracting" | "extracted" | "failed" | "superseded" | "not_invoice" | "not_invoice";
+        DocumentStatusEnum: "pending" | "extracting" | "extracted" | "failed" | "superseded" | "not_invoice";
         Draft: {
             /** Format: uuid */
             readonly id: string;

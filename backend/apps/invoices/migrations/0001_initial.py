@@ -8,139 +8,375 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('accounts', '0001_initial'),
-        ('documents', '0002_extractionrun'),
-        ('parties', '0001_initial'),
+        ("accounts", "0001_initial"),
+        ("documents", "0002_extractionrun"),
+        ("parties", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Invoice',
+            name="Invoice",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('direction', models.CharField(choices=[('inward', 'Inward'), ('outward', 'Outward')], max_length=8)),
-                ('invoice_number', models.CharField(max_length=32)),
-                ('invoice_date', models.DateField()),
-                ('due_date', models.DateField(blank=True, null=True)),
-                ('place_of_supply_state_code', models.CharField(blank=True, max_length=2)),
-                ('supply_type', models.CharField(choices=[('intra', 'Intra'), ('inter', 'Inter'), ('export', 'Export'), ('sez', 'Sez'), ('import', 'Import')], default='intra', max_length=8)),
-                ('is_reverse_charge', models.BooleanField(default=False)),
-                ('irn', models.CharField(blank=True, max_length=64)),
-                ('has_qr', models.BooleanField(default=False)),
-                ('currency', models.CharField(default='INR', max_length=3)),
-                ('taxable_value', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('cgst', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('sgst', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('igst', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('cess', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('round_off', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('total', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('amount_paid', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('payment_status', models.CharField(choices=[('unpaid', 'Unpaid'), ('partial', 'Partial'), ('paid', 'Paid'), ('overdue', 'Overdue'), ('written_off', 'Written Off')], default='unpaid', max_length=12)),
-                ('itc_eligible', models.BooleanField(default=True)),
-                ('itc_blocked_reason', models.CharField(blank=True, max_length=200)),
-                ('status', models.CharField(choices=[('needs_review', 'Needs Review'), ('confirmed', 'Confirmed'), ('rejected', 'Rejected'), ('duplicate', 'Duplicate')], default='needs_review', max_length=14)),
-                ('validation_status', models.CharField(choices=[('valid', 'Valid'), ('warnings', 'Warnings'), ('invalid', 'Invalid')], default='valid', max_length=10)),
-                ('confidence', models.DecimalField(decimal_places=3, default=Decimal('0'), max_digits=4)),
-                ('layout_hash', models.CharField(blank=True, max_length=64)),
-                ('reviewed_at', models.DateTimeField(blank=True, null=True)),
-                ('fy', models.CharField(max_length=7)),
-                ('period_month', models.CharField(max_length=7)),
-                ('notes', models.TextField(blank=True)),
-                ('bank_details', models.JSONField(blank=True, default=dict)),
-                ('payment_terms', models.CharField(blank=True, max_length=100)),
-                ('document', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='invoices', to='documents.document')),
-                ('duplicate_of', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='invoices.invoice')),
-                ('extraction_run', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='documents.extractionrun')),
-                ('gstin_profile', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='accounts.gstinprofile')),
-                ('org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='accounts.organization')),
-                ('party', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='invoices', to='parties.party')),
-                ('reviewed_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "direction",
+                    models.CharField(
+                        choices=[("inward", "Inward"), ("outward", "Outward")], max_length=8
+                    ),
+                ),
+                ("invoice_number", models.CharField(max_length=32)),
+                ("invoice_date", models.DateField()),
+                ("due_date", models.DateField(blank=True, null=True)),
+                ("place_of_supply_state_code", models.CharField(blank=True, max_length=2)),
+                (
+                    "supply_type",
+                    models.CharField(
+                        choices=[
+                            ("intra", "Intra"),
+                            ("inter", "Inter"),
+                            ("export", "Export"),
+                            ("sez", "Sez"),
+                            ("import", "Import"),
+                        ],
+                        default="intra",
+                        max_length=8,
+                    ),
+                ),
+                ("is_reverse_charge", models.BooleanField(default=False)),
+                ("irn", models.CharField(blank=True, max_length=64)),
+                ("has_qr", models.BooleanField(default=False)),
+                ("currency", models.CharField(default="INR", max_length=3)),
+                (
+                    "taxable_value",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "cgst",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "sgst",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "igst",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "cess",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "round_off",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "total",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "amount_paid",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "payment_status",
+                    models.CharField(
+                        choices=[
+                            ("unpaid", "Unpaid"),
+                            ("partial", "Partial"),
+                            ("paid", "Paid"),
+                            ("overdue", "Overdue"),
+                            ("written_off", "Written Off"),
+                        ],
+                        default="unpaid",
+                        max_length=12,
+                    ),
+                ),
+                ("itc_eligible", models.BooleanField(default=True)),
+                ("itc_blocked_reason", models.CharField(blank=True, max_length=200)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("needs_review", "Needs Review"),
+                            ("confirmed", "Confirmed"),
+                            ("rejected", "Rejected"),
+                            ("duplicate", "Duplicate"),
+                        ],
+                        default="needs_review",
+                        max_length=14,
+                    ),
+                ),
+                (
+                    "validation_status",
+                    models.CharField(
+                        choices=[
+                            ("valid", "Valid"),
+                            ("warnings", "Warnings"),
+                            ("invalid", "Invalid"),
+                        ],
+                        default="valid",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "confidence",
+                    models.DecimalField(decimal_places=3, default=Decimal("0"), max_digits=4),
+                ),
+                ("layout_hash", models.CharField(blank=True, max_length=64)),
+                ("reviewed_at", models.DateTimeField(blank=True, null=True)),
+                ("fy", models.CharField(max_length=7)),
+                ("period_month", models.CharField(max_length=7)),
+                ("notes", models.TextField(blank=True)),
+                ("bank_details", models.JSONField(blank=True, default=dict)),
+                ("payment_terms", models.CharField(blank=True, max_length=100)),
+                (
+                    "document",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="invoices",
+                        to="documents.document",
+                    ),
+                ),
+                (
+                    "duplicate_of",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="invoices.invoice",
+                    ),
+                ),
+                (
+                    "extraction_run",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="documents.extractionrun",
+                    ),
+                ),
+                (
+                    "gstin_profile",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="accounts.gstinprofile",
+                    ),
+                ),
+                (
+                    "org",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="accounts.organization",
+                    ),
+                ),
+                (
+                    "party",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="invoices",
+                        to="parties.party",
+                    ),
+                ),
+                (
+                    "reviewed_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at'],
-                'abstract': False,
+                "ordering": ["-created_at"],
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='InvoiceLine',
+            name="InvoiceLine",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('line_no', models.PositiveSmallIntegerField()),
-                ('description', models.CharField(blank=True, max_length=500)),
-                ('hsn_sac', models.CharField(blank=True, max_length=8)),
-                ('quantity', models.DecimalField(decimal_places=3, default=Decimal('1'), max_digits=14)),
-                ('uom', models.CharField(blank=True, max_length=20)),
-                ('unit_price', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('discount', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('taxable_value', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('rate', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=5)),
-                ('cess_rate', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=5)),
-                ('cgst', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('sgst', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('igst', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('cess', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('line_total', models.DecimalField(decimal_places=2, default=Decimal('0'), max_digits=14)),
-                ('confidence', models.DecimalField(decimal_places=3, default=Decimal('0'), max_digits=4)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='parties.expensecategory')),
-                ('invoice', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lines', to='invoices.invoice')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("line_no", models.PositiveSmallIntegerField()),
+                ("description", models.CharField(blank=True, max_length=500)),
+                ("hsn_sac", models.CharField(blank=True, max_length=8)),
+                (
+                    "quantity",
+                    models.DecimalField(decimal_places=3, default=Decimal("1"), max_digits=14),
+                ),
+                ("uom", models.CharField(blank=True, max_length=20)),
+                (
+                    "unit_price",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "discount",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "taxable_value",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                ("rate", models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=5)),
+                (
+                    "cess_rate",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=5),
+                ),
+                (
+                    "cgst",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "sgst",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "igst",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "cess",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "line_total",
+                    models.DecimalField(decimal_places=2, default=Decimal("0"), max_digits=14),
+                ),
+                (
+                    "confidence",
+                    models.DecimalField(decimal_places=3, default=Decimal("0"), max_digits=4),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="parties.expensecategory",
+                    ),
+                ),
+                (
+                    "invoice",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="lines",
+                        to="invoices.invoice",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['line_no'],
-                'abstract': False,
+                "ordering": ["line_no"],
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='ValidationIssue',
+            name="ValidationIssue",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('code', models.CharField(max_length=40)),
-                ('severity', models.CharField(max_length=10)),
-                ('field', models.CharField(blank=True, max_length=80)),
-                ('message', models.CharField(max_length=500)),
-                ('resolved_at', models.DateTimeField(blank=True, null=True)),
-                ('note', models.CharField(blank=True, max_length=500)),
-                ('invoice', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='issues', to='invoices.invoice')),
-                ('resolved_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("code", models.CharField(max_length=40)),
+                ("severity", models.CharField(max_length=10)),
+                ("field", models.CharField(blank=True, max_length=80)),
+                ("message", models.CharField(max_length=500)),
+                ("resolved_at", models.DateTimeField(blank=True, null=True)),
+                ("note", models.CharField(blank=True, max_length=500)),
+                (
+                    "invoice",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="issues",
+                        to="invoices.invoice",
+                    ),
+                ),
+                (
+                    "resolved_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['created_at'],
-                'abstract': False,
+                "ordering": ["created_at"],
+                "abstract": False,
             },
         ),
         migrations.AddIndex(
-            model_name='invoice',
-            index=models.Index(fields=['org', 'status'], name='invoices_in_org_id_e1280f_idx'),
+            model_name="invoice",
+            index=models.Index(fields=["org", "status"], name="invoices_in_org_id_e1280f_idx"),
         ),
         migrations.AddIndex(
-            model_name='invoice',
-            index=models.Index(fields=['org', 'direction', 'invoice_date'], name='invoices_in_org_id_fa2c39_idx'),
+            model_name="invoice",
+            index=models.Index(
+                fields=["org", "direction", "invoice_date"], name="invoices_in_org_id_fa2c39_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='invoice',
-            index=models.Index(fields=['org', 'payment_status', 'due_date'], name='invoices_in_org_id_1f02ff_idx'),
+            model_name="invoice",
+            index=models.Index(
+                fields=["org", "payment_status", "due_date"], name="invoices_in_org_id_1f02ff_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='invoice',
-            constraint=models.UniqueConstraint(condition=models.Q(('status', 'duplicate'), _negated=True), fields=('org', 'party', 'invoice_number', 'fy'), name='uq_invoice_number_per_fy'),
+            model_name="invoice",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(("status", "duplicate"), _negated=True),
+                fields=("org", "party", "invoice_number", "fy"),
+                name="uq_invoice_number_per_fy",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='invoice',
-            constraint=models.CheckConstraint(condition=models.Q(('igst', 0), models.Q(('cgst', 0), ('sgst', 0)), _connector='OR'), name='ck_invoice_one_tax_head'),
+            model_name="invoice",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("igst", 0), models.Q(("cgst", 0), ("sgst", 0)), _connector="OR"
+                ),
+                name="ck_invoice_one_tax_head",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='invoiceline',
-            constraint=models.CheckConstraint(condition=models.Q(('igst', 0), models.Q(('cgst', 0), ('sgst', 0)), _connector='OR'), name='ck_line_one_tax_head'),
+            model_name="invoiceline",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("igst", 0), models.Q(("cgst", 0), ("sgst", 0)), _connector="OR"
+                ),
+                name="ck_line_one_tax_head",
+            ),
         ),
     ]
