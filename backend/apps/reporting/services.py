@@ -118,9 +118,13 @@ def _basis_rows(org: Any, period: Period, direction: str) -> Any:
     )
 
 
+def _q(v: Decimal) -> Decimal:
+    return v.quantize(Decimal("0.01"))
+
+
 def summary(org: Any, period: Period) -> dict[str, Any]:
-    rev = _basis_rows(org, period, "outward").aggregate(v=_sum("basis_amount"))["v"]
-    exp = _basis_rows(org, period, "inward").aggregate(v=_sum("basis_amount"))["v"]
+    rev = _q(_basis_rows(org, period, "outward").aggregate(v=_sum("basis_amount"))["v"])
+    exp = _q(_basis_rows(org, period, "inward").aggregate(v=_sum("basis_amount"))["v"])
     cogs = _cogs(org, period)
     tax = tax_liability(org, period)
     gross = rev - cogs
@@ -160,14 +164,14 @@ def _cogs(org: Any, period: Period) -> Decimal:
 
 def pnl(org: Any, period: Period) -> dict[str, Any]:
     rev = {
-        r["month"]: r["v"]
+        r["month"]: _q(r["v"])
         for r in _basis_rows(org, period, "outward")
         .values("month")
         .annotate(v=_sum("basis_amount"))
         .order_by("month")
     }
     exp = {
-        r["month"]: r["v"]
+        r["month"]: _q(r["v"])
         for r in _basis_rows(org, period, "inward")
         .values("month")
         .annotate(v=_sum("basis_amount"))

@@ -146,4 +146,4 @@ def test_bad_params_are_400_and_unknown_report_404(demo_client) -> None:  # type
 
 def test_reports_are_org_scoped(client_b) -> None:  # type: ignore[no-untyped-def]
     r = client_b.get("/api/reports/summary")
-    assert r.status_code == 200 and r.json()["revenue"] == "0"
+    assert r.status_code == 200 and r.json()["revenue"] == "0.00"
