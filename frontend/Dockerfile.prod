@@ -7,6 +7,10 @@ FROM node:20-alpine AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# `output: standalone` serialises next.config at BUILD time, and /.dockerenv does not exist
+# during a build, so the proxy target must be supplied here or it bakes in localhost.
+ARG API_PROXY_URL=http://backend:8000
+ENV API_PROXY_URL=$API_PROXY_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 

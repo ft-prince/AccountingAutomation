@@ -80,13 +80,14 @@ services:
       backend: { condition: service_healthy }
 
   frontend:
-    build: ./frontend
-    environment:
-      API_PROXY_URL: http://backend:8000
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+    # Production build: routes are prebuilt, so pages serve instantly. Dev mode compiled each
+    # route on first visit (~18s for /login) and the macOS bind mount made it worse.
+    # For hot reload while developing, run `npm run dev` on the host instead.
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        API_PROXY_URL: http://backend:8000
     ports: ["3000:3000"]
     depends_on:
       backend: { condition: service_healthy }
