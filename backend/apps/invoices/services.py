@@ -96,17 +96,122 @@ def _supply_kind(st: SupplyType) -> str:
     return SupplyKind(st.value.lower())
 
 
+ORG_GSTIN_MISMATCH = "ORG_GSTIN_MISMATCH"
+_MSG_SAME_PAN = (
+    "{gstin} shares our PAN but is not a registered GSTIN of this organisation; add it in Settings."
+)
+_MSG_OUR_NAME = (
+    "{role} in our name but GSTIN {gstin} is not registered for this organisation; "
+    "add it in Settings or correct the invoice."
+)
+_MSG_UNKNOWN = (
+    "Neither GSTIN on this invoice belongs to this organisation. Filed as a vendor bill "
+    "for review; confirm the direction and the party."
+)
+
+
+def _org_name_tokens(org: Organization) -> set[str]:
+    """Distinctive words of the org's names, for the last-resort name match."""
+    stop = {"private", "limited", "pvt", "ltd", "llp", "inc", "the", "and", "of", "co"}
+    words = f"{org.name} {org.legal_name}".lower().replace(".", " ").replace(",", " ").split()
+    return {w for w in words if len(w) > 2 and w not in stop}
+
+
+def _names_us(org: Organization, name: str) -> bool:
+    tokens = _org_name_tokens(org)
+    return bool(tokens) and bool(tokens & set(name.lower().replace(".", " ").split()))
+
+
 def resolve_side(
     org: Organization, parsed: ExtractedInvoice
-) -> tuple[str, GSTINProfile, dict[str, Any]]:
-    """Which side is us? Returns (direction, our GSTINProfile, the other party's block)."""
+) -> tuple[str, GSTINProfile | None, dict[str, Any], list[dict[str, Any]]]:
+    """Which side is us? Returns (direction, our GSTINProfile, the other party's block, issues).
+
+    Never raises for an unrecognised invoice: a human decides in review. The ladder is
+    exact GSTIN match → same PAN (another registration of ours) → our name printed on the
+    invoice → assume a vendor bill and attach a blocking ORG_GSTIN_MISMATCH issue."""
     profiles = {p.gstin: p for p in GSTINProfile.objects.for_org(org)}
+    default = next((p for p in profiles.values() if p.is_default), None) or next(
+        iter(profiles.values()), None
+    )
     sup, rec = parsed.supplier.gstin.strip().upper(), parsed.recipient.gstin.strip().upper()
+    supplier, recipient = parsed.supplier.model_dump(), parsed.recipient.model_dump()
     if rec in profiles:
-        return Direction.INWARD, profiles[rec], parsed.supplier.model_dump()
+        return Direction.INWARD, profiles[rec], supplier, []
     if sup in profiles:
-        return Direction.OUTWARD, profiles[sup], parsed.recipient.model_dump()
-    raise IngestError("Neither supplier nor recipient GSTIN belongs to this organisation.")
+        return Direction.OUTWARD, profiles[sup], recipient, []
+
+    pan = (org.pan or "").strip().upper()
+    if pan and len(rec) == 15 and rec[2:12] == pan:
+        return (
+            Direction.INWARD,
+            default,
+            supplier,
+            [
+                _side_issue(
+                    "warning",
+                    "recipient_gstin",
+                    _MSG_SAME_PAN.format(gstin=rec),
+                )
+            ],
+        )
+    if pan and len(sup) == 15 and sup[2:12] == pan:
+        return (
+            Direction.OUTWARD,
+            default,
+            recipient,
+            [
+                _side_issue(
+                    "warning",
+                    "supplier_gstin",
+                    _MSG_SAME_PAN.format(gstin=sup),
+                )
+            ],
+        )
+
+    if _names_us(org, parsed.recipient.name) and not _names_us(org, parsed.supplier.name):
+        return (
+            Direction.INWARD,
+            default,
+            supplier,
+            [
+                _side_issue(
+                    "error",
+                    "recipient_gstin",
+                    _MSG_OUR_NAME.format(role="Billed", gstin=rec or "(none)"),
+                )
+            ],
+        )
+    if _names_us(org, parsed.supplier.name) and not _names_us(org, parsed.recipient.name):
+        return (
+            Direction.OUTWARD,
+            default,
+            recipient,
+            [
+                _side_issue(
+                    "error",
+                    "supplier_gstin",
+                    _MSG_OUR_NAME.format(role="Issued", gstin=sup or "(none)"),
+                )
+            ],
+        )
+
+    return (
+        Direction.INWARD,
+        default,
+        supplier,
+        [
+            _side_issue(
+                "error",
+                "recipient_gstin",
+                _MSG_UNKNOWN,
+            )
+        ],
+    )
+
+
+def _side_issue(severity: str, field: str, message: str) -> dict[str, Any]:
+    return {"code": ORG_GSTIN_MISMATCH, "severity": severity, "field": field, "message": message}
 
 
 def resolve_party(org: Organization, other: dict[str, Any], direction: str) -> Party:
@@ -207,7 +312,7 @@ def ingest_extraction(run: ExtractionRun, *, client: Any = None) -> Invoice:
         raise IngestError("Extraction run has no parsed output.")
     org = run.document.org
     parsed = ExtractedInvoice.model_validate(run.parsed)
-    direction, profile, other = resolve_side(org, parsed)
+    direction, profile, other, side_issues = resolve_side(org, parsed)
     party = resolve_party(org, other, direction)
     inv_date = parse_iso_date(parsed.invoice.date) or date.today()
     supplier_state = parsed.supplier.gstin[:2] or parsed.supplier.state_code
@@ -218,7 +323,7 @@ def ingest_extraction(run: ExtractionRun, *, client: Any = None) -> Invoice:
         supplier_state,
         pos or supplier_state,
         is_export=False,
-        is_sez=profile.registration_type == "sez",
+        is_sez=profile is not None and profile.registration_type == "sez",
     )
     line_inputs = [
         LineInput(
@@ -250,7 +355,7 @@ def ingest_extraction(run: ExtractionRun, *, client: Any = None) -> Invoice:
             parsed, vendor_einvoice_applicable=party.aato_bracket != "below_5cr"
         )
     ]
-    issues = domain_issues + deltas
+    issues = domain_issues + deltas + side_issues
     confidence = (
         Decimal(str(min(parsed.field_confidence.values())))
         if parsed.field_confidence

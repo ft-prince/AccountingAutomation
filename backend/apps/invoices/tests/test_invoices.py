@@ -13,7 +13,7 @@ from apps.documents.factories import DocumentFactory
 from apps.documents.models import ExtractionRun
 from apps.invoices.factories import InvoiceFactory, LineFactory
 from apps.invoices.models import InvoiceStatus
-from apps.invoices.services import IngestError, ingest_extraction
+from apps.invoices.services import ingest_extraction
 from apps.parties.factories import PartyFactory
 from apps.parties.models import Party
 
@@ -103,9 +103,34 @@ def test_db_check_rejects_both_heads(org_a) -> None:  # type: ignore[no-untyped-
         LineFactory(invoice=inv, cgst=Decimal("1"), igst=Decimal("1"))
 
 
-def test_unknown_gstin_on_both_sides_raises(org_a) -> None:  # type: ignore[no-untyped-def]
-    with pytest.raises(IngestError):
-        ingest_extraction(_run(org_a.org, "acme_intra_18"))
+def test_unknown_gstin_on_both_sides_is_filed_for_review_not_lost(org_a) -> None:  # type: ignore[no-untyped-def]
+    """The extraction worked; refusing to store it would throw that work away. A human decides."""
+    org = org_a.org
+    org.name, org.legal_name, org.pan = "Someone Else", "", ""
+    org.save()
+    inv = ingest_extraction(_run(org, "acme_intra_18"))
+    assert inv.direction == "inward" and inv.status == "needs_review"
+    assert inv.validation_status == "invalid"
+    issue = inv.issues.get(code="ORG_GSTIN_MISMATCH")
+    assert issue.severity == "error" and "Neither GSTIN" in issue.message
+
+
+def test_side_resolves_by_pan_then_by_name(org_a) -> None:  # type: ignore[no-untyped-def]
+    org = org_a.org
+    # Recipient 27AAGFF2194N1ZZ carries PAN AAGFF2194N: another registration of ours.
+    org.pan, org.name = "AAGFF2194N", "Unrelated Name"
+    org.save()
+    inv = ingest_extraction(_run(org, "acme_intra_18"))
+    assert (
+        inv.direction == "inward"
+        and inv.issues.get(code="ORG_GSTIN_MISMATCH").severity == "warning"
+    )
+    # No PAN, but our name is printed as the recipient.
+    org.pan, org.name = "", "Nexren AI Private Limited"
+    org.save()
+    inv2 = ingest_extraction(_run(org, "acme_intra_18", **{"invoice.number": "AW/25-26/0099"}))
+    assert inv2.direction == "inward" and inv2.party.gstin == "27AAPFU0939F1ZV"
+    assert inv2.issues.get(code="ORG_GSTIN_MISMATCH").severity == "error"
 
 
 def test_outward_direction_when_we_are_supplier(org_a) -> None:  # type: ignore[no-untyped-def]

@@ -3,12 +3,13 @@
 import logging
 
 from celery import shared_task
+from django.conf import settings
 
 from apps.documents.models import Document, DocumentStatus
 from apps.documents.services import mark_failed
 
 log = logging.getLogger(__name__)
-MAX_ATTEMPTS = 3
+MAX_ATTEMPTS = 6  # paced by EXTRACTION_RATE_LIMIT, so retries mostly wait rather than fail
 
 
 def run_extraction(document: Document) -> None:
@@ -27,6 +28,7 @@ def run_extraction(document: Document) -> None:
     retry_backoff_max=600,
     retry_jitter=True,
     max_retries=MAX_ATTEMPTS - 1,
+    rate_limit=settings.EXTRACTION_RATE_LIMIT,
 )
 def extract_document(self, document_id: str) -> str:  # type: ignore[no-untyped-def]
     doc = Document.objects.filter(pk=document_id).first()

@@ -124,7 +124,7 @@ def test_task_records_failure_reason_after_max_attempts(org_a, monkeypatch) -> N
 
 
 def test_task_retry_config() -> None:
-    assert extract_document.max_retries == 2  # 3 attempts total
+    assert extract_document.max_retries == 5  # 6 attempts, paced
     assert extract_document.retry_backoff is True
 
 
@@ -132,3 +132,8 @@ def test_missing_document_is_noop() -> None:
     import uuid
 
     assert extract_document.apply(args=[str(uuid.uuid4())]).get() == "missing"
+
+
+def test_extraction_is_rate_limited_and_retries_wait() -> None:
+    assert extract_document.rate_limit  # paced to the provider's token budget
+    assert extract_document.max_retries == 5  # six attempts, mostly waiting on the limiter

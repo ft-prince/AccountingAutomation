@@ -149,6 +149,11 @@ GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
 # Celery rate limit for email classification, matched to the provider's tokens-per-minute
 # budget (Groq's free tier is 8k TPM and one classification costs roughly 3-4k).
 CLASSIFY_RATE_LIMIT = env("CLASSIFY_RATE_LIMIT", default="2/m")
+# One extraction is ~5-8k tokens; Groq's free tier allows 8k per minute, so one a minute is
+# the honest default there. Raise it on a paid tier or on Anthropic.
+EXTRACTION_RATE_LIMIT = env(
+    "EXTRACTION_RATE_LIMIT", default="1/m" if LLM_PROVIDER == "groq" else "30/m"
+)
 
 GROQ_PRICE_USD_PER_MTOK = {
     "input": Decimal(env("GROQ_PRICE_INPUT", default="0")),
