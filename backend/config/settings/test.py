@@ -17,3 +17,8 @@ REST_FRAMEWORK = {
         "forecast": "100000/hour",
     },
 }  # noqa: F405
+
+# The suite stubs the Anthropic client shape, and must never depend on a developer's local
+# .env choosing a provider. Groq is covered explicitly in apps/core/tests/test_llm.py.
+LLM_PROVIDER = "anthropic"
+GROQ_API_KEY = ""
