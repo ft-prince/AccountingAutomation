@@ -140,7 +140,8 @@ USD_INR_RATE = Decimal(env("USD_INR_RATE", default="84.00"))
 LLM_PROVIDER = env("LLM_PROVIDER", default="anthropic")
 GROQ_API_KEY = env("GROQ_API_KEY", default="")
 GROQ_BASE_URL = env("GROQ_BASE_URL", default="https://api.groq.com/openai/v1")
-GROQ_MODEL = env("GROQ_MODEL", default="llama-3.3-70b-versatile")
+# Verify against GET /v1/models for your account; availability differs per plan.
+GROQ_MODEL = env("GROQ_MODEL", default="openai/gpt-oss-120b")
 # Groq models are text-in; a scanned PDF needs a vision-capable model or it is refused.
 GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
 # USD per million tokens. Groq's free tier is 0; set these when you move to a paid plan,
