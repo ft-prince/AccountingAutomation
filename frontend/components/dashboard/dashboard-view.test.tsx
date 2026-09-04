@@ -5,13 +5,14 @@ import { DashboardView } from "./dashboard-view";
 
 // Recharts needs layout; the charts are unit-tested through lib/chart-data. Here only the frame matters.
 vi.mock("@/components/charts", () => ({
-  ChartFrame: ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <section aria-label={title}>{children}</section>
+  ChartFrame: ({ title, children, actions }: { title: string; children: React.ReactNode; actions?: React.ReactNode }) => (
+    <section aria-label={title}>{actions}{children}</section>
   ),
   PnlBars: () => <div data-testid="pnl" />,
   CategoryDonut: () => <div data-testid="donut" />,
   AgingStacked: () => <div data-testid="aging" />,
   HorizontalBars: () => <div data-testid="bars" />,
+  ForecastBand: () => <div data-testid="forecast-band" />,
 }));
 
 const meta = { fy: "2026-27", period: { from: "2026-04-01", to: "2026-09-04" }, basis: "accrual", invoice_count: 182, pending_count: 12 };
@@ -28,9 +29,17 @@ const REPORTS: Record<string, unknown> = {
   "cash-position": { accounts: [{ account: "a", name: "HDFC Current", balance: "90586823.00", as_of: "2026-09-04", source: "statement", unmatched: { count: 8, credits: "1", debits: "-1" } }], total_cash: "90586823.00", meta },
 };
 
+function json(body: unknown): Response {
+  return new Response(JSON.stringify(body), { status: 200, headers: { "Content-Type": "application/json" } });
+}
+
 function mockFetch() {
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    if (url.includes("/api/forecast/latest")) return json({ id: "run1", as_of: "2026-09-04", horizon_days: 91, insufficient_history: false, runway_date: null, backtest_coverage: "0.82", backtest_n_origins: 4, points: [{ date: "2026-09-05", p10: "1", p50: "2", p90: "3", deterministic: "2" }] });
+    if (url.includes("/api/forecast/anomalies")) return json({ as_of: "2026-09-04", window_days: 90, expenses: [], duplicates: [{ invoice: "inv9", kind: "duplicate", party: "p", party_name: "Acme", category: null, category_name: "", z: null, detail: "same amount within 7 days", related_invoice: "inv8" }], concentration: { top1_party: null, top1_party_name: "", top1_share: "0", top3_parties: [], top3_share: "0", is_top1_flagged: false, is_top3_flagged: false } });
+    if (url.includes("/api/forecast/risk/customers")) return json([{ party: "p7", party_name: "Slowpay Ltd", score: "0.91", band: "high", drivers: ["share overdue 60%"], mean_days: "70", std_days: "10", trend_days: "5", share_overdue: "0.6", utilisation: null }]);
+    if (url.includes("/api/mail/review-queue")) return json([{ id: "d1" }, { id: "d2" }, { id: "d3" }]);
     const name = /\/api\/reports\/([a-z-]+)/.exec(url)?.[1] ?? "";
     const body = REPORTS[name];
     if (!body) return new Response(JSON.stringify({ title: "Not found", status: 404 }), { status: 404 });
@@ -55,14 +64,20 @@ describe("DashboardView", () => {
     expect(screen.getByText("₹3,17,70,377.00")).toBeInTheDocument(); // net
     expect(screen.getByText("₹11,38,221.00")).toBeInTheDocument(); // tax due next
     expect(screen.getByText("GSTR-1 · 11 Sep 2026")).toBeInTheDocument();
-    expect(screen.getByText("Phase 18 · forecast")).toBeInTheDocument(); // runway placeholder
+    expect(screen.getByText("> horizon")).toBeInTheDocument(); // runway tile from the latest run
+    expect(screen.getByText("13w horizon · P50")).toBeInTheDocument();
+    expect(screen.getByTestId("forecast-band")).toBeInTheDocument();
+    expect(screen.getByText("Bands calibrated · 82% coverage · 4 origins")).toBeInTheDocument();
     expect(screen.getByText("12 pending excluded")).toBeInTheDocument();
     expect(screen.getAllByText("Accrual · 12 pending").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("ITC at risk · Blocked category")).toBeInTheDocument();
     expect(screen.getByText("Drafts awaiting review")).toBeInTheDocument();
+    expect(screen.getByText("3 drafts waiting")).toBeInTheDocument();
+    expect(screen.getByText("Anomaly · Duplicate · Acme")).toBeInTheDocument();
+    expect(screen.getByText("High payment risk · Slowpay Ltd")).toBeInTheDocument();
 
     // The picker drives every query with the same period.
-    const urls = fetchSpy.mock.calls.map(([input]) => String(input));
+    const urls = fetchSpy.mock.calls.map(([input]) => String(input)).filter((url) => url.includes("/api/reports/"));
     expect(urls.every((url) => url.includes("from=2026-04-01&to=2026-09-04&basis=accrual"))).toBe(true);
     expect(new Set(urls.map((url) => /reports\/([a-z-]+)/.exec(url)?.[1])).size).toBe(9);
   });

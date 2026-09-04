@@ -1,19 +1,19 @@
 "use client";
 
-import { AlertTriangle, Clock, Construction } from "lucide-react";
+import { AlertTriangle, Clock, MailWarning, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { MoneyText } from "@/components/primitives/money-text";
 import { ICON_STROKE } from "@/lib/constants";
-import { buildAlerts, type AlertTone, type DashboardAlert } from "@/lib/dashboard-alerts";
-import type { AgingReport, ItcAtRiskReport, ReportMeta } from "@/lib/reports";
+import { buildAlerts, type AlertSources, type AlertTone, type DashboardAlert } from "@/lib/dashboard-alerts";
+import type { ReportMeta } from "@/lib/reports";
 import { BasisBadge } from "@/components/primitives/basis-badge";
 import { cn } from "@/lib/utils";
 
 const TONE_CLASS: Record<AlertTone, string> = { danger: "text-danger", warning: "text-warning", muted: "text-muted" };
-const ICONS: Record<DashboardAlert["kind"], typeof AlertTriangle> = { overdue: Clock, itc_at_risk: AlertTriangle, placeholder: Construction };
+const ICONS: Record<DashboardAlert["kind"], typeof AlertTriangle> = { overdue: Clock, itc_at_risk: AlertTriangle, anomaly: AlertTriangle, high_risk: ShieldAlert, drafts: MailWarning };
 
-export function AlertsFeed({ itc, arAging, meta }: { itc: ItcAtRiskReport | undefined; arAging: AgingReport | undefined; meta: ReportMeta | undefined }) {
-  const alerts = buildAlerts(itc, arAging);
+export function AlertsFeed({ sources, meta }: { sources: AlertSources; meta: ReportMeta | undefined }) {
+  const alerts = buildAlerts(sources);
   return (
     <section aria-label="Alerts" className="flex flex-col rounded-card border border-border bg-surface p-5">
       <header className="flex items-start justify-between gap-2">
@@ -37,7 +37,7 @@ export function AlertsFeed({ itc, arAging, meta }: { itc: ItcAtRiskReport | unde
             </>
           );
           return (
-            <li key={alert.id} className={cn("py-2.5", alert.kind === "placeholder" && "opacity-70")}>
+            <li key={alert.id} className="py-2.5">
               {alert.href ? (
                 <Link href={alert.href} className="flex items-start gap-3 rounded-md hover:text-accent">
                   {body}
@@ -48,6 +48,7 @@ export function AlertsFeed({ itc, arAging, meta }: { itc: ItcAtRiskReport | unde
             </li>
           );
         })}
+        {alerts.length === 0 && <li className="py-2.5 text-sm text-muted">Nothing needs attention.</li>}
       </ul>
     </section>
   );

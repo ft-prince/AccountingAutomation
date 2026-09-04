@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildAlerts, itcAlerts, overdueAlerts } from "./dashboard-alerts";
+import { anomalyAlerts, buildAlerts, draftsAlert, highRiskAlerts, itcAlerts, overdueAlerts } from "./dashboard-alerts";
 import type { AgingReport, ItcAtRiskReport, ReportMeta } from "./reports";
 
 const meta: ReportMeta = { fy: "2026-27", period: { from: "2026-04-01", to: "2026-09-04" }, basis: "accrual", invoice_count: 10, pending_count: 2 };
@@ -37,8 +37,15 @@ describe("dashboard alerts", () => {
     expect(alerts[0].title).toBe("ITC at risk · Blocked category");
   });
 
-  test("feed ends with the Phase 16/18 placeholders", () => {
-    const alerts = buildAlerts(itc, aging);
-    expect(alerts.map((alert) => alert.kind)).toEqual(["overdue", "itc_at_risk", "placeholder", "placeholder"]);
+  test("feed orders overdue, high-risk, ITC, anomalies, then the drafts count", () => {
+    const risk = [{ party: "p9", party_name: "Slow", score: "0.9", band: "high" as const, drivers: ["trend +12 d"], mean_days: "60", std_days: "5", trend_days: "12", share_overdue: "0.5", utilisation: null }];
+    const anomalies = { as_of: "2026-09-04", window_days: 90, expenses: [{ invoice: "i1", kind: "amount" as const, party: "p1", party_name: "Vedanta", category: null, category_name: "", z: "3.4", detail: "3.4 MAD above median", related_invoice: null }], duplicates: [], concentration: { top1_party: null, top1_party_name: "", top1_share: "0", top3_parties: [], top3_share: "0", is_top1_flagged: false, is_top3_flagged: false } };
+    const alerts = buildAlerts({ itc, arAging: aging, risk, anomalies, pendingDrafts: 2 });
+    expect(alerts.map((alert) => alert.kind)).toEqual(["overdue", "high_risk", "itc_at_risk", "anomaly", "drafts"]);
+    expect(highRiskAlerts(risk)[0]).toMatchObject({ title: "High payment risk · Slow", detail: "trend +12 d", href: "/parties/p9" });
+    expect(anomalyAlerts(anomalies)[0]).toMatchObject({ title: "Anomaly · Amount · Vedanta", href: "/invoices/i1" });
+    expect(draftsAlert(2)[0]).toMatchObject({ detail: "2 drafts waiting", tone: "warning" });
+    expect(draftsAlert(0)[0]).toMatchObject({ detail: "queue is clear", tone: "muted" });
+    expect(draftsAlert(undefined)).toEqual([]);
   });
 });

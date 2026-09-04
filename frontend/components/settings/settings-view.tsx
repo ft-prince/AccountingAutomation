@@ -2,17 +2,19 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/primitives/page-header";
-import { PlaceholderCard } from "@/components/primitives/placeholder-card";
 import { Tabs } from "@/components/primitives/tabs";
 import { useUser } from "@/lib/auth";
 import { ApiKeysTab } from "./api-keys-tab";
 import { CategoriesTab } from "./categories-tab";
 import { ExtractionTab } from "./extraction-tab";
+import { ForecastTab } from "./forecast-tab";
 import { GstinsTab } from "./gstins-tab";
+import { MailTab } from "./mail-tab";
 import { MembersTab } from "./members-tab";
 import { OrgTab } from "./org-tab";
 
 export type SettingsTab = "org" | "gstins" | "categories" | "members" | "extraction" | "api-keys" | "mail" | "forecast";
+export const SETTINGS_TABS: readonly SettingsTab[] = ["org", "gstins", "categories", "members", "extraction", "api-keys", "mail", "forecast"];
 
 const TABS: readonly { value: SettingsTab; label: string; hint?: string }[] = [
   { value: "org", label: "Organisation" },
@@ -21,8 +23,8 @@ const TABS: readonly { value: SettingsTab; label: string; hint?: string }[] = [
   { value: "members", label: "Users & roles" },
   { value: "extraction", label: "Extraction" },
   { value: "api-keys", label: "API keys" },
-  { value: "mail", label: "Mail", hint: "Phase 16" },
-  { value: "forecast", label: "Forecast", hint: "Phase 18" },
+  { value: "mail", label: "Mail" },
+  { value: "forecast", label: "Forecast" },
 ];
 
 const EDIT_ROLES = new Set(["owner", "accountant"]);
@@ -45,8 +47,8 @@ export function SettingsView({ initialTab = "org" }: { initialTab?: SettingsTab 
         {tab === "members" && <MembersTab isOwner={isOwner} currentEmail={me?.user.email} />}
         {tab === "extraction" && <ExtractionTab isOwner={isOwner} />}
         {tab === "api-keys" && <ApiKeysTab isOwner={isOwner} />}
-        {tab === "mail" && <PlaceholderCard title="Mailboxes, style guide and templates" phase={16} description="Connect Gmail / Microsoft, set the writing style and reply templates." className="min-h-[200px]" />}
-        {tab === "forecast" && <PlaceholderCard title="Forecast fixed lines" phase={18} description="Rent, salaries, loan EMIs and other fixed outflows for the cashflow engine." className="min-h-[200px]" />}
+        {tab === "mail" && <MailTab isOwner={isOwner} canEdit={canEdit} />}
+        {tab === "forecast" && <ForecastTab canEdit={canEdit} />}
       </div>
     </div>
   );

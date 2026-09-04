@@ -11,6 +11,7 @@ const API_PROXY_URL =
   process.env.API_PROXY_URL ?? (IN_DOCKER ? "http://backend:8000" : "http://localhost:8000");
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   outputFileTracingRoot: __dirname,
   // Django's DRF router URLs end in "/"; without this Next would 308 them to the
   // slash-less form and Django's APPEND_SLASH would bounce straight back.

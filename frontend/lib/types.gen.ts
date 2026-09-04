@@ -437,6 +437,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/exports/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["exports_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/exports/documents.zip": {
         parameters: {
             query?: never;
@@ -480,6 +496,23 @@ export interface paths {
         };
         /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
         get: operations["forecast_backtest_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/drivers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_drivers_retrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -682,6 +715,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/forecast/runs/{id}/narrative": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description §8.8: generate (or regenerate) the labelled summary from aggregates only. */
+        post: operations["forecast_runs_narrative_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/forecast/scenarios/": {
         parameters: {
             query?: never;
@@ -729,6 +779,23 @@ export interface paths {
         put?: never;
         /** @description Overlay for the UI; persists nothing, so every org member may run it. */
         post: operations["forecast_scenarios_run_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/scenarios/{id}/run/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Overlay for the UI; persists nothing, so every org member may run it. */
+        post: operations["forecast_scenarios_run_create_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -918,7 +985,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_connect_create"];
         delete?: never;
         options?: never;
@@ -933,7 +1003,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_connect_callback_retrieve"];
         put?: never;
         post?: never;
@@ -950,10 +1023,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_drafts_list"];
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_drafts_create"];
         delete?: never;
         options?: never;
@@ -968,14 +1047,20 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_drafts_retrieve"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         patch: operations["mail_drafts_partial_update"];
         trace?: never;
     };
@@ -988,7 +1073,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_drafts_acknowledge_flag_create"];
         delete?: never;
         options?: never;
@@ -1005,7 +1093,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_drafts_approve_create"];
         delete?: never;
         options?: never;
@@ -1022,7 +1113,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_drafts_reject_create"];
         delete?: never;
         options?: never;
@@ -1039,7 +1133,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_drafts_send_create"];
         delete?: never;
         options?: never;
@@ -1054,7 +1151,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_drafts_metrics_retrieve"];
         put?: never;
         post?: never;
@@ -1071,7 +1171,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_drafts_review_queue_retrieve"];
         put?: never;
         post?: never;
@@ -1088,10 +1191,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_mailboxes_list"];
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_mailboxes_create"];
         delete?: never;
         options?: never;
@@ -1106,7 +1215,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_mailboxes_retrieve"];
         put?: never;
         post?: never;
@@ -1125,7 +1237,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_mailboxes_grant_send_scope_create"];
         delete?: never;
         options?: never;
@@ -1142,7 +1257,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_mailboxes_revoke_create"];
         delete?: never;
         options?: never;
@@ -1159,7 +1277,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_mailboxes_connect_create"];
         delete?: never;
         options?: never;
@@ -1174,7 +1295,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_mailboxes_connect_callback_retrieve"];
         put?: never;
         post?: never;
@@ -1191,7 +1315,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_metrics_retrieve"];
         put?: never;
         post?: never;
@@ -1208,7 +1335,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_review_queue_retrieve"];
         put?: never;
         post?: never;
@@ -1243,10 +1373,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_templates_list"];
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_templates_create"];
         delete?: never;
         options?: never;
@@ -1261,7 +1397,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_templates_retrieve"];
         put?: never;
         post?: never;
@@ -1278,10 +1417,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_threads_list"];
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_threads_create"];
         delete?: never;
         options?: never;
@@ -1296,7 +1441,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         get: operations["mail_threads_retrieve"];
         put?: never;
         post?: never;
@@ -1315,7 +1463,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_threads_close_create"];
         delete?: never;
         options?: never;
@@ -1332,7 +1483,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_threads_draft_create"];
         delete?: never;
         options?: never;
@@ -1349,7 +1503,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_threads_ignore_create"];
         delete?: never;
         options?: never;
@@ -1366,7 +1523,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /**
+         * @description `path(..., ViewSet.as_view({...}))` routes never receive the @action initkwargs, so a
+         *     declared permission_classes would silently vanish there. Apply them on every route.
+         */
         post: operations["mail_threads_snooze_create"];
         delete?: never;
         options?: never;
@@ -1534,6 +1694,162 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reconciliation/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reconciliation_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["reconciliation_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reconciliation_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/import-2b/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["reconciliation_import_2b_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/matches/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reconciliation_matches_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/matches/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reconciliation_matches_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["reconciliation_matches_partial_update"];
+        trace?: never;
+    };
+    "/api/reconciliation/records/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reconciliation_records_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["reconciliation_records_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/records/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reconciliation_records_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/records/{id}/ims/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["reconciliation_records_ims_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reconciliation/run/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["reconciliation_run_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/{name}": {
         parameters: {
             query?: never;
@@ -1549,6 +1865,43 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/reports/schedules/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reports_schedules_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["reports_schedules_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports/schedules/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["reports_schedules_retrieve"];
+        put?: never;
+        post?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        delete: operations["reports_schedules_destroy"];
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["reports_schedules_partial_update"];
         trace?: never;
     };
     "/api/settings": {
@@ -1617,16 +1970,28 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
         };
-        /** @enum {unknown} */
-        BlankEnum: "";
+        Batch: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly period: string;
+            readonly source: components["schemas"]["BatchSourceEnum"];
+            readonly filename: string;
+            /** Format: email */
+            readonly imported_by: string;
+            /** Format: date-time */
+            readonly imported_at: string;
+            readonly counts: unknown;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /**
-         * @description * `monthly` - Monthly
-         *     * `quarterly` - Quarterly
-         *     * `yearly` - Yearly
-         *     * `once` - Once
+         * @description * `json` - Json
+         *     * `xlsx` - Xlsx
          * @enum {string}
          */
-        CadenceEnum: "monthly" | "quarterly" | "yearly" | "once";
+        BatchSourceEnum: "json" | "xlsx";
+        /** @enum {unknown} */
+        BlankEnum: "";
         Category: {
             /** Format: uuid */
             readonly id: string;
@@ -1655,7 +2020,7 @@ export interface components {
             readonly size_bytes: number;
             readonly page_count: number | null;
             readonly sha256: string;
-            readonly source: components["schemas"]["SourceEnum"];
+            readonly source: components["schemas"]["DocumentSourceEnum"];
             readonly status: components["schemas"]["DocumentStatusEnum"];
             readonly error: string;
             readonly attempts: number;
@@ -1668,6 +2033,13 @@ export interface components {
             /** Format: uuid */
             readonly duplicate_of: string;
         };
+        /**
+         * @description * `upload` - Upload
+         *     * `email` - Email
+         *     * `api` - Api
+         * @enum {string}
+         */
+        DocumentSourceEnum: "upload" | "email" | "api";
         /**
          * @description * `pending` - Pending
          *     * `extracting` - Extracting
@@ -1755,7 +2127,7 @@ export interface components {
             name: string;
             /** Format: decimal */
             amount?: string;
-            cadence?: components["schemas"]["CadenceEnum"];
+            cadence?: components["schemas"]["FixedLineCadenceEnum"];
             /** Format: date */
             next_date: string;
             direction?: components["schemas"]["FixedLineDirectionEnum"];
@@ -1763,6 +2135,14 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
         };
+        /**
+         * @description * `monthly` - Monthly
+         *     * `quarterly` - Quarterly
+         *     * `yearly` - Yearly
+         *     * `once` - Once
+         * @enum {string}
+         */
+        FixedLineCadenceEnum: "monthly" | "quarterly" | "yearly" | "once";
         /**
          * @description * `inflow` - Inflow
          *     * `outflow` - Outflow
@@ -1834,6 +2214,12 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
         };
+        /**
+         * @description * `pdf` - Pdf
+         *     * `xlsx` - Xlsx
+         * @enum {string}
+         */
+        FormatEnum: "pdf" | "xlsx";
         GSTINProfile: {
             /** Format: uuid */
             readonly id: string;
@@ -1850,6 +2236,13 @@ export interface components {
             readonly created_at: string;
         };
         /**
+         * @description * `accept` - Accept
+         *     * `reject` - Reject
+         *     * `pend` - Pend
+         * @enum {string}
+         */
+        ImsActionEnum: "accept" | "reject" | "pend";
+        /**
          * @description * `invoice_query` - Invoice Query
          *     * `payment_confirmation` - Payment Confirmation
          *     * `payment_delay_notice` - Payment Delay Notice
@@ -1865,6 +2258,22 @@ export interface components {
          * @enum {string}
          */
         IntentEnum: "invoice_query" | "payment_confirmation" | "payment_delay_notice" | "statement_request" | "quote_request" | "po_or_order" | "dispute" | "vendor_bill_received" | "support" | "meeting_or_scheduling" | "newsletter_or_spam" | "other";
+        InvoiceBrief: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly invoice_number: string;
+            /** Format: date */
+            readonly invoice_date: string;
+            readonly party_name: string;
+            readonly party_gstin: string;
+            /** Format: decimal */
+            readonly taxable_value: string;
+            /** Format: decimal */
+            readonly total: string;
+            readonly tax: string;
+            readonly itc_eligible: boolean;
+            readonly status: components["schemas"]["StatusE97Enum"];
+        };
         InvoiceDetail: {
             /** Format: uuid */
             readonly id: string;
@@ -2110,6 +2519,27 @@ export interface components {
          * @enum {string}
          */
         MailboxStatusEnum: "active" | "error" | "revoked";
+        Match: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly batch: string;
+            readonly record: components["schemas"]["Record"];
+            readonly invoice: components["schemas"]["InvoiceBrief"];
+            readonly match_type: components["schemas"]["MatchTypeEnum"];
+            /** Format: decimal */
+            readonly delta_value: string;
+            /** Format: decimal */
+            readonly delta_tax: string;
+            readonly at_risk: string;
+            readonly note: string;
+            /** Format: email */
+            readonly resolved_by: string;
+            /** Format: date-time */
+            readonly resolved_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /**
          * @description * `unmatched` - Unmatched
          *     * `auto` - Auto
@@ -2118,6 +2548,15 @@ export interface components {
          * @enum {string}
          */
         MatchStatusEnum: "unmatched" | "auto" | "manual" | "ignored";
+        /**
+         * @description * `exact` - Exact
+         *     * `fuzzy` - Fuzzy
+         *     * `value_mismatch` - Value Mismatch
+         *     * `missing_in_books` - Missing In Books
+         *     * `missing_in_2b` - Missing In 2B
+         * @enum {string}
+         */
+        MatchTypeEnum: "exact" | "fuzzy" | "value_mismatch" | "missing_in_books" | "missing_in_2b";
         Me: {
             user: components["schemas"]["User"];
             readonly org: string;
@@ -2170,6 +2609,8 @@ export interface components {
          * @enum {string}
          */
         MethodEnum: "neft" | "upi" | "cheque" | "card" | "cash" | "other";
+        /** @enum {unknown} */
+        NullEnum: null;
         Ok: {
             ok: boolean;
         };
@@ -2198,6 +2639,19 @@ export interface components {
              */
             previous?: string | null;
             results: components["schemas"]["BankAccount"][];
+        };
+        PaginatedBatchList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Batch"][];
         };
         PaginatedCategoryList: {
             /**
@@ -2316,6 +2770,19 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["Mailbox"][];
         };
+        PaginatedMatchList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Match"][];
+        };
         PaginatedMembershipList: {
             /**
              * Format: uri
@@ -2355,6 +2822,19 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["Payment"][];
         };
+        PaginatedRecordList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Record"][];
+        };
         PaginatedRecurringPatternList: {
             /**
              * Format: uri
@@ -2367,6 +2847,19 @@ export interface components {
              */
             previous?: string | null;
             results: components["schemas"]["RecurringPattern"][];
+        };
+        PaginatedReportScheduleList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["ReportSchedule"][];
         };
         PaginatedScenarioList: {
             /**
@@ -2547,7 +3040,7 @@ export interface components {
             name?: string;
             /** Format: decimal */
             amount?: string;
-            cadence?: components["schemas"]["CadenceEnum"];
+            cadence?: components["schemas"]["FixedLineCadenceEnum"];
             /** Format: date */
             next_date?: string;
             direction?: components["schemas"]["FixedLineDirectionEnum"];
@@ -2588,6 +3081,27 @@ export interface components {
             notes?: string;
             payment_terms?: string;
             lines?: components["schemas"]["LineWrite"][];
+        };
+        PatchedMatch: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            readonly batch?: string;
+            readonly record?: components["schemas"]["Record"];
+            readonly invoice?: components["schemas"]["InvoiceBrief"];
+            readonly match_type?: components["schemas"]["MatchTypeEnum"];
+            /** Format: decimal */
+            readonly delta_value?: string;
+            /** Format: decimal */
+            readonly delta_tax?: string;
+            readonly at_risk?: string;
+            readonly note?: string;
+            /** Format: email */
+            readonly resolved_by?: string;
+            /** Format: date-time */
+            readonly resolved_at?: string | null;
+            /** Format: date-time */
+            readonly created_at?: string;
         };
         PatchedMembership: {
             /** Format: uuid */
@@ -2673,6 +3187,21 @@ export interface components {
             /** Format: date-time */
             readonly created_at?: string;
         };
+        PatchedReportSchedule: {
+            /** Format: uuid */
+            readonly id?: string;
+            report?: string;
+            params?: unknown;
+            cadence?: components["schemas"]["ReportScheduleCadenceEnum"];
+            recipients?: string[];
+            format?: components["schemas"]["FormatEnum"];
+            is_active?: boolean;
+            /** Format: date-time */
+            readonly last_sent_at?: string | null;
+            readonly last_error?: string;
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
         PatchedScenario: {
             /** Format: uuid */
             readonly id?: string;
@@ -2735,6 +3264,35 @@ export interface components {
          * @enum {string}
          */
         ProviderEnum: "gmail" | "microsoft";
+        Record: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly batch: string;
+            readonly supplier_gstin: string;
+            readonly supplier_name: string;
+            readonly invoice_number: string;
+            /** Format: date */
+            readonly invoice_date: string;
+            /** Format: decimal */
+            readonly invoice_value: string;
+            readonly place_of_supply: string;
+            readonly reverse_charge: boolean;
+            /** Format: decimal */
+            readonly taxable_value: string;
+            /** Format: decimal */
+            readonly igst: string;
+            /** Format: decimal */
+            readonly cgst: string;
+            /** Format: decimal */
+            readonly sgst: string;
+            /** Format: decimal */
+            readonly cess: string;
+            readonly tax: string;
+            readonly itc_available: boolean;
+            readonly ims_action: (components["schemas"]["ImsActionEnum"] | components["schemas"]["NullEnum"]) | null;
+            readonly ims_note: string;
+        };
         RecurringPattern: {
             /** Format: uuid */
             readonly id: string;
@@ -2769,6 +3327,28 @@ export interface components {
          * @enum {string}
          */
         RegistrationTypeEnum: "regular" | "composition" | "casual" | "sez" | "unregistered";
+        ReportSchedule: {
+            /** Format: uuid */
+            readonly id: string;
+            report: string;
+            params?: unknown;
+            cadence?: components["schemas"]["ReportScheduleCadenceEnum"];
+            recipients?: string[];
+            format?: components["schemas"]["FormatEnum"];
+            is_active?: boolean;
+            /** Format: date-time */
+            readonly last_sent_at: string | null;
+            readonly last_error: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `daily` - Daily
+         *     * `weekly` - Weekly
+         *     * `monthly` - Monthly
+         * @enum {string}
+         */
+        ReportScheduleCadenceEnum: "daily" | "weekly" | "monthly";
         Revision: {
             /** Format: uuid */
             readonly id: string;
@@ -2817,13 +3397,6 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
         };
-        /**
-         * @description * `upload` - Upload
-         *     * `email` - Email
-         *     * `api` - Api
-         * @enum {string}
-         */
-        SourceEnum: "upload" | "email" | "api";
         /**
          * @description * `pending` - Pending
          *     * `running` - Running
@@ -3838,6 +4411,26 @@ export interface operations {
             };
         };
     };
+    exports_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     "exports_documents.zip_retrieve": {
         parameters: {
             query?: never;
@@ -3876,6 +4469,25 @@ export interface operations {
         };
     };
     forecast_backtest_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
+    forecast_drivers_retrieve: {
         parameters: {
             query?: never;
             header?: never;
@@ -4325,6 +4937,33 @@ export interface operations {
             };
         };
     };
+    forecast_runs_narrative_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ForecastRun"];
+                "application/x-www-form-urlencoded": components["schemas"]["ForecastRun"];
+                "multipart/form-data": components["schemas"]["ForecastRun"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
     forecast_scenarios_list: {
         parameters: {
             query?: {
@@ -4429,6 +5068,34 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Scenario"];
+                "application/x-www-form-urlencoded": components["schemas"]["Scenario"];
+                "multipart/form-data": components["schemas"]["Scenario"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scenario"];
+                };
+            };
+        };
+    };
+    forecast_scenarios_run_create_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this scenario. */
                 id: string;
             };
             cookie?: never;
@@ -6038,6 +6705,300 @@ export interface operations {
             };
         };
     };
+    reconciliation_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedBatchList"];
+                };
+            };
+        };
+    };
+    reconciliation_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Batch"];
+                "multipart/form-data": components["schemas"]["Batch"];
+                "application/x-www-form-urlencoded": components["schemas"]["Batch"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Batch"];
+                };
+            };
+        };
+    };
+    reconciliation_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this gst r2b batch. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Batch"];
+                };
+            };
+        };
+    };
+    reconciliation_import_2b_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Batch"];
+                "multipart/form-data": components["schemas"]["Batch"];
+                "application/x-www-form-urlencoded": components["schemas"]["Batch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Batch"];
+                };
+            };
+        };
+    };
+    reconciliation_matches_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedMatchList"];
+                };
+            };
+        };
+    };
+    reconciliation_matches_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this reconciliation match. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Match"];
+                };
+            };
+        };
+    };
+    reconciliation_matches_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this reconciliation match. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedMatch"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedMatch"];
+                "multipart/form-data": components["schemas"]["PatchedMatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Match"];
+                };
+            };
+        };
+    };
+    reconciliation_records_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedRecordList"];
+                };
+            };
+        };
+    };
+    reconciliation_records_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Record"];
+                "application/x-www-form-urlencoded": components["schemas"]["Record"];
+                "multipart/form-data": components["schemas"]["Record"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Record"];
+                };
+            };
+        };
+    };
+    reconciliation_records_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this gst r2b record. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Record"];
+                };
+            };
+        };
+    };
+    reconciliation_records_ims_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this gst r2b record. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Record"];
+                "application/x-www-form-urlencoded": components["schemas"]["Record"];
+                "multipart/form-data": components["schemas"]["Record"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Record"];
+                };
+            };
+        };
+    };
+    reconciliation_run_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Batch"];
+                "multipart/form-data": components["schemas"]["Batch"];
+                "application/x-www-form-urlencoded": components["schemas"]["Batch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Batch"];
+                };
+            };
+        };
+    };
     reports_retrieve: {
         parameters: {
             query?: never;
@@ -6055,6 +7016,126 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    reports_schedules_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedReportScheduleList"];
+                };
+            };
+        };
+    };
+    reports_schedules_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportSchedule"];
+                "application/x-www-form-urlencoded": components["schemas"]["ReportSchedule"];
+                "multipart/form-data": components["schemas"]["ReportSchedule"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportSchedule"];
+                };
+            };
+        };
+    };
+    reports_schedules_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this report schedule. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportSchedule"];
+                };
+            };
+        };
+    };
+    reports_schedules_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this report schedule. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reports_schedules_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this report schedule. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedReportSchedule"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedReportSchedule"];
+                "multipart/form-data": components["schemas"]["PatchedReportSchedule"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportSchedule"];
+                };
             };
         };
     };

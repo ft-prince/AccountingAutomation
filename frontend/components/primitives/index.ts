@@ -15,3 +15,4 @@ export { StatTile } from "./stat-tile";
 export { StatusBadge } from "./status-badge";
 export { Switch } from "./switch";
 export { Tabs } from "./tabs";
+export { RiskBandBadge } from "./risk-band-badge";

@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { AgingStacked, CategoryDonut, ChartFrame, HorizontalBars, PnlBars } from "@/components/charts";
+import { AgingStacked, CategoryDonut, ChartFrame, ForecastBand, HorizontalBars, PnlBars } from "@/components/charts";
+import { BacktestBadge } from "@/components/forecast/backtest-badge";
 import { PageHeader } from "@/components/primitives/page-header";
 import { PeriodPicker } from "@/components/primitives/period-picker";
-import { PlaceholderCard } from "@/components/primitives/placeholder-card";
 import { resolvePeriod, todayIso, type Period } from "@/lib/periods";
+import { ApiError } from "@/lib/api";
+import { useAnomalies, useCustomerRisk, useLatestForecast } from "@/lib/forecast";
+import { horizonLabel } from "@/lib/forecast-data";
+import { useReviewQueue } from "@/lib/mail";
 import { useReport, type ReportParams } from "@/lib/reports";
 import { AlertsFeed } from "./alerts-feed";
 import { KpiRow } from "./kpi-row";
@@ -26,14 +30,32 @@ export function DashboardView({ today }: { today?: string }) {
   const tax = useReport("tax-liability", params);
   const itc = useReport("itc-at-risk", params);
   const cash = useReport("cash-position", params);
+  const forecast = useLatestForecast();
+  const anomalies = useAnomalies();
+  const risk = useCustomerRisk();
+  const reviewQueue = useReviewQueue();
+  const hasNoRun = forecast.error instanceof ApiError && forecast.error.status === 404;
+  const latestRun = forecast.data ?? (hasNoRun ? null : undefined);
+  const todayDate = today ?? todayIso();
 
   return (
     <div className="space-y-6">
       <PageHeader title="Cashflow," emphasis="forecast" description={`${period.label} · ${DASHBOARD_BASIS} basis`} actions={<PeriodPicker onChange={setPeriod} defaultPreset="fy_to_date" today={today} />} />
 
-      <KpiRow periodLabel={period.label} cash={cash.data} arAging={arAging.data} apAging={apAging.data} summary={summary.data} tax={tax.data} />
+      <KpiRow periodLabel={period.label} cash={cash.data} arAging={arAging.data} apAging={apAging.data} summary={summary.data} tax={tax.data} forecast={forecast.isError && !hasNoRun ? null : latestRun} />
 
-      <PlaceholderCard title="Cashflow forecast" phase={18} description="13-week P10–P90 band from Module D lands here." className="min-h-[200px]" />
+      <ChartFrame
+        title="Cashflow forecast"
+        meta={undefined}
+        periodLabel={forecast.data ? `${horizonLabel(forecast.data.horizon_days)} from ${forecast.data.as_of} · ${forecast.data.insufficient_history ? "deterministic only (< 90 d history)" : "P10–P90 band"}` : "—"}
+        isPending={forecast.isPending}
+        error={hasNoRun ? undefined : forecast.error}
+        isEmpty={hasNoRun || forecast.data?.points.length === 0}
+        emptyText="No forecast run yet — open Forecast and run one."
+        actions={forecast.data && !forecast.data.insufficient_history ? <BacktestBadge coverage={forecast.data.backtest_coverage} nOrigins={forecast.data.backtest_n_origins} /> : undefined}
+      >
+        {forecast.data && <ForecastBand points={forecast.data.points} today={todayDate} showBands={!forecast.data.insufficient_history} />}
+      </ChartFrame>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartFrame title="P&L by month" meta={pnl.data?.meta} periodLabel={period.label} isPending={pnl.isPending} error={pnl.error} isEmpty={pnl.data?.rows.length === 0}>
@@ -51,7 +73,7 @@ export function DashboardView({ today }: { today?: string }) {
         <ChartFrame title="Top customers" meta={parties.data?.meta} periodLabel={period.label} isPending={parties.isPending} error={parties.error} isEmpty={parties.data?.top_customers.length === 0}>
           {parties.data && <HorizontalBars rows={parties.data.top_customers} />}
         </ChartFrame>
-        <AlertsFeed itc={itc.data} arAging={arAging.data} meta={itc.data?.meta ?? arAging.data?.meta} />
+        <AlertsFeed sources={{ itc: itc.data, arAging: arAging.data, anomalies: anomalies.data, risk: risk.data, pendingDrafts: reviewQueue.data?.length }} meta={itc.data?.meta ?? arAging.data?.meta} />
       </div>
     </div>
   );

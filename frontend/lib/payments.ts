@@ -15,11 +15,12 @@ export interface PaymentFilters {
   party?: string;
 }
 
-export function usePayments(filters: PaymentFilters = {}) {
+export function usePayments(filters: PaymentFilters = {}, enabled = true) {
   return useQuery({
     queryKey: [PAYMENTS_KEY, "list", filters],
     queryFn: () =>
       api<Paginated<Payment>>(`/api/payments/${buildQuery({ direction: filters.direction, party: filters.party, page_size: PAYMENTS_PAGE_SIZE })}`),
+    enabled,
   });
 }
 

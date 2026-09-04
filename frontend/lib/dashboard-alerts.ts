@@ -1,10 +1,12 @@
-// Pure builder for the §7.4 row-4 alerts feed. Anomalies and drafts arrive in Phases 16/18.
+// Pure builder for the §7.4 row-4 alerts feed: ITC at risk, overdue > 60 d, anomalies, high-risk
+// customers and drafts awaiting review.
 import Big from "big.js";
+import type { AnomaliesReport, CustomerRisk } from "@/lib/forecast";
 import type { AgingReport, ItcAtRiskReport } from "@/lib/reports";
 import { humanize } from "@/lib/format";
 import { orZero } from "@/lib/money";
 
-export type AlertKind = "itc_at_risk" | "overdue" | "placeholder";
+export type AlertKind = "itc_at_risk" | "overdue" | "anomaly" | "high_risk" | "drafts";
 export type AlertTone = "danger" | "warning" | "muted";
 
 export interface DashboardAlert {
@@ -55,11 +57,55 @@ export function overdueAlerts(report: AgingReport | undefined, limit = OVERDUE_A
     }));
 }
 
-export const PLACEHOLDER_ALERTS: readonly DashboardAlert[] = [
-  { id: "drafts", kind: "placeholder", tone: "muted", title: "Drafts awaiting review", detail: "Phase 16 · client email assistant" },
-  { id: "anomalies", kind: "placeholder", tone: "muted", title: "Anomalies", detail: "Phase 18 · forecasting" },
-];
+export const ANOMALY_ALERT_LIMIT = 3;
 
-export function buildAlerts(itc: ItcAtRiskReport | undefined, arAging: AgingReport | undefined): DashboardAlert[] {
-  return [...overdueAlerts(arAging), ...itcAlerts(itc), ...PLACEHOLDER_ALERTS];
+export function anomalyAlerts(report: AnomaliesReport | undefined, limit = ANOMALY_ALERT_LIMIT): DashboardAlert[] {
+  if (!report) return [];
+  return [...report.duplicates, ...report.expenses].slice(0, limit).map((anomaly) => ({
+    id: `anomaly-${anomaly.kind}-${anomaly.invoice}`,
+    kind: "anomaly",
+    tone: "warning",
+    title: `Anomaly · ${humanize(anomaly.kind)} · ${anomaly.party_name || "unknown party"}`,
+    detail: anomaly.detail,
+    href: `/invoices/${anomaly.invoice}`,
+  }));
+}
+
+export function highRiskAlerts(rows: readonly CustomerRisk[] | undefined): DashboardAlert[] {
+  if (!rows) return [];
+  return rows
+    .filter((row) => row.band === "high")
+    .map((row) => ({
+      id: `risk-${row.party}`,
+      kind: "high_risk",
+      tone: "danger",
+      title: `High payment risk · ${row.party_name || row.party}`,
+      detail: row.drivers.length > 0 ? row.drivers.join(" · ") : `score ${row.score}`,
+      href: `/parties/${row.party}`,
+    }));
+}
+
+/** Count of drafts pending review (GET /api/mail/review-queue length); undefined while loading. */
+export function draftsAlert(pendingCount: number | undefined): DashboardAlert[] {
+  if (pendingCount === undefined) return [];
+  return [{
+    id: "drafts",
+    kind: "drafts",
+    tone: pendingCount > 0 ? "warning" : "muted",
+    title: "Drafts awaiting review",
+    detail: pendingCount === 0 ? "queue is clear" : `${pendingCount} draft${pendingCount === 1 ? "" : "s"} waiting`,
+    href: "/inbox?status=awaiting_review",
+  }];
+}
+
+export interface AlertSources {
+  itc?: ItcAtRiskReport;
+  arAging?: AgingReport;
+  anomalies?: AnomaliesReport;
+  risk?: readonly CustomerRisk[];
+  pendingDrafts?: number;
+}
+
+export function buildAlerts(sources: AlertSources): DashboardAlert[] {
+  return [...overdueAlerts(sources.arAging), ...highRiskAlerts(sources.risk), ...itcAlerts(sources.itc), ...anomalyAlerts(sources.anomalies), ...draftsAlert(sources.pendingDrafts)];
 }

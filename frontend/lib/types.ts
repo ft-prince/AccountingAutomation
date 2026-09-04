@@ -27,3 +27,37 @@ export type GstinProfile = Schemas["GSTINProfile"];
 export type Membership = Schemas["Membership"];
 export type MemberRole = Schemas["RoleEnum"];
 export type ApiKey = Schemas["APIKey"];
+
+// ---- Mail (§6) ---------------------------------------------------------------------------------
+export type Mailbox = Schemas["Mailbox"];
+export type MailProvider = Schemas["ProviderEnum"];
+export type ThreadList = Schemas["ThreadList"];
+export type ThreadDetail = Schemas["ThreadDetail"];
+export type ThreadStatus = Schemas["Status98aEnum"];
+export type MailMessage = Schemas["Message"];
+export type Draft = Schemas["Draft"];
+export type DraftSummary = Schemas["DraftSummary"];
+export type DraftStatus = Schemas["Status485Enum"];
+export type Intent = Schemas["IntentEnum"];
+export type Priority = Schemas["PriorityEnum"];
+export type StyleGuide = Schemas["StyleGuide"];
+export type ReplyTemplate = Schemas["Template"];
+
+// ---- Forecasting (§8) --------------------------------------------------------------------------
+export type ForecastRun = Schemas["ForecastRun"];
+export type ForecastPoint = Schemas["ForecastPoint"];
+export type Scenario = Schemas["Scenario"];
+export type RecurringPattern = Schemas["RecurringPattern"];
+export type FixedLine = Schemas["FixedLine"];
+export type FixedLineCadence = Schemas["FixedLineCadenceEnum"];
+export type FixedLineDirection = Schemas["FixedLineDirectionEnum"];
+export type ReportSchedule = Schemas["ReportSchedule"];
+export type ReportScheduleCadence = Schemas["ReportScheduleCadenceEnum"];
+export type ReportFormat = Schemas["FormatEnum"];
+
+// ---- Reconciliation (§3.8 / §11) ----------------------------------------------------------------
+export type ReconBatch = Schemas["Batch"];
+export type ReconRecord = Schemas["Record"];
+export type ReconMatch = Schemas["Match"];
+export type MatchType = Schemas["MatchTypeEnum"];
+export type ImsAction = Schemas["ImsActionEnum"];

@@ -10,7 +10,7 @@ import { RecordPaymentDialog } from "@/components/payments/record-payment-dialog
 import { ConfirmDialog } from "@/components/primitives/confirm-dialog";
 import { MoneyText } from "@/components/primitives/money-text";
 import { PageHeader } from "@/components/primitives/page-header";
-import { PlaceholderCard } from "@/components/primitives/placeholder-card";
+import { RiskBandBadge } from "@/components/primitives/risk-band-badge";
 import { QueryState } from "@/components/primitives/query-state";
 import { StatTile } from "@/components/primitives/stat-tile";
 import { StatusBadge } from "@/components/primitives/status-badge";
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
 import { ICON_STROKE } from "@/lib/constants";
+import { useCustomerRisk } from "@/lib/forecast";
 import { formatDate } from "@/lib/format";
 import { EMPTY_INVOICE_FILTERS } from "@/lib/invoice-filters";
 import { useInvoiceList } from "@/lib/invoice-queries";
@@ -73,6 +74,8 @@ export function PartyDetailView({ id }: { id: string }) {
   const arAging = useReport("ar-aging", params, isCustomer);
   const apAging = useReport("ap-aging", params, isVendor);
   const arRow = arAging.data?.rows.find((row) => row.party === id);
+  const risk = useCustomerRisk(isCustomer);
+  const riskRow = risk.data?.find((row) => row.party === id);
   const apRow = apAging.data?.rows.find((row) => row.party === id);
 
   const invoices = useInvoiceList({ ...EMPTY_INVOICE_FILTERS, party: id }, { pageSize: 50 });
@@ -128,8 +131,16 @@ export function PartyDetailView({ id }: { id: string }) {
             {isCustomer && <StatTile label="Receivable balance" value={arAging.data ? formatINR(arRow?.total ?? "0") : "…"} hint={arAging.data ? `as of ${formatDate(arAging.data.as_of)}` : undefined} />}
             {isVendor && <StatTile label="Payable balance" value={apAging.data ? formatINR(apRow?.total ?? "0") : "…"} hint={apAging.data ? `as of ${formatDate(apAging.data.as_of)}` : undefined} />}
             <StatTile label="Credit limit" value={party.data.credit_limit ? formatINR(party.data.credit_limit) : "—"} hint={party.data.credit_limit ? undefined : "not set"} />
-            <PlaceholderCard title="Risk band" phase={18} className="py-4" />
-            <PlaceholderCard title="Threads" phase={16} className="py-4" />
+            <div className="lift rounded-card border border-border bg-surface p-5">
+              <p className="text-sm text-muted">Payment risk</p>
+              <div className="mt-2"><RiskBandBadge band={riskRow?.band} /></div>
+              <p className="mt-3 text-xs text-muted">{riskRow ? `score ${riskRow.score} · ${riskRow.drivers.join(" · ") || "no drivers"}` : isCustomer ? "not enough paid invoices to score" : "vendors are not scored"}</p>
+            </div>
+            <div className="lift rounded-card border border-border bg-surface p-5">
+              <p className="text-sm text-muted">Email threads</p>
+              <Link href={`/inbox?party=${id}`} className="mt-2 inline-block text-sm font-medium underline underline-offset-2 hover:text-accent">Open in Inbox</Link>
+              <p className="mt-3 text-xs text-muted">Filtered to this party.</p>
+            </div>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
