@@ -848,7 +848,7 @@ export interface paths {
         /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
         get: operations["invoices_list"];
         put?: never;
-        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        /** @description Manual entry. Held to the same GST rules and recompute as an extracted invoice. */
         post: operations["invoices_create"];
         delete?: never;
         options?: never;
@@ -953,6 +953,40 @@ export interface paths {
         put?: never;
         /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
         post: operations["invoices_bulk_confirm_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/invoices/import/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description One row per invoice line; rows sharing an invoice_number become one invoice. */
+        post: operations["invoices_import_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/invoices/import-template/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["invoices_import_template_retrieve"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1308,6 +1342,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/mail/mailboxes/setup-status/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Turn a silent OAuth misconfiguration into a checklist. PROJECT_SPECS §6.3. */
+        get: operations["mail_mailboxes_setup_status_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/mail/metrics": {
         parameters: {
             query?: never;
@@ -1340,6 +1391,23 @@ export interface paths {
          *     declared permission_classes would silently vanish there. Apply them on every route.
          */
         get: operations["mail_review_queue_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/setup-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Turn a silent OAuth misconfiguration into a checklist. PROJECT_SPECS §6.3. */
+        get: operations["mail_setup_status_retrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1569,6 +1637,92 @@ export interface paths {
         head?: never;
         /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
         patch: operations["members_partial_update"];
+        trace?: never;
+    };
+    "/api/notifications/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/notifications/?unread=1 plus read / dismiss / read-all. Any member may act. */
+        get: operations["notifications_list"];
+        put?: never;
+        /** @description GET /api/notifications/?unread=1 plus read / dismiss / read-all. Any member may act. */
+        post: operations["notifications_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/notifications/?unread=1 plus read / dismiss / read-all. Any member may act. */
+        get: operations["notifications_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}/dismiss/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description GET /api/notifications/?unread=1 plus read / dismiss / read-all. Any member may act. */
+        post: operations["notifications_dismiss_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}/read/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description GET /api/notifications/?unread=1 plus read / dismiss / read-all. Any member may act. */
+        post: operations["notifications_read_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/read-all/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description GET /api/notifications/?unread=1 plus read / dismiss / read-all. Any member may act. */
+        post: operations["notifications_read_all_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/orgs/current": {
@@ -2422,6 +2576,13 @@ export interface components {
          * @enum {string}
          */
         KindEnum: "vendor" | "customer" | "both";
+        /**
+         * @description * `info` - Info
+         *     * `warning` - Warning
+         *     * `danger` - Danger
+         * @enum {string}
+         */
+        LevelEnum: "info" | "warning" | "danger";
         Line: {
             /** Format: uuid */
             readonly id: string;
@@ -2609,6 +2770,24 @@ export interface components {
          * @enum {string}
          */
         MethodEnum: "neft" | "upi" | "cheque" | "card" | "cash" | "other";
+        Notification: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly level: components["schemas"]["LevelEnum"];
+            readonly code: string;
+            readonly title: string;
+            readonly body: string;
+            readonly entity_type: string;
+            /** Format: uuid */
+            readonly entity_id: string | null;
+            readonly dedupe_key: string;
+            /** Format: date-time */
+            readonly read_at: string | null;
+            /** Format: date-time */
+            readonly dismissed_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /** @enum {unknown} */
         NullEnum: null;
         Ok: {
@@ -2795,6 +2974,19 @@ export interface components {
              */
             previous?: string | null;
             results: components["schemas"]["Membership"][];
+        };
+        PaginatedNotificationList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Notification"][];
         };
         PaginatedPartyList: {
             /**
@@ -5454,6 +5646,48 @@ export interface operations {
             };
         };
     };
+    invoices_import_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["InvoiceList"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceList"];
+                };
+            };
+        };
+    };
+    invoices_import_template_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceList"];
+                };
+            };
+        };
+    };
     invoices_review_queue_retrieve: {
         parameters: {
             query?: never;
@@ -5941,6 +6175,25 @@ export interface operations {
             };
         };
     };
+    mail_mailboxes_setup_status_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
     mail_metrics_retrieve: {
         parameters: {
             query?: never;
@@ -5975,6 +6228,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_setup_status_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
                 };
             };
         };
@@ -6393,6 +6665,158 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Membership"];
+                };
+            };
+        };
+    };
+    notifications_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedNotificationList"];
+                };
+            };
+        };
+    };
+    notifications_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Notification"];
+                "application/x-www-form-urlencoded": components["schemas"]["Notification"];
+                "multipart/form-data": components["schemas"]["Notification"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notification"];
+                };
+            };
+        };
+    };
+    notifications_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this notification. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notification"];
+                };
+            };
+        };
+    };
+    notifications_dismiss_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this notification. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Notification"];
+                "application/x-www-form-urlencoded": components["schemas"]["Notification"];
+                "multipart/form-data": components["schemas"]["Notification"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notification"];
+                };
+            };
+        };
+    };
+    notifications_read_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this notification. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Notification"];
+                "application/x-www-form-urlencoded": components["schemas"]["Notification"];
+                "multipart/form-data": components["schemas"]["Notification"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notification"];
+                };
+            };
+        };
+    };
+    notifications_read_all_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Notification"];
+                "application/x-www-form-urlencoded": components["schemas"]["Notification"];
+                "multipart/form-data": components["schemas"]["Notification"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notification"];
                 };
             };
         };

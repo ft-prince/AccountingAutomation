@@ -9,6 +9,7 @@ export type DocumentStatus = Schemas["DocumentStatusEnum"];
 export type InvoiceList = Schemas["InvoiceList"];
 export type InvoiceDetail = Schemas["InvoiceDetail"];
 export type InvoiceLine = Schemas["Line"];
+export type InvoiceLineWrite = Schemas["LineWrite"];
 export type InvoiceIssue = Schemas["Issue"];
 export type InvoiceStatus = Schemas["StatusE97Enum"];
 export type InvoiceDirection = Schemas["Direction7b9Enum"];

@@ -10,6 +10,7 @@ import { filtersFromSearchParams, filtersToSearchParams, type InvoiceFilters } f
 import { useInvoiceList } from "@/lib/invoice-queries";
 import { canConfirmInvoices } from "@/lib/roles";
 import { BulkActionBar } from "./bulk-action-bar";
+import { InvoiceEntryActions } from "./invoice-entry-actions";
 import { InvoiceFiltersBar } from "./invoice-filters-bar";
 import { InvoiceTable } from "./invoice-table";
 import { SavedViewsMenu } from "./saved-views-menu";
@@ -41,7 +42,14 @@ export function InvoicesView() {
         title="All"
         emphasis="invoices"
         description={list.data ? `${list.data.results.length} on this page · sorted by ${filters.ordering.replace("-", "").replace("__", " ")} ${filters.ordering.startsWith("-") ? "↓" : "↑"}` : "Server-side paging, sorting and filters"}
-        actions={me && <SavedViewsMenu userId={me.user.id} filters={filters} onApply={setFilters} />}
+        actions={
+          me && (
+            <>
+              <SavedViewsMenu userId={me.user.id} filters={filters} onApply={setFilters} />
+              <InvoiceEntryActions role={me.role} />
+            </>
+          )
+        }
       />
       <InvoiceFiltersBar filters={filters} onChange={setFilters} />
       <BulkActionBar selectedIds={selectedIds} rows={list.data?.results ?? []} filters={filters} canConfirm={canConfirmInvoices(me?.role)} onDone={clearSelection} />
