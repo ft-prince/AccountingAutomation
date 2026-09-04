@@ -18,6 +18,7 @@ class PartySerializer(serializers.ModelSerializer):
             "email_domains",
             "is_composition",
             "aato_bracket",
+            "aato_source",
             "default_category",
             "payment_terms_days",
             "credit_limit",
@@ -26,7 +27,7 @@ class PartySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "merged_into", "created_at", "updated_at"]
+        read_only_fields = ["id", "aato_source", "merged_into", "created_at", "updated_at"]
 
     def validate_gstin(self, value: str | None) -> str | None:
         if not value:
@@ -37,6 +38,16 @@ class PartySerializer(serializers.ModelSerializer):
         if not result.is_valid:
             raise serializers.ValidationError(result.errors)
         return value
+
+    def update(self, instance, validated_data):  # type: ignore[no-untyped-def]
+        # A human editing the bracket takes ownership of it, so nightly inference stops
+        # overriding their judgement (§3.5).
+        if (
+            "aato_bracket" in validated_data
+            and validated_data["aato_bracket"] != instance.aato_bracket
+        ):
+            validated_data["aato_source"] = "manual"
+        return super().update(instance, validated_data)
 
     def validate(self, attrs):  # type: ignore[no-untyped-def]
         gstin = attrs.get("gstin")

@@ -13,6 +13,11 @@ class PartyKind(models.TextChoices):
     BOTH = "both"
 
 
+class AATOSource(models.TextChoices):
+    MANUAL = "manual", "Set by a human"
+    INFERRED = "inferred", "Inferred from e-invoice IRNs"
+
+
 class ExpenseCategory(BaseModel):
     org = models.ForeignKey(
         "accounts.Organization", null=True, blank=True, on_delete=models.CASCADE, related_name="+"
@@ -51,6 +56,13 @@ class Party(TenantModel):
     aato_bracket = models.CharField(
         max_length=20, choices=AATOBracket.choices, default=AATOBracket.BELOW_5CR
     )
+    # Whether the bracket above was typed by a human or inferred from evidence
+    # (PROJECT_SPECS §3.5: an IRN proves the supplier is in e-invoicing scope).
+    aato_source = models.CharField(
+        max_length=10, choices=AATOSource.choices, default=AATOSource.MANUAL
+    )
+    # Bank-narration signatures learned from manual matches (Phase 8 matching).
+    narration_aliases = ArrayField(models.CharField(max_length=120), default=list, blank=True)
     default_category = models.ForeignKey(
         ExpenseCategory, null=True, blank=True, on_delete=models.SET_NULL
     )

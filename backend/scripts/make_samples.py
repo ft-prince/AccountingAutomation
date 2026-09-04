@@ -24,10 +24,10 @@ def gstin(prefix: str) -> str:
 
 # The demo org's own GSTIN: a vendor bill addressed to it ingests as `inward`.
 NEXREN = gstin("27AAGFF2194N1Z")
-ACME = gstin("27AAPFU0939F1Z")      # Maharashtra  → intra-state, CGST+SGST
-BHARAT = gstin("29AABCT1332L1Z")    # Karnataka    → inter-state, IGST
-ROBU = gstin("24AACCR5055K1Z")      # Gujarat      → inter-state, IGST
-TATA = gstin("27AAACT2727Q1Z")      # customer for the outward sample
+ACME = gstin("27AAPFU0939F1Z")  # Maharashtra  → intra-state, CGST+SGST
+BHARAT = gstin("29AABCT1332L1Z")  # Karnataka    → inter-state, IGST
+ROBU = gstin("24AACCR5055K1Z")  # Gujarat      → inter-state, IGST
+TATA = gstin("27AAACT2727Q1Z")  # customer for the outward sample
 
 
 def build_pdf(lines: list[str]) -> bytes:
@@ -111,7 +111,7 @@ def invoice_lines(
         "",
         f"Taxable Value: {rupees(taxable)}",
         *heads,
-        f"Round Off: 0.00",
+        "Round Off: 0.00",
         f"Invoice Total: {rupees(total)}",
         "",
         "Bank: HDFC Bank   A/c 50200012345678   IFSC HDFC0000123",
@@ -246,37 +246,121 @@ def write_statements() -> list[str]:
     """Column names are exactly the per-bank mappings in payments/services/statements.py."""
     hdfc = write_csv(
         "bank-statement-hdfc.csv",
-        ["Date", "Narration", "Chq./Ref.No.", "Value Dt", "Withdrawal Amt.", "Deposit Amt.", "Closing Balance"],
         [
-            ["01/09/26", "NEFT CR-TATA STEEL DIGITAL-UTR8830012", "UTR8830012", "01/09/26", "", "5,31,000.00", "12,45,000.00"],
-            ["02/09/26", "UPI-ACME WIDGETS PVT LTD-9920", "UPI9920", "02/09/26", "47,200.00", "", "11,97,800.00"],
-            ["03/09/26", "NEFT DR-BHARAT CLOUD SERVICES", "UTR7741188", "03/09/26", "47,200.00", "", "11,50,600.00"],
+            "Date",
+            "Narration",
+            "Chq./Ref.No.",
+            "Value Dt",
+            "Withdrawal Amt.",
+            "Deposit Amt.",
+            "Closing Balance",
+        ],
+        [
+            [
+                "01/09/26",
+                "NEFT CR-TATA STEEL DIGITAL-UTR8830012",
+                "UTR8830012",
+                "01/09/26",
+                "",
+                "5,31,000.00",
+                "12,45,000.00",
+            ],
+            [
+                "02/09/26",
+                "UPI-ACME WIDGETS PVT LTD-9920",
+                "UPI9920",
+                "02/09/26",
+                "47,200.00",
+                "",
+                "11,97,800.00",
+            ],
+            [
+                "03/09/26",
+                "NEFT DR-BHARAT CLOUD SERVICES",
+                "UTR7741188",
+                "03/09/26",
+                "47,200.00",
+                "",
+                "11,50,600.00",
+            ],
             ["04/09/26", "BANK CHARGES SEP", "", "04/09/26", "590.00", "", "11,50,010.00"],
         ],
     )
     icici = write_csv(
         "bank-statement-icici.csv",
-        ["Transaction Date", "Transaction Remarks", "Cheque Number", "Withdrawal Amount (INR )", "Deposit Amount (INR )", "Balance (INR )"],
         [
-            ["01/09/2026", "NEFT/RELIANCE INDUSTRIAL IOT/ABC001", "ABC001", "", "448400.00", "2688800.00"],
+            "Transaction Date",
+            "Transaction Remarks",
+            "Cheque Number",
+            "Withdrawal Amount (INR )",
+            "Deposit Amount (INR )",
+            "Balance (INR )",
+        ],
+        [
+            [
+                "01/09/2026",
+                "NEFT/RELIANCE INDUSTRIAL IOT/ABC001",
+                "ABC001",
+                "",
+                "448400.00",
+                "2688800.00",
+            ],
             ["02/09/2026", "ACH/PRIME WORKSPACE RENT LLP/AUG", "", "100300.00", "", "2588500.00"],
             ["03/09/2026", "IMPS/ROBU ELECTRONICS/0777", "0777", "23600.00", "", "2564900.00"],
         ],
     )
     sbi = write_csv(
         "bank-statement-sbi.csv",
-        ["Txn Date", "Value Date", "Description", "Ref No./Cheque No.", "Debit", "Credit", "Balance"],
         [
-            ["01 Sep 2026", "01 Sep 2026", "TO TRANSFER-UPI/DR/GOOGLE CLOUD INDIA", "", "33040.00", "", "981000.00"],
-            ["02 Sep 2026", "02 Sep 2026", "BY TRANSFER-NEFT/CR/MAHINDRA AUTOMATION", "NEFT77321", "", "306800.00", "1287800.00"],
-            ["03 Sep 2026", "03 Sep 2026", "TO TRANSFER-NEFT/DR/ADANI ELECTRICITY", "NEFT77400", "21240.00", "", "1266560.00"],
+            "Txn Date",
+            "Value Date",
+            "Description",
+            "Ref No./Cheque No.",
+            "Debit",
+            "Credit",
+            "Balance",
+        ],
+        [
+            [
+                "01 Sep 2026",
+                "01 Sep 2026",
+                "TO TRANSFER-UPI/DR/GOOGLE CLOUD INDIA",
+                "",
+                "33040.00",
+                "",
+                "981000.00",
+            ],
+            [
+                "02 Sep 2026",
+                "02 Sep 2026",
+                "BY TRANSFER-NEFT/CR/MAHINDRA AUTOMATION",
+                "NEFT77321",
+                "",
+                "306800.00",
+                "1287800.00",
+            ],
+            [
+                "03 Sep 2026",
+                "03 Sep 2026",
+                "TO TRANSFER-NEFT/DR/ADANI ELECTRICITY",
+                "NEFT77400",
+                "21240.00",
+                "",
+                "1266560.00",
+            ],
         ],
     )
     generic = write_csv(
         "bank-statement-generic.csv",
         ["date", "description", "reference", "amount", "balance"],
         [
-            ["2026-09-01", "Payout from Siemens India Partner", "SIE-9001", "590000.00", "1590000.00"],
+            [
+                "2026-09-01",
+                "Payout from Siemens India Partner",
+                "SIE-9001",
+                "590000.00",
+                "1590000.00",
+            ],
             ["2026-09-02", "Atlassian India subscription", "ATL-2211", "-11210.00", "1578790.00"],
             ["2026-09-03", "Freelance Devs Collective", "FDC-0099", "-106200.00", "1472590.00"],
         ],

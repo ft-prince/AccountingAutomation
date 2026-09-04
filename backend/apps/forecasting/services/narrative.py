@@ -1,16 +1,19 @@
-"""§8.8: Claude-generated five-bullet summary from aggregates only, guarded by the pure checker."""
+"""§8.8: LLM-generated five-bullet summary from aggregates only, guarded by the pure checker.
+The provider (Anthropic or Groq) is chosen by apps.core.llm from LLM_PROVIDER."""
 
 import logging
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from django.conf import settings
 
+from apps.core import llm as core_llm
 from apps.forecasting.domain.narrative import check_bullets, numbers_in
 from apps.forecasting.models import ForecastPoint, ForecastRun
 
 log = logging.getLogger(__name__)
+MAX_TOKENS = 1024
 PROMPT_VERSION = "forecast_narrative_v1"
 PROMPT_PATH = Path(settings.BASE_DIR) / "prompts" / f"{PROMPT_VERSION}.txt"
 TOOL: dict[str, Any] = {
@@ -68,21 +71,21 @@ def generate_narrative(
     """Returns the accepted bullets joined by newlines, or None (with the reason logged)."""
     import json
 
-    import anthropic
-
-    if client is None:
-        if not settings.ANTHROPIC_API_KEY:
-            return None
-        client = cast(Any, anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY, max_retries=2))
-    resp = client.messages.create(
-        model=settings.ANTHROPIC_MODEL,
-        max_tokens=1024,
-        system=PROMPT_PATH.read_text(),
-        tools=[TOOL],
-        tool_choice={"type": "tool", "name": "write_summary"},
-        messages=[{"role": "user", "content": json.dumps(aggregates, ensure_ascii=False)}],
-    )
-    tool_input = next((b.input for b in resp.content if b.type == "tool_use"), None)
+    if client is None and not core_llm.has_api_key():
+        return None
+    payload = json.dumps(aggregates, ensure_ascii=False)
+    try:
+        reply = core_llm.call_tool(
+            system=PROMPT_PATH.read_text(),
+            messages=[{"role": "user", "content": payload}],
+            tool=TOOL,
+            max_tokens=MAX_TOKENS,
+            client=client,
+        )
+        tool_input = reply.tool_input
+    except core_llm.SchemaError as exc:
+        log.warning("narrative tool call unusable", extra={"run": str(run.pk), "reason": str(exc)})
+        tool_input = None
     bullets = list(tool_input.get("bullets", [])) if isinstance(tool_input, dict) else []
     allowed = numbers_in(json.dumps(aggregates, ensure_ascii=False))
     result = check_bullets(bullets, allowed)

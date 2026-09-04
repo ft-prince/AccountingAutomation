@@ -17,6 +17,10 @@ app.conf.beat_schedule = {
         "task": "apps.reporting.tasks.send_due_reports",
         "schedule": crontab(hour=6, minute=30),
     },
+    "infer-vendor-aato-nightly": {
+        "task": "apps.parties.tasks.infer_vendor_aato",
+        "schedule": crontab(hour=4, minute=45),
+    },
     "refresh-overdue-nightly": {
         "task": "apps.payments.tasks.refresh_overdue_statuses",
         "schedule": crontab(hour=1, minute=0),

@@ -36,6 +36,56 @@ STOPWORDS = {
     "technologies",
 }
 _TOKEN = re.compile(r"[a-z0-9]{3,}")
+# Bank verbs and channel words carry no vendor identity; they are stripped when
+# a narration is reduced to the signature we learn against a party.
+NARRATION_NOISE = {
+    "neft",
+    "imps",
+    "rtgs",
+    "upi",
+    "ach",
+    "nach",
+    "ecs",
+    "chq",
+    "cheque",
+    "clg",
+    "pos",
+    "atm",
+    "inf",
+    "inb",
+    "mmt",
+    "trf",
+    "txn",
+    "ref",
+    "utr",
+    "rrn",
+    "transfer",
+    "payment",
+    "paid",
+    "from",
+    "for",
+    "the",
+    "and",
+}
+ALIAS_MAX = 20
+ALIAS_MAX_LEN = 120
+ALIAS_SCORE = Decimal("0.45")  # a learned alias is stronger evidence than loose name tokens
+NAME_TOKEN_SCORE = Decimal("0.30")
+
+
+def narration_signature(description: str) -> str:
+    """Stable vendor fingerprint of a bank narration.
+
+    Lowercase, drop the UTR/reference numbers and anything with a digit in it,
+    drop bank verbs, collapse whitespace. "NEFT CR ACME WIDGETS UTR552211" and
+    "NEFT/CR/ACME WIDGETS/UTR889900" both reduce to "acme widget".
+    """
+    words = [
+        word[:-1] if len(word) > 3 and word.endswith("s") else word
+        for word in _TOKEN.findall(description.lower())
+        if not any(ch.isdigit() for ch in word) and word not in NARRATION_NOISE
+    ]
+    return " ".join(words)[:ALIAS_MAX_LEN].strip()
 
 
 @dataclass
@@ -70,8 +120,12 @@ def _score(
     desc = txn.description.lower()
     party = invoices[0].party
     party_tokens = _tokens(party.legal_name) | _tokens(party.display_name)
-    if party_tokens & _tokens(desc):
-        score += Decimal("0.30")
+    signature = narration_signature(txn.description)
+    if signature and signature in party.narration_aliases:
+        score += ALIAS_SCORE
+        reasons.append(f"narration matches a learned alias for {party}: '{signature}'")
+    elif party_tokens & _tokens(desc):
+        score += NAME_TOKEN_SCORE
         reasons.append("party name in description")
     refs = {txn.reference.lower()} | {
         t for t in _tokens(txn.description) if any(c.isdigit() for c in t)
@@ -127,6 +181,16 @@ def should_auto_accept(cands: list[Candidate]) -> Candidate | None:
     return cands[0]
 
 
+def learn_alias(party: Any, description: str) -> str | None:
+    """Remember how this party's payments read on the statement. Returns the new alias."""
+    signature = narration_signature(description)
+    if not signature or signature in party.narration_aliases:
+        return None
+    party.narration_aliases = [*party.narration_aliases, signature][-ALIAS_MAX:]
+    party.save(update_fields=["narration_aliases", "updated_at"])
+    return signature
+
+
 def apply_match(
     txn: BankTransaction, invoices: list[Invoice], *, actor: Any, status: str
 ) -> Payment:
@@ -160,6 +224,8 @@ def apply_match(
         txn.matched_payment = payment
         txn.match_status = status
         txn.save(update_fields=["matched_payment", "match_status", "updated_at"])
+        if status == MatchStatus.MANUAL:
+            learn_alias(payment.party, txn.description)
         record(
             payment.org,
             actor=actor,
