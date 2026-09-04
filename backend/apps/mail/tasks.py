@@ -3,6 +3,7 @@
 import logging
 
 from celery import shared_task
+from django.conf import settings
 
 from apps.accounts.models import User
 from apps.mail.models import EmailDraft, EmailThread, MailboxConnection, MailboxStatus
@@ -36,7 +37,15 @@ def sync_mailbox(self, connection_id: str) -> str:  # type: ignore[no-untyped-de
     return f"created={stats.created} skipped={stats.skipped}"
 
 
-@shared_task(bind=True, autoretry_for=(Exception,), retry_backoff=True, max_retries=2)
+# Paced to the provider's tokens-per-minute budget: a burst of threads otherwise spends its
+# attempts on 429s. Raise CLASSIFY_RATE_LIMIT once you are off a free tier.
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=True,
+    max_retries=5,
+    rate_limit=settings.CLASSIFY_RATE_LIMIT,
+)
 def classify_thread(self, thread_id: str) -> str:  # type: ignore[no-untyped-def]
     from apps.mail.services.classification import classify_thread as classify
 

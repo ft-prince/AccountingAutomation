@@ -146,6 +146,10 @@ GROQ_MODEL = env("GROQ_MODEL", default="openai/gpt-oss-120b")
 GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
 # USD per million tokens. Groq's free tier is 0; set these when you move to a paid plan,
 # otherwise spend is recorded as zero and any cost report under-reports.
+# Celery rate limit for email classification, matched to the provider's tokens-per-minute
+# budget (Groq's free tier is 8k TPM and one classification costs roughly 3-4k).
+CLASSIFY_RATE_LIMIT = env("CLASSIFY_RATE_LIMIT", default="2/m")
+
 GROQ_PRICE_USD_PER_MTOK = {
     "input": Decimal(env("GROQ_PRICE_INPUT", default="0")),
     "output": Decimal(env("GROQ_PRICE_OUTPUT", default="0")),
