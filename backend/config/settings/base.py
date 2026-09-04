@@ -134,6 +134,20 @@ ANTHROPIC_PRICE_USD_PER_MTOK = {
 }
 USD_INR_RATE = Decimal(env("USD_INR_RATE", default="84.00"))
 
+# --- LLM provider -----------------------------------------------------------
+# "anthropic" (default) or "groq". Groq speaks the OpenAI wire format; the adapter in
+# apps/core/llm.py translates, so no extra SDK is needed.
+LLM_PROVIDER = env("LLM_PROVIDER", default="anthropic")
+GROQ_API_KEY = env("GROQ_API_KEY", default="")
+GROQ_BASE_URL = env("GROQ_BASE_URL", default="https://api.groq.com/openai/v1")
+GROQ_MODEL = env("GROQ_MODEL", default="llama-3.3-70b-versatile")
+# Groq models are text-in; a scanned PDF needs a vision-capable model or it is refused.
+GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
+
+# --- Backups ----------------------------------------------------------------
+BACKUP_BUCKET = env("BACKUP_BUCKET", default="")
+BACKUP_STALE_HOURS = env.int("BACKUP_STALE_HOURS", default=48)
+
 AWS_S3_ENDPOINT_URL = env("S3_ENDPOINT_URL", default="")
 AWS_ACCESS_KEY_ID = env("S3_ACCESS_KEY", default="")
 AWS_SECRET_ACCESS_KEY = env("S3_SECRET_KEY", default="")
