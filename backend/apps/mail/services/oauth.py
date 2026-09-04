@@ -66,7 +66,8 @@ def start_connect(
         "scopes": scopes,
     }
     if provider == Provider.GMAIL:
-        url = gmail.authorization_url(scopes, state=state, redirect_uri=redirect_uri)
+        url, code_verifier = gmail.authorization_url(scopes, state=state, redirect_uri=redirect_uri)
+        pending["code_verifier"] = code_verifier
     else:
         flow = graph.initiate_flow(scopes, state=state, redirect_uri=redirect_uri)
         pending["flow"] = flow
@@ -79,7 +80,10 @@ def _exchange(pending: dict[str, Any], query: dict[str, str]) -> dict[str, Any]:
     provider = pending["provider"]
     if provider == Provider.GMAIL:
         return gmail.exchange_code(
-            query["code"], scopes=pending["scopes"], redirect_uri=_redirect_uri(provider)
+            query["code"],
+            scopes=pending["scopes"],
+            redirect_uri=_redirect_uri(provider),
+            code_verifier=pending.get("code_verifier", ""),
         )
     return graph.exchange_flow(pending["flow"], query)
 

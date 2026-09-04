@@ -29,10 +29,12 @@ def google(monkeypatch):  # type: ignore[no-untyped-def]
 
     def auth_url(scopes, *, state, redirect_uri):  # type: ignore[no-untyped-def]
         seen.update(scopes=scopes, state=state, redirect_uri=redirect_uri)
-        return f"https://accounts.google.com/o/oauth2/auth?state={state}"
+        return f"https://accounts.google.com/o/oauth2/auth?state={state}", "verifier-abc"
 
-    def exchange(code, *, scopes, redirect_uri):  # type: ignore[no-untyped-def]
+    def exchange(code, *, scopes, redirect_uri, code_verifier=""):  # type: ignore[no-untyped-def]
         assert code == "the-code"
+        # Google rejects the exchange without the PKCE verifier from the authorize step.
+        seen.update(code_verifier=code_verifier)
         return {"token": "at", "refresh_token": SECRET, "scopes": scopes}
 
     monkeypatch.setattr(gmail, "authorization_url", auth_url)
@@ -256,3 +258,11 @@ def test_templates_list_and_create(client_a, client_b, viewer_client) -> None:  
     assert client_a.get("/api/mail/templates/").json()["results"][0]["name"] == "Statement"
     assert client_a.get("/api/mail/templates/?intent=dispute").json()["results"] == []
     assert client_b.get("/api/mail/templates/").json()["results"] == []
+
+
+@pytest.mark.django_db
+def test_gmail_pkce_verifier_survives_the_round_trip(client_a, google) -> None:  # type: ignore[no-untyped-def]
+    """Regression: the verifier is generated while building the authorize URL, so it must be
+    carried in the session to the token exchange or Google answers "Missing code verifier"."""
+    connect_gmail(client_a, google)
+    assert google["code_verifier"] == "verifier-abc"

@@ -57,15 +57,23 @@ def _flow(scopes: list[str], redirect_uri: str) -> Any:
     return flow
 
 
-def authorization_url(scopes: list[str], *, state: str, redirect_uri: str) -> str:
-    url, _ = _flow(scopes, redirect_uri).authorization_url(
+def authorization_url(scopes: list[str], *, state: str, redirect_uri: str) -> tuple[str, str]:
+    """Returns (url, code_verifier). The library generates a PKCE verifier here and Google only
+    sees its challenge, so the caller MUST carry the verifier to the token exchange or Google
+    rejects it with "Missing code verifier"."""
+    flow = _flow(scopes, redirect_uri)
+    url, _ = flow.authorization_url(
         access_type="offline", prompt="consent", include_granted_scopes="true", state=state
     )
-    return str(url)
+    return str(url), str(getattr(flow, "code_verifier", "") or "")
 
 
-def exchange_code(code: str, *, scopes: list[str], redirect_uri: str) -> dict[str, Any]:
+def exchange_code(
+    code: str, *, scopes: list[str], redirect_uri: str, code_verifier: str = ""
+) -> dict[str, Any]:
     flow = _flow(scopes, redirect_uri)
+    if code_verifier:
+        flow.code_verifier = code_verifier
     flow.fetch_token(code=code)
     return tokens_from_credentials(flow.credentials)
 
