@@ -7,6 +7,17 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 MONEY = {"type": "string", "description": "Decimal digits as a string, e.g. '1234.56'"}
+DOCUMENT_KINDS = (
+    "tax_invoice",
+    "bill_of_supply",
+    "credit_note",
+    "debit_note",
+    "proforma",
+    "receipt",
+    "purchase_order",
+    "other",
+)
+INVOICE_KINDS = frozenset({"tax_invoice", "bill_of_supply"})
 STR = {"type": "string"}
 BOOL = {"type": "boolean"}
 
@@ -26,6 +37,11 @@ INVOICE_TOOL: dict[str, Any] = {
     "strict": True,
     "input_schema": _obj(
         {
+            "document_kind": {
+                "type": "string",
+                "enum": list(DOCUMENT_KINDS),
+                "description": "Kind of document; only tax_invoice and bill_of_supply are booked.",
+            },
             "supplier": _obj({"name": STR, "gstin": STR, "address": STR, "state_code": STR}),
             "recipient": _obj({"name": STR, "gstin": STR, "address": STR, "state_code": STR}),
             "invoice": _obj(
@@ -161,6 +177,7 @@ class BankDetails(BaseModel):
 
 
 class ExtractedInvoice(BaseModel):
+    document_kind: str = "tax_invoice"  # older runs predate the field; they were all invoices
     supplier: Supplier
     recipient: Supplier
     invoice: InvoiceHeader

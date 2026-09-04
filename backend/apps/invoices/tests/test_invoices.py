@@ -286,3 +286,22 @@ def test_party_merge_moves_invoices(org_a) -> None:  # type: ignore[no-untyped-d
     merge_party(a, b, actor=org_a.user)
     inv.refresh_from_db()
     assert inv.party_id == b.pk and Party.objects.get(pk=a.pk).merged_into_id == b.pk
+
+
+def test_headline_confidence_ignores_soft_fields(nexren, client_a) -> None:  # type: ignore[no-untyped-def]
+    from apps.invoices.services import core_confidence
+
+    fc = {
+        "invoice.payment_terms": 0.5,
+        "supplier.gstin": 0.97,
+        "totals.total": 0.99,
+        "lines.0.taxable_value": 0.96,
+        "lines.0.uom": 0.4,
+    }
+    assert core_confidence(fc) == (Decimal("0.960"), "lines.0.taxable_value")
+    assert core_confidence({}) == (Decimal("0"), "")
+    assert core_confidence({"notes": 0.3}) == (Decimal("0.300"), "notes")  # nothing core: fall back
+    inv = ingest_extraction(_run(nexren.org, "acme_intra_18", field_confidence=fc))
+    assert inv.confidence == Decimal("0.960")  # payment_terms at 0.5 no longer drags it down
+    body = client_a.get(f"/api/invoices/{inv.id}/").json()
+    assert body["confidence"] == "0.960" and body["confidence_field"] == "lines.0.taxable_value"

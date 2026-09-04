@@ -61,13 +61,29 @@ def has_text_layer(pdf_bytes: bytes) -> bool:
         return chars / len(pages) >= SCAN_CHARS_PER_PAGE
 
 
+MAX_IMAGE_SIDE = 1024  # vision models bill by pixel area; an A4 page reads fine at this size
+
+
+def shrink_image(data: bytes, max_side: int = MAX_IMAGE_SIDE) -> tuple[bytes, str]:
+    """Downscale to `max_side` on the long edge and re-encode as JPEG. Returns (bytes, mime).
+    Roughly 4x fewer image tokens than a 150-DPI PNG with no loss a reader would notice."""
+    from PIL import Image  # Pillow ships with pdfplumber
+
+    with Image.open(io.BytesIO(data)) as img:
+        rgb = img.convert("RGB")
+    rgb.thumbnail((max_side, max_side))
+    buf = io.BytesIO()
+    rgb.save(buf, format="JPEG", quality=85, optimize=True)
+    return buf.getvalue(), "image/jpeg"
+
+
 def render_pages(pdf_bytes: bytes, dpi: int = 150) -> list[bytes]:
     out: list[bytes] = []
     with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
         for page in pdf.pages:
             buf = io.BytesIO()
             page.to_image(resolution=dpi).original.save(buf, format="PNG")
-            out.append(buf.getvalue())
+            out.append(shrink_image(buf.getvalue())[0])
     return out
 
 
@@ -84,8 +100,9 @@ def build_content(data: bytes, mime: str, *, provider: str | None = None) -> lis
             if core_llm.active_provider(provider) == core_llm.GROQ:
                 return [_pdf_text_block(data)]
             return [_document_block(data)]
-        return [_image_block(png, "image/png") for png in render_pages(data)]
-    return [_image_block(data, mime)]
+        return [_image_block(jpg, "image/jpeg") for jpg in render_pages(data)]
+    small, small_mime = shrink_image(data)
+    return [_image_block(small, small_mime)]
 
 
 def _pdf_text_block(pdf: bytes) -> dict[str, Any]:
@@ -123,7 +140,11 @@ def _image_block(img: bytes, mime: str) -> dict[str, Any]:
 
 
 def call_model(
-    client: Any, content: list[dict[str, Any]], *, feedback: str | None = None
+    client: Any,
+    content: list[dict[str, Any]],
+    *,
+    feedback: str | None = None,
+    provider: str | None = None,
 ) -> ModelReply:
     messages: list[dict[str, Any]] = [
         {"role": "user", "content": [*content, {"type": "text", "text": "Extract this invoice."}]}
@@ -137,6 +158,7 @@ def call_model(
         )
     try:
         reply = core_llm.call_tool(
+            provider=provider,
             system=PROMPT_PATH.read_text(),
             messages=messages,
             tool=INVOICE_TOOL,
@@ -192,24 +214,27 @@ def cost_inr(input_tokens: int, output_tokens: int, *, provider: str | None = No
 
 def extract(document: Document, *, client: Any | None = None) -> ExtractionRun:
     """Run the pipeline once, appending an ExtractionRun. Raises on failure after recording it."""
-    provider = core_llm.active_provider()
+    data = storage.get_object(document.file)
+    is_scan = document.mime != "application/pdf" or not has_text_layer(data)
+    # Scans may route to a different provider (EXTRACTION_SCAN_PROVIDER); text PDFs use the default.
+    scan_override = settings.EXTRACTION_SCAN_PROVIDER or None
+    provider = core_llm.active_provider(scan_override if is_scan else None)
     client = client or _client()
     started = time.monotonic()
-    data = storage.get_object(document.file)
     content = build_content(data, document.mime, provider=provider)
     has_images = any(block.get("type") == "image" for block in content)
     model_used = core_llm.configured_model(provider=provider, has_images=has_images)
     tokens_in = tokens_out = 0
     raw: dict[str, Any] = {}
     try:
-        reply = call_model(client, content)
+        reply = call_model(client, content, provider=provider)
         tokens_in, tokens_out, raw = reply.input_tokens, reply.output_tokens, reply.raw
         model_used = reply.model or model_used
         try:
             parsed = parse_reply(reply)
         except SchemaError as first:
             # §5: on schema failure retry ONCE with the error fed back, then fail.
-            reply = call_model(client, content, feedback=str(first)[:1500])
+            reply = call_model(client, content, feedback=str(first)[:1500], provider=provider)
             tokens_in += reply.input_tokens
             tokens_out += reply.output_tokens
             raw = {"first_attempt": raw, "retry": reply.raw}

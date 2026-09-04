@@ -142,6 +142,10 @@ GROQ_API_KEY = env("GROQ_API_KEY", default="")
 GROQ_BASE_URL = env("GROQ_BASE_URL", default="https://api.groq.com/openai/v1")
 # Verify against GET /v1/models for your account; availability differs per plan.
 GROQ_MODEL = env("GROQ_MODEL", default="openai/gpt-oss-120b")
+# Scans (images, PDFs without a text layer) may go to a different provider than text PDFs:
+# Groq's free tier caps its vision model at 1,000 tokens per request, below one page image.
+# Empty means "same as LLM_PROVIDER".
+EXTRACTION_SCAN_PROVIDER = env("EXTRACTION_SCAN_PROVIDER", default="")
 # Groq models are text-in; a scanned PDF needs a vision-capable model or it is refused.
 GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
 # USD per million tokens. Groq's free tier is 0; set these when you move to a paid plan,

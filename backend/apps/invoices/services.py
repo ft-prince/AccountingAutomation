@@ -41,6 +41,46 @@ from apps.parties.services import register_merge_handler
 log = logging.getLogger(__name__)
 
 AUTO_CONFIRM_MIN_CONFIDENCE = Decimal("0.95")
+# The headline confidence and review-queue order look only at fields that change money or
+# identity. Soft fields (payment terms, addresses, notes) still gate §5 auto-confirm.
+CORE_CONFIDENCE_PREFIXES = (
+    "supplier.gstin",
+    "supplier.name",
+    "recipient.gstin",
+    "invoice.number",
+    "invoice.date",
+    "invoice.is_reverse_charge",
+    "totals.",
+)
+CORE_LINE_SUFFIXES = (
+    "quantity",
+    "unit_price",
+    "discount",
+    "taxable_value",
+    "rate",
+    "cgst",
+    "sgst",
+    "igst",
+    "cess",
+)
+
+
+def _is_core_field(name: str) -> bool:
+    if name.startswith(CORE_CONFIDENCE_PREFIXES):
+        return True
+    return name.startswith("lines.") and name.rsplit(".", 1)[-1] in CORE_LINE_SUFFIXES
+
+
+def core_confidence(field_confidence: dict[str, float]) -> tuple[Decimal, str]:
+    """(minimum over core fields, name of the weakest one). Falls back to every field when the
+    run reported no core fields, and to (0, "") when it reported nothing."""
+    if not field_confidence:
+        return Decimal("0"), ""
+    core = {k: v for k, v in field_confidence.items() if _is_core_field(k)} or field_confidence
+    field, value = min(core.items(), key=lambda kv: (kv[1], kv[0]))
+    return Decimal(str(value)).quantize(Decimal("0.001")), field
+
+
 AUTO_CONFIRM_MIN_LAYOUT_HISTORY = 5
 TAX_RECOMPUTED = "TAX_RECOMPUTED"
 TAX_DELTA_TOLERANCE = Decimal("0.01")
@@ -356,11 +396,7 @@ def ingest_extraction(run: ExtractionRun, *, client: Any = None) -> Invoice:
         )
     ]
     issues = domain_issues + deltas + side_issues
-    confidence = (
-        Decimal(str(min(parsed.field_confidence.values())))
-        if parsed.field_confidence
-        else Decimal("0")
-    )
+    confidence, _weakest = core_confidence(parsed.field_confidence)
 
     with transaction.atomic():
         invoice = Invoice(

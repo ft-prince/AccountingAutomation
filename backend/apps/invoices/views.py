@@ -42,7 +42,7 @@ class InvoiceViewSet(OrgScopedViewSet):
         qs = (
             super()
             .get_queryset()  # type: ignore[no-untyped-call]
-            .select_related("party")
+            .select_related("party", "extraction_run")
             .annotate(
                 outstanding=F("total") - F("amount_paid"),
                 issue_count=Count("issues", distinct=True),

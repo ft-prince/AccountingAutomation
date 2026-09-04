@@ -12,13 +12,22 @@ log = logging.getLogger(__name__)
 MAX_ATTEMPTS = 6  # paced by EXTRACTION_RATE_LIMIT, so retries mostly wait rather than fail
 
 
-def run_extraction(document: Document) -> None:
-    """PROJECT_SPECS §5: model call → validated ExtractionRun → (Phase 7) invoice ingest."""
+def run_extraction(document: Document) -> str:
+    """PROJECT_SPECS §5: model call → validated ExtractionRun → invoice ingest.
+    Returns the document status to record: EXTRACTED, or NOT_INVOICE when the model read the
+    file as a letter, report, quote, PO, receipt or note — then nothing is booked."""
     from apps.documents.services.extraction import extract
+    from apps.documents.services.schema import INVOICE_KINDS
     from apps.invoices.services import ingest_extraction
 
     run = extract(document)
+    kind = (run.parsed or {}).get("document_kind", "tax_invoice")
+    if kind not in INVOICE_KINDS:
+        document.error = f"Not an invoice: the model read this as '{kind}'. Nothing was booked."
+        document.save(update_fields=["error", "updated_at"])
+        return DocumentStatus.NOT_INVOICE
     ingest_extraction(run)
+    return DocumentStatus.EXTRACTED
 
 
 @shared_task(
@@ -40,8 +49,7 @@ def extract_document(self, document_id: str) -> str:  # type: ignore[no-untyped-
     doc.attempts += 1
     doc.save(update_fields=["status", "attempts", "updated_at"])
     try:
-        run_extraction(doc)
-        doc.status = DocumentStatus.EXTRACTED
+        doc.status = run_extraction(doc) or DocumentStatus.EXTRACTED
         doc.save(update_fields=["status", "updated_at"])
     except Exception as exc:
         log.exception("extract_document failed", extra={"document_id": document_id})

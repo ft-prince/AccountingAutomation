@@ -47,6 +47,17 @@ class IssueSerializer(serializers.ModelSerializer):
 
 class InvoiceListSerializer(serializers.ModelSerializer):
     party_name = serializers.CharField(source="party.legal_name", read_only=True)
+    confidence_field = serializers.SerializerMethodField()
+
+    def get_confidence_field(self, obj: Invoice) -> str | None:
+        """The core field that set the headline confidence; None for manual entries."""
+        run = obj.extraction_run
+        if run is None or not run.field_confidence:
+            return None
+        from apps.invoices.services import core_confidence
+
+        return core_confidence(run.field_confidence)[1] or None
+
     outstanding = serializers.DecimalField(max_digits=14, decimal_places=2, read_only=True)
     issue_count = serializers.IntegerField(read_only=True)
 
@@ -76,6 +87,7 @@ class InvoiceListSerializer(serializers.ModelSerializer):
             "fy",
             "period_month",
             "issue_count",
+            "confidence_field",
             "created_at",
         ]
 

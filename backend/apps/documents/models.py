@@ -17,6 +17,7 @@ class DocumentStatus(models.TextChoices):
     EXTRACTED = "extracted"
     FAILED = "failed"
     SUPERSEDED = "superseded"
+    NOT_INVOICE = "not_invoice"  # extracted fine, but it is a letter, report, PO, quote...
 
 
 class Document(TenantModel):

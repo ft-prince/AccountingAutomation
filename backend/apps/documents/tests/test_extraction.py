@@ -151,3 +151,55 @@ def test_live_extraction(org_a, fake_storage) -> None:  # type: ignore[no-untype
     run = extract(doc)
     assert run.succeeded
     assert ExtractedInvoice.model_validate(run.parsed).supplier.gstin == "27AAPFU0939F1ZV"
+
+
+def test_non_invoice_is_marked_not_booked(org_a, fake_storage, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """A letter or report must not become an empty invoice with eight missing-field issues."""
+    from apps.documents.tasks import extract_document
+    from apps.invoices.models import Invoice
+
+    doc = _doc(org_a.org, fake_storage, "acme_intra_18")
+    reply = json.loads((FIXTURES / "acme_intra_18.reply.json").read_text())
+    reply["document_kind"] = "other"
+    monkeypatch.setattr(extraction, "_client", lambda: FakeAnthropic([reply]))
+    assert extract_document.apply(args=[str(doc.pk)]).get() == "extracted"
+    doc.refresh_from_db()
+    assert doc.status == "not_invoice" and "Not an invoice" in doc.error
+    assert not Invoice.objects.filter(document=doc).exists()
+    assert ExtractionRun.objects.filter(document=doc).count() == 1  # the run is still kept
+
+
+def test_page_images_are_shrunk_for_vision_models() -> None:
+    import io
+
+    from PIL import Image
+
+    from apps.documents.services.extraction import MAX_IMAGE_SIDE, shrink_image
+
+    big = io.BytesIO()
+    Image.new("RGB", (2480, 3508), "white").save(big, format="PNG")  # A4 at 300 DPI
+    small, mime = shrink_image(big.getvalue())
+    with Image.open(io.BytesIO(small)) as img:
+        assert max(img.size) == MAX_IMAGE_SIDE and mime == "image/jpeg"
+    assert len(small) < len(big.getvalue()) / 4
+
+
+def test_scans_can_route_to_a_different_provider(org_a, fake_storage, settings) -> None:  # type: ignore[no-untyped-def]
+    """Groq's free tier cannot take a page image; scans go to Anthropic while text PDFs stay."""
+    import io
+
+    from PIL import Image
+
+    settings.LLM_PROVIDER = "groq"
+    settings.GROQ_API_KEY = "k"
+    settings.EXTRACTION_SCAN_PROVIDER = "anthropic"
+    png = io.BytesIO()
+    Image.new("RGB", (1200, 1600), "white").save(png, format="PNG")
+    doc = DocumentFactory(org=org_a.org, mime="image/png", original_filename="scan.png")
+    fake_storage[doc.file] = png.getvalue()
+    good = json.loads((FIXTURES / "acme_intra_18.reply.json").read_text())
+    fake = FakeAnthropic([good])
+    run = extract(doc, client=fake)
+    block = fake.calls[0]["messages"][0]["content"][0]
+    assert block["type"] == "image" and block["source"]["media_type"] == "image/jpeg"
+    assert run.model_name == settings.ANTHROPIC_MODEL  # the scan went down the Anthropic path

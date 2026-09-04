@@ -332,7 +332,13 @@ def _sleep(seconds: float) -> None:
 
 
 def _failed(attempts: int, reason: str) -> str:
-    return f"Groq request failed after {attempts} attempt(s): {reason}"
+    hint = ""
+    if "Request too large" in reason:
+        hint = (
+            " — the image or prompt exceeds this model's per-request token cap on your tier. "
+            "Route scans elsewhere with EXTRACTION_SCAN_PROVIDER, or move to a paid tier."
+        )
+    return f"Groq request failed after {attempts} attempt(s): {reason}{hint}"
 
 
 def _body_excerpt(response: Any) -> str:
