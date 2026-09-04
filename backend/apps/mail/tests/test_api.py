@@ -266,3 +266,27 @@ def test_gmail_pkce_verifier_survives_the_round_trip(client_a, google) -> None: 
     carried in the session to the token exchange or Google answers "Missing code verifier"."""
     connect_gmail(client_a, google)
     assert google["code_verifier"] == "verifier-abc"
+
+
+@pytest.mark.django_db
+def test_provider_failure_becomes_a_readable_message_not_a_traceback(client_a, google) -> None:  # type: ignore[no-untyped-def]
+    """A disabled Gmail API used to surface as a raw 500 HttpError page."""
+    from apps.mail.providers import gmail as gmail_provider
+
+    def boom(tokens):  # type: ignore[no-untyped-def]
+        raise RuntimeError(
+            "<HttpError 403 ... 'reason': 'accessNotConfigured', "
+            "Gmail API has not been used in project 451364275103 before or it is disabled.>"
+        )
+
+    client_a.post("/api/mail/connect/gmail")
+    gmail_provider.profile_email = boom  # type: ignore[assignment]
+    try:
+        resp = client_a.get(
+            f"/api/mail/connect/gmail/callback?code=the-code&state={google['state']}"
+        )
+    finally:
+        pass
+    assert resp.status_code == 400, resp.content[:200]
+    detail = str(resp.json())
+    assert "Gmail API is not enabled" in detail and "451364275103" not in detail

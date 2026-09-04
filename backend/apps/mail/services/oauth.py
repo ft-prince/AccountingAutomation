@@ -76,6 +76,25 @@ def start_connect(
     return url
 
 
+def _provider_hint(provider: str, exc: Exception) -> str:
+    """Turn a provider SDK exception into something a person can act on."""
+    text = str(exc)
+    if "accessNotConfigured" in text or "has not been used in project" in text:
+        api = "Gmail API" if provider == Provider.GMAIL else "Microsoft Graph"
+        return (
+            f"{api} is not enabled for this OAuth project. Enable it in the provider console, "
+            "wait a minute for it to propagate, then connect again."
+        )
+    if "insufficientPermissions" in text or "insufficient" in text.lower():
+        return (
+            "The granted scopes are insufficient. Disconnect and connect again, "
+            "accepting all requested permissions."
+        )
+    if "invalid_grant" in text:
+        return "The authorisation code was rejected. Start the connection again."
+    return f"The provider rejected the request: {text[:300]}"
+
+
 def _exchange(pending: dict[str, Any], query: dict[str, str]) -> dict[str, Any]:
     provider = pending["provider"]
     if provider == Provider.GMAIL:
@@ -98,9 +117,17 @@ def complete_connect(
         raise OAuthError(f"provider returned an error: {query['error']}")
     if not query.get("code") or query.get("state") != pending["state"]:
         raise OAuthError("OAuth state mismatch")
-    tokens = _exchange(pending, query)
+    try:
+        tokens = _exchange(pending, query)
+    except OAuthError:
+        raise
+    except Exception as exc:  # noqa: BLE001 — surface a message, not a traceback
+        raise OAuthError(_provider_hint(provider, exc)) from exc
     module = gmail if provider == Provider.GMAIL else graph
-    email_address = module.profile_email(tokens).lower()
+    try:
+        email_address = module.profile_email(tokens).lower()
+    except Exception as exc:  # noqa: BLE001 — any provider failure becomes a readable message
+        raise OAuthError(_provider_hint(provider, exc)) from exc
     granted = list(tokens.get("scopes") or pending["scopes"])
     with transaction.atomic():
         if pending.get("mailbox_id"):
