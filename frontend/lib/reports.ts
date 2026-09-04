@@ -21,6 +21,8 @@ export interface ReportParams {
   from: string;
   to: string;
   basis: ReportBasis;
+  /** Financial-year label ("2026-27"); optional, the server derives it from `from` when absent. */
+  fy?: string;
 }
 
 export interface SummaryReport {
@@ -89,6 +91,9 @@ export interface DsoDpoReport {
   dpo_days: string;
   receivables: string;
   payables: string;
+  sales_90d: string;
+  purchases_90d: string;
+  window: { from: string; to: string };
   meta: ReportMeta;
 }
 
@@ -189,7 +194,7 @@ export const REPORT_NAMES: readonly ReportName[] = [
 ];
 
 export function reportPath(name: ReportName, params: ReportParams): string {
-  return `/api/reports/${name}${buildQuery({ from: params.from, to: params.to, basis: params.basis })}`;
+  return `/api/reports/${name}${buildQuery({ fy: params.fy, from: params.from, to: params.to, basis: params.basis })}`;
 }
 
 export const REPORT_STALE_MS = 30_000;

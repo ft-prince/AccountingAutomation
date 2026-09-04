@@ -16,7 +16,12 @@ const nextConfig: NextConfig = {
   // slash-less form and Django's APPEND_SLASH would bounce straight back.
   skipTrailingSlashRedirect: true,
   async rewrites() {
-    return [{ source: "/api/:path*", destination: `${API_PROXY_URL}/api/:path*` }];
+    return [
+      // DRF router URLs end in "/". Next strips the trailing slash from `:path*`, and Django's
+      // APPEND_SLASH then 301s back to the slashed URL — an infinite loop. Keep the slash explicitly.
+      { source: "/api/:path*/", destination: `${API_PROXY_URL}/api/:path*/` },
+      { source: "/api/:path*", destination: `${API_PROXY_URL}/api/:path*` },
+    ];
   },
 };
 

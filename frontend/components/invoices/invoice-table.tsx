@@ -65,7 +65,10 @@ export function InvoiceTable({ rows, ordering, onOrderingChange, onSelectionChan
   const selectionKey = selectedIds.join("|");
 
   useEffect(() => onSelectionChange(selectionKey === "" ? [] : selectionKey.split("|")), [selectionKey, onSelectionChange]);
-  useEffect(() => table.resetRowSelection(true), [selectionResetKey, table]);
+  // `table` is a new object each render in @tanstack/react-table v9; depending on it re-ran the reset on
+  // every render and the resulting state update looped ("Maximum update depth exceeded").
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- only the reset key should trigger
+  useEffect(() => table.resetRowSelection(true), [selectionResetKey]);
 
   const sortableById = useMemo(() => new Map(SORTABLE_COLUMNS.map((column) => [column.id, column.field])), []);
 
