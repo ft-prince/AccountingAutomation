@@ -45,7 +45,9 @@ export async function ensureCsrfCookie(): Promise<void> {
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
-  if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  // FormData bodies must keep the browser-generated multipart boundary.
+  const isMultipart = typeof FormData !== "undefined" && init.body instanceof FormData;
+  if (init.body && !isMultipart && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   const csrf = csrfToken();
   if (csrf && init.method && init.method !== "GET") headers.set(CSRF_HEADER, csrf);
 

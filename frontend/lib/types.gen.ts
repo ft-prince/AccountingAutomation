@@ -4,6 +4,42 @@
  */
 
 export interface paths {
+    "/api/api-keys/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["api_keys_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["api_keys_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/api-keys/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["api_keys_retrieve"];
+        put?: never;
+        post?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        delete: operations["api_keys_destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/login": {
         parameters: {
             query?: never;
@@ -47,6 +83,231 @@ export interface paths {
         put?: never;
         /** @description Switch current org: {"org_id": ...} */
         post: operations["auth_me_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/accounts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["bank_accounts_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["bank_accounts_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/accounts/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["bank_accounts_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["bank_accounts_partial_update"];
+        trace?: never;
+    };
+    "/api/bank/auto-match": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_auto_match_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/balance-snapshots/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["bank_balance_snapshots_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["bank_balance_snapshots_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/balance-snapshots/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["bank_balance_snapshots_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/statements/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_statements_import_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        get: operations["bank_transactions_list"];
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_transactions_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        get: operations["bank_transactions_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/{id}/candidates/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        get: operations["bank_transactions_candidates_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/{id}/ignore/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_transactions_ignore_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/{id}/match/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_transactions_match_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/auto-match/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_transactions_auto_match_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/transactions/import/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Org-scoped through the bank account (BankTransaction has no org column). */
+        post: operations["bank_transactions_import_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -170,6 +431,304 @@ export interface paths {
         put?: never;
         /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
         post: operations["documents_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exports/documents.zip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/exports/documents.zip?period=YYYY-MM|fy=YYYY-YY */
+        get: operations["exports_documents.zip_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/anomalies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Read-only computed views (§8.5); org-scoped through the services. */
+        get: operations["forecast_anomalies_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/backtest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_backtest_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/expected/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_expected_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["forecast_expected_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/expected/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_expected_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["forecast_expected_partial_update"];
+        trace?: never;
+    };
+    "/api/forecast/fixed-lines/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_fixed_lines_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["forecast_fixed_lines_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/fixed-lines/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_fixed_lines_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["forecast_fixed_lines_partial_update"];
+        trace?: never;
+    };
+    "/api/forecast/latest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_latest_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/recurring/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_recurring_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["forecast_recurring_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/recurring/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_recurring_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["forecast_recurring_partial_update"];
+        trace?: never;
+    };
+    "/api/forecast/risk/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Read-only computed views (§8.5); org-scoped through the services. */
+        get: operations["forecast_risk_customers_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["forecast_run_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/runs/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_runs_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["forecast_runs_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/runs/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_runs_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/scenarios/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_scenarios_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["forecast_scenarios_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/forecast/scenarios/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["forecast_scenarios_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["forecast_scenarios_partial_update"];
+        trace?: never;
+    };
+    "/api/forecast/scenarios/{id}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Overlay for the UI; persists nothing, so every org member may run it. */
+        post: operations["forecast_scenarios_run_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -350,6 +909,471 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/mail/connect/{provider}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_connect_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/connect/{provider}/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_connect_callback_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_drafts_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_drafts_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_drafts_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["mail_drafts_partial_update"];
+        trace?: never;
+    };
+    "/api/mail/drafts/{id}/acknowledge-flag/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_drafts_acknowledge_flag_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/{id}/approve/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_drafts_approve_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/{id}/reject/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_drafts_reject_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/{id}/send/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_drafts_send_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/metrics/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_drafts_metrics_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/drafts/review-queue/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_drafts_review_queue_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/mailboxes/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_mailboxes_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_mailboxes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/mailboxes/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_mailboxes_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/mailboxes/{id}/grant-send-scope/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_mailboxes_grant_send_scope_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/mailboxes/{id}/revoke/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_mailboxes_revoke_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/mailboxes/connect/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_mailboxes_connect_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/mailboxes/connect_callback/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_mailboxes_connect_callback_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_metrics_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/review-queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_review_queue_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/style-guide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Singleton per org: GET|PUT /api/mail/style-guide (PUT owner-only, §4/§12). */
+        get: operations["mail_style_guide_retrieve"];
+        /** @description Singleton per org: GET|PUT /api/mail/style-guide (PUT owner-only, §4/§12). */
+        put: operations["mail_style_guide_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/templates/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_templates_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_templates_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/templates/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_templates_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/threads/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_threads_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_threads_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/threads/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["mail_threads_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/threads/{id}/close/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_threads_close_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/threads/{id}/draft/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_threads_draft_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/threads/{id}/ignore/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_threads_ignore_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mail/threads/{id}/snooze/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["mail_threads_snooze_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/members/": {
         parameters: {
             query?: never;
@@ -397,7 +1421,8 @@ export interface paths {
         get: operations["orgs_current_retrieve"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** @description §12: owner requests deletion; purge_deleted_orgs (Beat) removes S3 + DB after 30 days. */
+        delete: operations["orgs_current_destroy"];
         options?: never;
         head?: never;
         patch: operations["orgs_current_partial_update"];
@@ -456,10 +1481,112 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/payments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["payments_list"];
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["payments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/payments/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        get: operations["payments_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        patch: operations["payments_partial_update"];
+        trace?: never;
+    };
+    "/api/payments/{id}/allocate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Every queryset goes through TenantManager.for_org. Cross-org ids are 404, never 403. */
+        post: operations["payments_allocate_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET /api/reports/{name}?fy=&from=&to=&basis=accrual|cash */
+        get: operations["reports_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description GET|PUT /api/settings — extraction toggles and the auto-confirm flag (§5, default OFF). */
+        get: operations["settings_retrieve"];
+        /** @description GET|PUT /api/settings — extraction toggles and the auto-confirm flag (§5, default OFF). */
+        put: operations["settings_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        APIKey: {
+            /** Format: uuid */
+            readonly id: string;
+            name: string;
+            readonly prefix: string;
+            /** Format: uuid */
+            readonly created_by: string | null;
+            /** Format: date-time */
+            readonly last_used_at: string | null;
+            /** Format: date-time */
+            readonly revoked_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /**
          * @description * `below_5cr` - Below ₹5 crore
          *     * `5_to_10cr` - ₹5–10 crore
@@ -467,6 +1594,39 @@ export interface components {
          * @enum {string}
          */
         AatoBracketEnum: "below_5cr" | "5_to_10cr" | "above_10cr";
+        Allocation: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            invoice: string;
+            readonly invoice_number: string;
+            /** Format: decimal */
+            amount?: string;
+        };
+        BankAccount: {
+            /** Format: uuid */
+            readonly id: string;
+            name: string;
+            bank?: string;
+            masked_account?: string;
+            /** Format: decimal */
+            opening_balance?: string;
+            /** Format: date */
+            opening_balance_date?: string | null;
+            is_active?: boolean;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /** @enum {unknown} */
+        BlankEnum: "";
+        /**
+         * @description * `monthly` - Monthly
+         *     * `quarterly` - Quarterly
+         *     * `yearly` - Yearly
+         *     * `once` - Once
+         * @enum {string}
+         */
+        CadenceEnum: "monthly" | "quarterly" | "yearly" | "once";
         Category: {
             /** Format: uuid */
             readonly id: string;
@@ -486,7 +1646,7 @@ export interface components {
          *     * `outward` - Outward
          * @enum {string}
          */
-        DirectionEnum: "inward" | "outward";
+        Direction7b9Enum: "inward" | "outward";
         Document: {
             /** Format: uuid */
             readonly id: string;
@@ -517,6 +1677,163 @@ export interface components {
          * @enum {string}
          */
         DocumentStatusEnum: "pending" | "extracting" | "extracted" | "failed" | "superseded";
+        Draft: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            readonly thread: string;
+            /** Format: uuid */
+            readonly in_reply_to: string | null;
+            /** @default 1 */
+            readonly version: number;
+            readonly prompt_version: string;
+            readonly model_name: string;
+            readonly context_snapshot: unknown;
+            readonly body_text: string;
+            readonly body_html: string;
+            readonly proposed_attachments: unknown;
+            readonly tone: string;
+            /** Format: decimal */
+            readonly confidence: string;
+            readonly guardrail_flags: string[];
+            readonly acknowledged_flags: unknown;
+            readonly status: components["schemas"]["Status485Enum"];
+            readonly instruction: string;
+            /** Format: uuid */
+            readonly created_by: string | null;
+            /** Format: uuid */
+            readonly reviewed_by: string | null;
+            /** Format: date-time */
+            readonly reviewed_at: string | null;
+            readonly reject_reason: string;
+            /** Format: uuid */
+            readonly sent_message: string | null;
+            /** Format: date-time */
+            readonly sent_at: string | null;
+            readonly edit_distance: number | null;
+            readonly revisions: components["schemas"]["Revision"][];
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        DraftSummary: {
+            /** Format: uuid */
+            readonly id: string;
+            version?: number;
+            status?: components["schemas"]["Status485Enum"];
+            tone?: string;
+            /** Format: decimal */
+            confidence?: string;
+            guardrail_flags?: string[];
+            acknowledged_flags?: unknown;
+            /** Format: uuid */
+            reviewed_by?: string | null;
+            /** Format: date-time */
+            sent_at?: string | null;
+            edit_distance?: number | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        ExpectedInvoice: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            party: string;
+            readonly party_name: string;
+            /** Format: decimal */
+            amount?: string;
+            /** Format: date */
+            expected_date: string;
+            /** Format: decimal */
+            probability: string;
+            note?: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        FixedLine: {
+            /** Format: uuid */
+            readonly id: string;
+            name: string;
+            /** Format: decimal */
+            amount?: string;
+            cadence?: components["schemas"]["CadenceEnum"];
+            /** Format: date */
+            next_date: string;
+            direction?: components["schemas"]["FixedLineDirectionEnum"];
+            is_active?: boolean;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `inflow` - Inflow
+         *     * `outflow` - Outflow
+         * @enum {string}
+         */
+        FixedLineDirectionEnum: "inflow" | "outflow";
+        ForecastPoint: {
+            /** Format: date */
+            date: string;
+            /** Format: decimal */
+            p10?: string | null;
+            /** Format: decimal */
+            p50?: string | null;
+            /** Format: decimal */
+            p90?: string | null;
+            /** Format: decimal */
+            deterministic?: string;
+        };
+        ForecastRun: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: date */
+            readonly as_of: string;
+            readonly horizon_days: number;
+            readonly seed: number;
+            readonly params: unknown;
+            readonly inputs_hash: string;
+            readonly history_days: number;
+            readonly insufficient_history: boolean;
+            /** Format: decimal */
+            readonly opening_cash: string;
+            /** Format: decimal */
+            readonly backtest_mape: string | null;
+            /** Format: decimal */
+            readonly backtest_coverage: string | null;
+            readonly backtest_n_origins: number | null;
+            /** Format: date */
+            readonly runway_date: string | null;
+            readonly narrative: string | null;
+            readonly status: components["schemas"]["Status480Enum"];
+            readonly error: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            readonly points: components["schemas"]["ForecastPoint"][];
+        };
+        ForecastRunList: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: date */
+            readonly as_of: string;
+            readonly horizon_days: number;
+            readonly seed: number;
+            readonly params: unknown;
+            readonly inputs_hash: string;
+            readonly history_days: number;
+            readonly insufficient_history: boolean;
+            /** Format: decimal */
+            readonly opening_cash: string;
+            /** Format: decimal */
+            readonly backtest_mape: string | null;
+            /** Format: decimal */
+            readonly backtest_coverage: string | null;
+            readonly backtest_n_origins: number | null;
+            /** Format: date */
+            readonly runway_date: string | null;
+            readonly narrative: string | null;
+            readonly status: components["schemas"]["Status480Enum"];
+            readonly error: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         GSTINProfile: {
             /** Format: uuid */
             readonly id: string;
@@ -532,6 +1849,22 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
         };
+        /**
+         * @description * `invoice_query` - Invoice Query
+         *     * `payment_confirmation` - Payment Confirmation
+         *     * `payment_delay_notice` - Payment Delay Notice
+         *     * `statement_request` - Statement Request
+         *     * `quote_request` - Quote Request
+         *     * `po_or_order` - Po Or Order
+         *     * `dispute` - Dispute
+         *     * `vendor_bill_received` - Vendor Bill Received
+         *     * `support` - Support
+         *     * `meeting_or_scheduling` - Meeting Or Scheduling
+         *     * `newsletter_or_spam` - Newsletter Or Spam
+         *     * `other` - Other
+         * @enum {string}
+         */
+        IntentEnum: "invoice_query" | "payment_confirmation" | "payment_delay_notice" | "statement_request" | "quote_request" | "po_or_order" | "dispute" | "vendor_bill_received" | "support" | "meeting_or_scheduling" | "newsletter_or_spam" | "other";
         InvoiceDetail: {
             /** Format: uuid */
             readonly id: string;
@@ -540,7 +1873,7 @@ export interface components {
             invoice_date: string;
             /** Format: date */
             due_date?: string | null;
-            direction: components["schemas"]["DirectionEnum"];
+            direction: components["schemas"]["Direction7b9Enum"];
             /** Format: uuid */
             party: string;
             readonly party_name: string;
@@ -609,7 +1942,7 @@ export interface components {
             invoice_date: string;
             /** Format: date */
             due_date?: string | null;
-            direction: components["schemas"]["DirectionEnum"];
+            direction: components["schemas"]["Direction7b9Enum"];
             /** Format: uuid */
             party: string;
             readonly party_name: string;
@@ -747,6 +2080,52 @@ export interface components {
              */
             cess_rate: string;
         };
+        Login: {
+            /** Format: email */
+            email: string;
+            password: string;
+        };
+        Mailbox: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly provider: components["schemas"]["ProviderEnum"];
+            /** Format: email */
+            readonly email_address: string;
+            readonly scopes: string[];
+            readonly status: components["schemas"]["MailboxStatusEnum"];
+            readonly has_send_scope: boolean;
+            readonly needs_send_scope: boolean;
+            /** Format: date-time */
+            readonly last_sync_at: string | null;
+            readonly last_error: string;
+            /** Format: uuid */
+            readonly connected_by: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `active` - Active
+         *     * `error` - Error
+         *     * `revoked` - Revoked
+         * @enum {string}
+         */
+        MailboxStatusEnum: "active" | "error" | "revoked";
+        /**
+         * @description * `unmatched` - Unmatched
+         *     * `auto` - Auto
+         *     * `manual` - Manual
+         *     * `ignored` - Ignored
+         * @enum {string}
+         */
+        MatchStatusEnum: "unmatched" | "auto" | "manual" | "ignored";
+        Me: {
+            user: components["schemas"]["User"];
+            readonly org: string;
+            role: string | null;
+            orgs: {
+                [key: string]: unknown;
+            }[];
+        };
         Membership: {
             /** Format: uuid */
             readonly id: string;
@@ -756,6 +2135,69 @@ export interface components {
             role?: components["schemas"]["RoleEnum"];
             /** Format: date-time */
             readonly created_at: string;
+        };
+        Message: {
+            /** Format: uuid */
+            readonly id: string;
+            direction: components["schemas"]["MessageDirectionEnum"];
+            /** Format: email */
+            from_address: string;
+            to_addresses?: string[];
+            cc_addresses?: string[];
+            /** Format: date-time */
+            date: string;
+            subject?: string;
+            body_text?: string;
+            body_html?: string;
+            attachments?: unknown;
+            is_read?: boolean;
+            injection_flag?: boolean;
+            injection_note?: string;
+        };
+        /**
+         * @description * `inbound` - Inbound
+         *     * `outbound` - Outbound
+         * @enum {string}
+         */
+        MessageDirectionEnum: "inbound" | "outbound";
+        /**
+         * @description * `neft` - Neft
+         *     * `upi` - Upi
+         *     * `cheque` - Cheque
+         *     * `card` - Card
+         *     * `cash` - Cash
+         *     * `other` - Other
+         * @enum {string}
+         */
+        MethodEnum: "neft" | "upi" | "cheque" | "card" | "cash" | "other";
+        Ok: {
+            ok: boolean;
+        };
+        PaginatedAPIKeyList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["APIKey"][];
+        };
+        PaginatedBankAccountList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["BankAccount"][];
         };
         PaginatedCategoryList: {
             /**
@@ -783,6 +2225,58 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["Document"][];
         };
+        PaginatedDraftList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Draft"][];
+        };
+        PaginatedExpectedInvoiceList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["ExpectedInvoice"][];
+        };
+        PaginatedFixedLineList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["FixedLine"][];
+        };
+        PaginatedForecastRunListList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["ForecastRunList"][];
+        };
         PaginatedGSTINProfileList: {
             /**
              * Format: uri
@@ -808,6 +2302,19 @@ export interface components {
              */
             previous?: string | null;
             results: components["schemas"]["InvoiceList"][];
+        };
+        PaginatedMailboxList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Mailbox"][];
         };
         PaginatedMembershipList: {
             /**
@@ -835,6 +2342,97 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["Party"][];
         };
+        PaginatedPaymentList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Payment"][];
+        };
+        PaginatedRecurringPatternList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["RecurringPattern"][];
+        };
+        PaginatedScenarioList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Scenario"][];
+        };
+        PaginatedSnapshotList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Snapshot"][];
+        };
+        PaginatedTemplateList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Template"][];
+        };
+        PaginatedThreadListList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["ThreadList"][];
+        };
+        PaginatedTransactionList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Transaction"][];
+        };
         Party: {
             /** Format: uuid */
             readonly id: string;
@@ -861,6 +2459,20 @@ export interface components {
             /** Format: date-time */
             readonly updated_at: string;
         };
+        PatchedBankAccount: {
+            /** Format: uuid */
+            readonly id?: string;
+            name?: string;
+            bank?: string;
+            masked_account?: string;
+            /** Format: decimal */
+            opening_balance?: string;
+            /** Format: date */
+            opening_balance_date?: string | null;
+            is_active?: boolean;
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
         PatchedCategory: {
             /** Format: uuid */
             readonly id?: string;
@@ -872,6 +2484,74 @@ export interface components {
             tally_ledger_name?: string;
             is_recurring_hint?: boolean;
             readonly is_system?: boolean;
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
+        PatchedDraft: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            readonly thread?: string;
+            /** Format: uuid */
+            readonly in_reply_to?: string | null;
+            /** @default 1 */
+            readonly version: number;
+            readonly prompt_version?: string;
+            readonly model_name?: string;
+            readonly context_snapshot?: unknown;
+            readonly body_text?: string;
+            readonly body_html?: string;
+            readonly proposed_attachments?: unknown;
+            readonly tone?: string;
+            /** Format: decimal */
+            readonly confidence?: string;
+            readonly guardrail_flags?: string[];
+            readonly acknowledged_flags?: unknown;
+            readonly status?: components["schemas"]["Status485Enum"];
+            readonly instruction?: string;
+            /** Format: uuid */
+            readonly created_by?: string | null;
+            /** Format: uuid */
+            readonly reviewed_by?: string | null;
+            /** Format: date-time */
+            readonly reviewed_at?: string | null;
+            readonly reject_reason?: string;
+            /** Format: uuid */
+            readonly sent_message?: string | null;
+            /** Format: date-time */
+            readonly sent_at?: string | null;
+            readonly edit_distance?: number | null;
+            readonly revisions?: components["schemas"]["Revision"][];
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
+        PatchedExpectedInvoice: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            party?: string;
+            readonly party_name?: string;
+            /** Format: decimal */
+            amount?: string;
+            /** Format: date */
+            expected_date?: string;
+            /** Format: decimal */
+            probability?: string;
+            note?: string;
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
+        PatchedFixedLine: {
+            /** Format: uuid */
+            readonly id?: string;
+            name?: string;
+            /** Format: decimal */
+            amount?: string;
+            cadence?: components["schemas"]["CadenceEnum"];
+            /** Format: date */
+            next_date?: string;
+            direction?: components["schemas"]["FixedLineDirectionEnum"];
+            is_active?: boolean;
             /** Format: date-time */
             readonly created_at?: string;
         };
@@ -945,6 +2625,93 @@ export interface components {
             /** Format: date-time */
             readonly updated_at?: string;
         };
+        PatchedPayment: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            party?: string | null;
+            /** @default  */
+            readonly party_name: string;
+            direction?: components["schemas"]["PaymentDirectionEnum"];
+            /** Format: decimal */
+            amount?: string;
+            /** Format: date */
+            date?: string;
+            method?: components["schemas"]["MethodEnum"];
+            reference?: string;
+            notes?: string;
+            readonly allocations?: components["schemas"]["Allocation"][];
+            /** Format: decimal */
+            readonly allocated?: string;
+            /** Format: uuid */
+            readonly created_by?: string | null;
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
+        PatchedRecurringPattern: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            party?: string | null;
+            /** @default  */
+            readonly party_name: string;
+            /** Format: uuid */
+            category?: string | null;
+            /** @default  */
+            readonly category_name: string;
+            /** Format: decimal */
+            amount_p50?: string;
+            period_days?: number;
+            /** Format: date */
+            next_expected?: string;
+            /** Format: decimal */
+            readonly confidence?: string;
+            readonly occurrences?: number;
+            user_confirmed?: boolean | null;
+            /** Format: date-time */
+            readonly last_detected_at?: string | null;
+            /** Format: date-time */
+            readonly created_at?: string;
+        };
+        PatchedScenario: {
+            /** Format: uuid */
+            readonly id?: string;
+            name?: string;
+            overrides?: unknown;
+            /** Format: date-time */
+            readonly created_at?: string;
+            /** Format: date-time */
+            readonly updated_at?: string;
+        };
+        Payment: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            party?: string | null;
+            /** @default  */
+            readonly party_name: string;
+            direction: components["schemas"]["PaymentDirectionEnum"];
+            /** Format: decimal */
+            amount?: string;
+            /** Format: date */
+            date: string;
+            method?: components["schemas"]["MethodEnum"];
+            reference?: string;
+            notes?: string;
+            readonly allocations: components["schemas"]["Allocation"][];
+            /** Format: decimal */
+            readonly allocated: string;
+            /** Format: uuid */
+            readonly created_by: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `received` - Received
+         *     * `made` - Made
+         * @enum {string}
+         */
+        PaymentDirectionEnum: "received" | "made";
         /**
          * @description * `unpaid` - Unpaid
          *     * `partial` - Partial
@@ -955,6 +2722,45 @@ export interface components {
          */
         PaymentStatusEnum: "unpaid" | "partial" | "paid" | "overdue" | "written_off";
         /**
+         * @description * `low` - Low
+         *     * `normal` - Normal
+         *     * `high` - High
+         *     * `urgent` - Urgent
+         * @enum {string}
+         */
+        PriorityEnum: "low" | "normal" | "high" | "urgent";
+        /**
+         * @description * `gmail` - Gmail
+         *     * `microsoft` - Microsoft
+         * @enum {string}
+         */
+        ProviderEnum: "gmail" | "microsoft";
+        RecurringPattern: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            party?: string | null;
+            /** @default  */
+            readonly party_name: string;
+            /** Format: uuid */
+            category?: string | null;
+            /** @default  */
+            readonly category_name: string;
+            /** Format: decimal */
+            amount_p50?: string;
+            period_days: number;
+            /** Format: date */
+            next_expected: string;
+            /** Format: decimal */
+            readonly confidence: string;
+            readonly occurrences: number;
+            user_confirmed?: boolean | null;
+            /** Format: date-time */
+            readonly last_detected_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
          * @description * `regular` - Regular
          *     * `composition` - Composition
          *     * `casual` - Casual
@@ -963,6 +2769,16 @@ export interface components {
          * @enum {string}
          */
         RegistrationTypeEnum: "regular" | "composition" | "casual" | "sez" | "unregistered";
+        Revision: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            editor?: string | null;
+            before?: string;
+            after?: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /**
          * @description * `owner` - Owner
          *     * `accountant` - Accountant
@@ -971,6 +2787,36 @@ export interface components {
          * @enum {string}
          */
         RoleEnum: "owner" | "accountant" | "reviewer" | "viewer";
+        Scenario: {
+            /** Format: uuid */
+            readonly id: string;
+            name: string;
+            overrides: unknown;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+        };
+        /**
+         * @description * `positive` - Positive
+         *     * `neutral` - Neutral
+         *     * `negative` - Negative
+         * @enum {string}
+         */
+        SentimentEnum: "positive" | "neutral" | "negative";
+        Snapshot: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            bank_account?: string | null;
+            /** Format: date */
+            date: string;
+            /** Format: decimal */
+            balance?: string;
+            readonly source: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /**
          * @description * `upload` - Upload
          *     * `email` - Email
@@ -979,6 +2825,34 @@ export interface components {
          */
         SourceEnum: "upload" | "email" | "api";
         /**
+         * @description * `pending` - Pending
+         *     * `running` - Running
+         *     * `done` - Done
+         *     * `failed` - Failed
+         * @enum {string}
+         */
+        Status480Enum: "pending" | "running" | "done" | "failed";
+        /**
+         * @description * `pending_review` - Pending Review
+         *     * `approved` - Approved
+         *     * `edited_approved` - Edited Approved
+         *     * `rejected` - Rejected
+         *     * `sent` - Sent
+         *     * `superseded` - Superseded
+         * @enum {string}
+         */
+        Status485Enum: "pending_review" | "approved" | "edited_approved" | "rejected" | "sent" | "superseded";
+        /**
+         * @description * `new` - New
+         *     * `drafted` - Drafted
+         *     * `awaiting_review` - Awaiting Review
+         *     * `replied` - Replied
+         *     * `closed` - Closed
+         *     * `ignored` - Ignored
+         * @enum {string}
+         */
+        Status98aEnum: "new" | "drafted" | "awaiting_review" | "replied" | "closed" | "ignored";
+        /**
          * @description * `needs_review` - Needs Review
          *     * `confirmed` - Confirmed
          *     * `rejected` - Rejected
@@ -986,6 +2860,15 @@ export interface components {
          * @enum {string}
          */
         StatusE97Enum: "needs_review" | "confirmed" | "rejected" | "duplicate";
+        StyleGuide: {
+            sign_off?: string;
+            tone_rules?: string;
+            banned_phrases?: string[];
+            must_include?: string[];
+            few_shot_examples?: unknown;
+            /** Format: date-time */
+            readonly updated_at: string;
+        };
         /**
          * @description * `intra` - Intra
          *     * `inter` - Inter
@@ -995,6 +2878,99 @@ export interface components {
          * @enum {string}
          */
         SupplyTypeEnum: "intra" | "inter" | "export" | "sez" | "import";
+        SwitchOrg: {
+            /** Format: uuid */
+            org_id: string;
+        };
+        Template: {
+            /** Format: uuid */
+            readonly id: string;
+            intent: components["schemas"]["IntentEnum"];
+            name: string;
+            body: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        ThreadDetail: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            mailbox: string;
+            subject?: string;
+            /** Format: uuid */
+            party?: string | null;
+            /** @default  */
+            readonly party_name: string;
+            party_resolution?: string;
+            linked_invoices?: string[];
+            intent?: components["schemas"]["IntentEnum"] | components["schemas"]["BlankEnum"];
+            priority?: components["schemas"]["PriorityEnum"];
+            sentiment?: components["schemas"]["SentimentEnum"] | components["schemas"]["BlankEnum"];
+            requires_finance_data?: boolean;
+            status?: components["schemas"]["Status98aEnum"];
+            /** Format: date-time */
+            last_inbound_at?: string | null;
+            /** Format: date-time */
+            sla_due_at?: string | null;
+            /** Format: date-time */
+            snoozed_until?: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+            readonly messages: components["schemas"]["Message"][];
+            readonly drafts: components["schemas"]["DraftSummary"][];
+        };
+        ThreadList: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            mailbox: string;
+            subject?: string;
+            /** Format: uuid */
+            party?: string | null;
+            /** @default  */
+            readonly party_name: string;
+            party_resolution?: string;
+            linked_invoices?: string[];
+            intent?: components["schemas"]["IntentEnum"] | components["schemas"]["BlankEnum"];
+            priority?: components["schemas"]["PriorityEnum"];
+            sentiment?: components["schemas"]["SentimentEnum"] | components["schemas"]["BlankEnum"];
+            requires_finance_data?: boolean;
+            status?: components["schemas"]["Status98aEnum"];
+            /** Format: date-time */
+            last_inbound_at?: string | null;
+            /** Format: date-time */
+            sla_due_at?: string | null;
+            /** Format: date-time */
+            snoozed_until?: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        Transaction: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            bank_account: string;
+            /** Format: date */
+            date: string;
+            /** Format: decimal */
+            amount?: string;
+            description?: string;
+            reference?: string;
+            /** Format: decimal */
+            balance_after?: string | null;
+            match_status?: components["schemas"]["MatchStatusEnum"];
+            /** Format: uuid */
+            matched_payment?: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        User: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: email */
+            email: string;
+            full_name?: string;
+        };
         /**
          * @description * `valid` - Valid
          *     * `warnings` - Warnings
@@ -1011,6 +2987,98 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    api_keys_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedAPIKeyList"];
+                };
+            };
+        };
+    };
+    api_keys_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["APIKey"];
+                "application/x-www-form-urlencoded": components["schemas"]["APIKey"];
+                "multipart/form-data": components["schemas"]["APIKey"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIKey"];
+                };
+            };
+        };
+    };
+    api_keys_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this api key. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIKey"];
+                };
+            };
+        };
+    };
+    api_keys_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this api key. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     auth_login_create: {
         parameters: {
             query?: never;
@@ -1018,14 +3086,21 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Login"];
+                "application/x-www-form-urlencoded": components["schemas"]["Login"];
+                "multipart/form-data": components["schemas"]["Login"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["Ok"];
+                };
             };
         };
     };
@@ -1056,12 +3131,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description No response body */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["Me"];
+                };
             };
         };
     };
@@ -1072,14 +3148,433 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SwitchOrg"];
+                "application/x-www-form-urlencoded": components["schemas"]["SwitchOrg"];
+                "multipart/form-data": components["schemas"]["SwitchOrg"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["Ok"];
+                };
+            };
+        };
+    };
+    bank_accounts_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedBankAccountList"];
+                };
+            };
+        };
+    };
+    bank_accounts_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BankAccount"];
+                "application/x-www-form-urlencoded": components["schemas"]["BankAccount"];
+                "multipart/form-data": components["schemas"]["BankAccount"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccount"];
+                };
+            };
+        };
+    };
+    bank_accounts_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank account. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccount"];
+                };
+            };
+        };
+    };
+    bank_accounts_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank account. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedBankAccount"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedBankAccount"];
+                "multipart/form-data": components["schemas"]["PatchedBankAccount"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccount"];
+                };
+            };
+        };
+    };
+    bank_auto_match_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_balance_snapshots_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedSnapshotList"];
+                };
+            };
+        };
+    };
+    bank_balance_snapshots_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Snapshot"];
+                "application/x-www-form-urlencoded": components["schemas"]["Snapshot"];
+                "multipart/form-data": components["schemas"]["Snapshot"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Snapshot"];
+                };
+            };
+        };
+    };
+    bank_balance_snapshots_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank balance snapshot. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Snapshot"];
+                };
+            };
+        };
+    };
+    bank_statements_import_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedTransactionList"];
+                };
+            };
+        };
+    };
+    bank_transactions_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank transaction. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_candidates_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank transaction. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_ignore_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank transaction. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_match_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank transaction. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_auto_match_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
+            };
+        };
+    };
+    bank_transactions_import_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Transaction"];
+                "multipart/form-data": components["schemas"]["Transaction"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transaction"];
+                };
             };
         };
     };
@@ -1339,6 +3834,619 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Document"];
+                };
+            };
+        };
+    };
+    "exports_documents.zip_retrieve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    forecast_anomalies_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRunList"];
+                };
+            };
+        };
+    };
+    forecast_backtest_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
+    forecast_expected_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedExpectedInvoiceList"];
+                };
+            };
+        };
+    };
+    forecast_expected_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpectedInvoice"];
+                "application/x-www-form-urlencoded": components["schemas"]["ExpectedInvoice"];
+                "multipart/form-data": components["schemas"]["ExpectedInvoice"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpectedInvoice"];
+                };
+            };
+        };
+    };
+    forecast_expected_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this expected invoice. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpectedInvoice"];
+                };
+            };
+        };
+    };
+    forecast_expected_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this expected invoice. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedExpectedInvoice"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedExpectedInvoice"];
+                "multipart/form-data": components["schemas"]["PatchedExpectedInvoice"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpectedInvoice"];
+                };
+            };
+        };
+    };
+    forecast_fixed_lines_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedFixedLineList"];
+                };
+            };
+        };
+    };
+    forecast_fixed_lines_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FixedLine"];
+                "application/x-www-form-urlencoded": components["schemas"]["FixedLine"];
+                "multipart/form-data": components["schemas"]["FixedLine"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FixedLine"];
+                };
+            };
+        };
+    };
+    forecast_fixed_lines_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this fixed cashflow line. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FixedLine"];
+                };
+            };
+        };
+    };
+    forecast_fixed_lines_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this fixed cashflow line. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedFixedLine"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedFixedLine"];
+                "multipart/form-data": components["schemas"]["PatchedFixedLine"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FixedLine"];
+                };
+            };
+        };
+    };
+    forecast_latest_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
+    forecast_recurring_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedRecurringPatternList"];
+                };
+            };
+        };
+    };
+    forecast_recurring_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecurringPattern"];
+                "application/x-www-form-urlencoded": components["schemas"]["RecurringPattern"];
+                "multipart/form-data": components["schemas"]["RecurringPattern"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringPattern"];
+                };
+            };
+        };
+    };
+    forecast_recurring_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this recurring expense pattern. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringPattern"];
+                };
+            };
+        };
+    };
+    forecast_recurring_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this recurring expense pattern. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedRecurringPattern"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedRecurringPattern"];
+                "multipart/form-data": components["schemas"]["PatchedRecurringPattern"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringPattern"];
+                };
+            };
+        };
+    };
+    forecast_risk_customers_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRunList"];
+                };
+            };
+        };
+    };
+    forecast_run_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ForecastRun"];
+                "application/x-www-form-urlencoded": components["schemas"]["ForecastRun"];
+                "multipart/form-data": components["schemas"]["ForecastRun"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
+    forecast_runs_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedForecastRunListList"];
+                };
+            };
+        };
+    };
+    forecast_runs_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ForecastRun"];
+                "application/x-www-form-urlencoded": components["schemas"]["ForecastRun"];
+                "multipart/form-data": components["schemas"]["ForecastRun"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
+    forecast_runs_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this forecast run. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastRun"];
+                };
+            };
+        };
+    };
+    forecast_scenarios_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedScenarioList"];
+                };
+            };
+        };
+    };
+    forecast_scenarios_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Scenario"];
+                "application/x-www-form-urlencoded": components["schemas"]["Scenario"];
+                "multipart/form-data": components["schemas"]["Scenario"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scenario"];
+                };
+            };
+        };
+    };
+    forecast_scenarios_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this scenario. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scenario"];
+                };
+            };
+        };
+    };
+    forecast_scenarios_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this scenario. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedScenario"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedScenario"];
+                "multipart/form-data": components["schemas"]["PatchedScenario"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scenario"];
+                };
+            };
+        };
+    };
+    forecast_scenarios_run_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Scenario"];
+                "application/x-www-form-urlencoded": components["schemas"]["Scenario"];
+                "multipart/form-data": components["schemas"]["Scenario"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scenario"];
                 };
             };
         };
@@ -1698,6 +4806,810 @@ export interface operations {
             };
         };
     };
+    mail_connect_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Mailbox"];
+                "application/x-www-form-urlencoded": components["schemas"]["Mailbox"];
+                "multipart/form-data": components["schemas"]["Mailbox"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_connect_callback_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_drafts_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedDraftList"];
+                };
+            };
+        };
+    };
+    mail_drafts_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Draft"];
+                "application/x-www-form-urlencoded": components["schemas"]["Draft"];
+                "multipart/form-data": components["schemas"]["Draft"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email draft. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email draft. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedDraft"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedDraft"];
+                "multipart/form-data": components["schemas"]["PatchedDraft"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_acknowledge_flag_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email draft. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Draft"];
+                "application/x-www-form-urlencoded": components["schemas"]["Draft"];
+                "multipart/form-data": components["schemas"]["Draft"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_approve_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email draft. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Draft"];
+                "application/x-www-form-urlencoded": components["schemas"]["Draft"];
+                "multipart/form-data": components["schemas"]["Draft"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_reject_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email draft. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Draft"];
+                "application/x-www-form-urlencoded": components["schemas"]["Draft"];
+                "multipart/form-data": components["schemas"]["Draft"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_send_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email draft. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Draft"];
+                "application/x-www-form-urlencoded": components["schemas"]["Draft"];
+                "multipart/form-data": components["schemas"]["Draft"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_metrics_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_drafts_review_queue_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedMailboxList"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Mailbox"];
+                "application/x-www-form-urlencoded": components["schemas"]["Mailbox"];
+                "multipart/form-data": components["schemas"]["Mailbox"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this mailbox connection. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_grant_send_scope_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this mailbox connection. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Mailbox"];
+                "application/x-www-form-urlencoded": components["schemas"]["Mailbox"];
+                "multipart/form-data": components["schemas"]["Mailbox"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_revoke_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this mailbox connection. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Mailbox"];
+                "application/x-www-form-urlencoded": components["schemas"]["Mailbox"];
+                "multipart/form-data": components["schemas"]["Mailbox"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_connect_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["Mailbox"];
+                "application/x-www-form-urlencoded": components["schemas"]["Mailbox"];
+                "multipart/form-data": components["schemas"]["Mailbox"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_mailboxes_connect_callback_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Mailbox"];
+                };
+            };
+        };
+    };
+    mail_metrics_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_review_queue_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+        };
+    };
+    mail_style_guide_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StyleGuide"];
+                };
+            };
+        };
+    };
+    mail_style_guide_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["StyleGuide"];
+                "application/x-www-form-urlencoded": components["schemas"]["StyleGuide"];
+                "multipart/form-data": components["schemas"]["StyleGuide"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StyleGuide"];
+                };
+            };
+        };
+    };
+    mail_templates_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedTemplateList"];
+                };
+            };
+        };
+    };
+    mail_templates_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Template"];
+                "application/x-www-form-urlencoded": components["schemas"]["Template"];
+                "multipart/form-data": components["schemas"]["Template"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Template"];
+                };
+            };
+        };
+    };
+    mail_templates_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this reply template. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Template"];
+                };
+            };
+        };
+    };
+    mail_threads_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedThreadListList"];
+                };
+            };
+        };
+    };
+    mail_threads_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadList"];
+                "application/x-www-form-urlencoded": components["schemas"]["ThreadList"];
+                "multipart/form-data": components["schemas"]["ThreadList"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadList"];
+                };
+            };
+        };
+    };
+    mail_threads_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email thread. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadDetail"];
+                };
+            };
+        };
+    };
+    mail_threads_close_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email thread. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadList"];
+                "application/x-www-form-urlencoded": components["schemas"]["ThreadList"];
+                "multipart/form-data": components["schemas"]["ThreadList"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadList"];
+                };
+            };
+        };
+    };
+    mail_threads_draft_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email thread. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadList"];
+                "application/x-www-form-urlencoded": components["schemas"]["ThreadList"];
+                "multipart/form-data": components["schemas"]["ThreadList"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadList"];
+                };
+            };
+        };
+    };
+    mail_threads_ignore_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email thread. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadList"];
+                "application/x-www-form-urlencoded": components["schemas"]["ThreadList"];
+                "multipart/form-data": components["schemas"]["ThreadList"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadList"];
+                };
+            };
+        };
+    };
+    mail_threads_snooze_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this email thread. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ThreadList"];
+                "application/x-www-form-urlencoded": components["schemas"]["ThreadList"];
+                "multipart/form-data": components["schemas"]["ThreadList"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThreadList"];
+                };
+            };
+        };
+    };
     members_list: {
         parameters: {
             query?: {
@@ -1829,6 +5741,24 @@ export interface operations {
         responses: {
             /** @description No response body */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    orgs_current_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1978,6 +5908,189 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Party"];
                 };
+            };
+        };
+    };
+    payments_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedPaymentList"];
+                };
+            };
+        };
+    };
+    payments_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Payment"];
+                "application/x-www-form-urlencoded": components["schemas"]["Payment"];
+                "multipart/form-data": components["schemas"]["Payment"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Payment"];
+                };
+            };
+        };
+    };
+    payments_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this payment. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Payment"];
+                };
+            };
+        };
+    };
+    payments_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this payment. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPayment"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPayment"];
+                "multipart/form-data": components["schemas"]["PatchedPayment"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Payment"];
+                };
+            };
+        };
+    };
+    payments_allocate_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this payment. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Payment"];
+                "application/x-www-form-urlencoded": components["schemas"]["Payment"];
+                "multipart/form-data": components["schemas"]["Payment"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Payment"];
+                };
+            };
+        };
+    };
+    reports_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    settings_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    settings_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

@@ -1,13 +1,14 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ApiError } from "@/lib/api";
 import { useUser } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
 import { Sidebar, type SidebarMode } from "./sidebar";
+import { ThemeFromQuery } from "./theme-from-query";
 
 const PUBLIC_PREFIXES = ["/dev"]; // mirrors middleware.ts
 
@@ -34,6 +35,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen">
+      <Suspense fallback={null}>
+        <ThemeFromQuery />
+      </Suspense>
       <Sidebar me={me} mode={mode} onToggle={toggle} />
       <main className="min-w-0 flex-1 px-6 py-6 lg:px-10">
         {isPending && !isPublic ? <ShellSkeleton /> : <ErrorBoundary>{children}</ErrorBoundary>}

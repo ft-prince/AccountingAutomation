@@ -1,6 +1,5 @@
 import { FileText, Inbox } from "lucide-react";
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { BasisBadge } from "@/components/primitives/basis-badge";
 import { EmptyState } from "@/components/primitives/empty-state";
 import { MoneyText } from "@/components/primitives/money-text";
@@ -13,7 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DARK_TOKENS, LIGHT_TOKENS } from "@/lib/tokens";
 import { PeriodPickerDemo } from "./period-picker-demo";
 import { ErrorBoundaryDemo } from "./error-boundary-demo";
-import { ThemeFromQuery } from "./theme-from-query";
 
 export const metadata: Metadata = { title: "Design tokens · Nexren Finance" };
 
@@ -40,9 +38,6 @@ function Swatches({ title, tokens }: { title: string; tokens: Record<string, str
 export default function TokensPage() {
   return (
     <div className="space-y-10 pb-16">
-      <Suspense fallback={null}>
-        <ThemeFromQuery />
-      </Suspense>
       <header className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">

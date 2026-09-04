@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 const THEMES = ["light", "dark"] as const;
 
-/** /dev/tokens?theme=light|dark — lets headless screenshot runs pin a theme. Dev page only. */
+/** ?theme=light|dark on any app route — lets headless screenshot runs pin a theme. Mounted once in AppShell. */
 export function ThemeFromQuery() {
   const { setTheme } = useTheme();
   const requested = useSearchParams().get("theme");

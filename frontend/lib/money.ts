@@ -33,3 +33,13 @@ export function abbreviateINR(amount: string): string {
 function trim(s: string): string {
   return s.replace(/\.?0+$/, "");
 }
+
+/** API money fields are optional on some schemas; treat absent as zero without ever touching a Number. */
+export function orZero(amount: string | null | undefined): string {
+  return amount === null || amount === undefined || amount === "" ? "0" : amount;
+}
+
+/** Sums decimal strings exactly. */
+export function sumINR(amounts: readonly (string | null | undefined)[]): string {
+  return amounts.reduce((total, amount) => total.plus(new Big(orZero(amount))), new Big(0)).toFixed(2);
+}
