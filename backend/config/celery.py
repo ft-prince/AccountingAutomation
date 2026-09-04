@@ -13,6 +13,10 @@ app.conf.beat_schedule = {
         "task": "apps.accounts.tasks.purge_deleted_orgs",
         "schedule": crontab(hour=2, minute=0),
     },
+    "send-due-reports-daily": {
+        "task": "apps.reporting.tasks.send_due_reports",
+        "schedule": crontab(hour=6, minute=30),
+    },
     "refresh-overdue-nightly": {
         "task": "apps.payments.tasks.refresh_overdue_statuses",
         "schedule": crontab(hour=1, minute=0),

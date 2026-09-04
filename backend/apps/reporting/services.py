@@ -325,10 +325,13 @@ def _aging(org: Any, direction: str, as_of: date) -> dict[str, Any]:
         )
         row[r["b"]] = str(r["v"])
         row["total"] += r["v"]
-    totals = {
-        b[0]: str(rows.filter(bucket=b[0]).aggregate(v=_sum("outstanding"))["v"]) for b in BUCKETS
+    by_bucket = {
+        r["bucket"]: (r["v"], r["n"])
+        for r in rows.values("bucket").annotate(v=_sum("outstanding"), n=Count("id"))
     }
-    grand = rows.aggregate(v=_sum("outstanding"))["v"]
+    totals = {b[0]: str(by_bucket.get(b[0], (ZERO, 0))[0]) for b in BUCKETS}
+    grand = sum((v for v, _ in by_bucket.values()), ZERO)
+    open_count = sum(n for _, n in by_bucket.values())
     out_rows = sorted(
         ({**r, "total": str(r["total"])} for r in table.values()),
         key=lambda r: Decimal(r["total"]),
@@ -338,7 +341,7 @@ def _aging(org: Any, direction: str, as_of: date) -> dict[str, Any]:
         "rows": out_rows,
         "totals": {**totals, "total": str(grand)},
         "as_of": as_of.isoformat(),
-        "open_invoices": rows.count(),
+        "open_invoices": open_count,
     }
 
 

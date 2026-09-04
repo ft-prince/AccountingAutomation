@@ -56,6 +56,9 @@ def test_demo_data_shape(demo) -> None:  # type: ignore[no-untyped-def]
 
 @pytest.mark.parametrize("name", sorted(REPORTS))
 def test_every_report_states_its_basis_and_runs_under_300ms(demo_client, name) -> None:  # type: ignore[no-untyped-def]
+    demo_client.get(
+        "/api/reports/summary"
+    )  # warm-up: first request pays for resolver/middleware imports
     t0 = time.perf_counter()
     r = demo_client.get(f"/api/reports/{name}?fy=2026-27")
     elapsed = (time.perf_counter() - t0) * 1000
