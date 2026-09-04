@@ -1,0 +1,21 @@
+{
+  "id": "10_rate_card",
+  "from_address": "ops@greenfieldsolar.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Rate card for predictive maintenance subscription",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hello Nexren,\n\nCould you share the per-device monthly rate for your predictive maintenance subscription? We have around 250 inverters. Also what are the onboarding charges?\n\nThanks,\nGreenfield Solar",
+  "label": {
+    "intent": "quote_request",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "quote_request",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as quote_request."
+  }
+}

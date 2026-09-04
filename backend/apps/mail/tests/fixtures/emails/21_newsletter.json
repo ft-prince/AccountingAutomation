@@ -1,0 +1,21 @@
+{
+  "id": "21_newsletter",
+  "from_address": "news@saasweekly.example",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Top 10 fintech trends this week",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "SaaS Weekly newsletter. This week: ten fintech trends, three funding rounds and an interview. Unsubscribe here.",
+  "label": {
+    "intent": "newsletter_or_spam",
+    "priority": "low"
+  },
+  "recorded_reply": {
+    "intent": "newsletter_or_spam",
+    "priority": "low",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as newsletter_or_spam."
+  }
+}

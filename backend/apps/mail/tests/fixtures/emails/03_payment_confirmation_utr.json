@@ -1,0 +1,21 @@
+{
+  "id": "03_payment_confirmation_utr",
+  "from_address": "ap@sunrisefoods.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Payment released - UTR HDFCN52026090112345",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Sir/Madam,\n\nWe have released payment of Rs. 1,18,000.00 towards invoice INV-2026-0157 today via NEFT. UTR: HDFCN52026090112345. Please acknowledge receipt and update our ledger.\n\nRegards,\nAccounts Payable\nSunrise Foods Ltd",
+  "label": {
+    "intent": "payment_confirmation",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "payment_confirmation",
+    "priority": "normal",
+    "sentiment": "positive",
+    "requires_finance_data": true,
+    "reason": "Classified as payment_confirmation."
+  }
+}

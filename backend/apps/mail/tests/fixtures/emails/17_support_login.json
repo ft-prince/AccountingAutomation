@@ -1,0 +1,21 @@
+{
+  "id": "17_support_login",
+  "from_address": "it@bharatprecision.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Cannot log in to the Nexren dashboard",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hello,\n\nSince this morning our operators get 'session expired' when logging in to the Nexren monitoring dashboard. Two of our lines are without alerts. Please help urgently.\n\nIT, Bharat Precision",
+  "label": {
+    "intent": "support",
+    "priority": "urgent"
+  },
+  "recorded_reply": {
+    "intent": "support",
+    "priority": "urgent",
+    "sentiment": "negative",
+    "requires_finance_data": false,
+    "reason": "Classified as support."
+  }
+}

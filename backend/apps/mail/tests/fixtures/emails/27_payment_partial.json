@@ -1,0 +1,21 @@
+{
+  "id": "27_payment_partial",
+  "from_address": "ap@sunrisefoods.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Part payment against INV-2026-0180",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi,\n\nWe have made a part payment of Rs. 50,000 against invoice INV-2026-0180 today. Balance will be cleared after inspection. UTR: ICIC0N2026090178901.\n\nSunrise Foods",
+  "label": {
+    "intent": "payment_confirmation",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "payment_confirmation",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as payment_confirmation."
+  }
+}

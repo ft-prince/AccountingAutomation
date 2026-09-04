@@ -1,0 +1,21 @@
+{
+  "id": "30_bank_kyc",
+  "from_address": "kyc@hdfcbank.example",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Re-KYC for current account",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Customer,\n\nAs per RBI guidelines please complete re-KYC for your current account by visiting the branch with the required documents before 30 September 2026.\n\nHDFC Bank",
+  "label": {
+    "intent": "other",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "support",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as other."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "09_quote_request",
+  "from_address": "procurement@tatanexus.example",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "RFQ - 40 edge gateways with 3-year AMC",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi,\n\nWe are evaluating vendors for 40 industrial edge gateways with a 3-year AMC for our Pune plant. Please send your best quotation including GST, delivery lead time and warranty terms by 10 September.\n\nRegards,\nProcurement, Tata Nexus",
+  "label": {
+    "intent": "quote_request",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "quote_request",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as quote_request."
+  }
+}

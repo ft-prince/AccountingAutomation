@@ -1,0 +1,21 @@
+{
+  "id": "20_reschedule",
+  "from_address": "admin@greenfieldsolar.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Reschedule site visit",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Nexren,\n\nThe site visit planned for 5 September has to be moved because of the plant shutdown. Can your engineer come on 12 September instead?\n\nAdmin, Greenfield Solar",
+  "label": {
+    "intent": "meeting_or_scheduling",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "meeting_or_scheduling",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as meeting_or_scheduling."
+  }
+}

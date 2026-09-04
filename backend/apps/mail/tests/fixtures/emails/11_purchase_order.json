@@ -1,0 +1,21 @@
+{
+  "id": "11_purchase_order",
+  "from_address": "po@meridianautomation.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "PO MA/PO/2026/0912 - vibration sensors",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Please find attached purchase order MA/PO/2026/0912 for 120 units of NX-VS200 vibration sensors at the agreed price. Delivery to our Chakan plant. Kindly acknowledge the PO and share the proforma invoice.\n\nRegards,\nMeridian Automation",
+  "label": {
+    "intent": "po_or_order",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "po_or_order",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as po_or_order."
+  }
+}

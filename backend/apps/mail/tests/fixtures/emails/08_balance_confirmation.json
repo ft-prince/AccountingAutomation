@@ -1,0 +1,21 @@
+{
+  "id": "08_balance_confirmation",
+  "from_address": "audit@kaveriengg.co.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Balance confirmation as on 31.03.2026",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Sir,\n\nAs part of our statutory audit our auditors require a balance confirmation as on 31 March 2026. Please confirm the outstanding balance in our account and share the list of open invoices.\n\nThanks,\nKaveri Engineering",
+  "label": {
+    "intent": "statement_request",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "statement_request",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as statement_request."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "14_dispute_double_billing",
+  "from_address": "finance@orionlogistics.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Double billing for August AMC",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "This is the second time we have been billed twice for the August AMC. Invoice INV-2026-0171 duplicates INV-2026-0165. This is unacceptable; please cancel one immediately and confirm in writing.\n\nOrion Logistics",
+  "label": {
+    "intent": "dispute",
+    "priority": "high"
+  },
+  "recorded_reply": {
+    "intent": "dispute",
+    "priority": "high",
+    "sentiment": "negative",
+    "requires_finance_data": true,
+    "reason": "Classified as dispute."
+  }
+}

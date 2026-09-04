@@ -12,6 +12,11 @@ urlpatterns = [
     path("api/", include("apps.documents.urls")),
     path("api/", include("apps.invoices.urls")),
     path("api/", include("apps.payments.urls")),
+    path("api/", include("apps.forecasting.urls")),
+    path("api/", include("apps.mail.urls")),
+    path("api/", include("apps.reporting.urls")),
+    path("api/", include("apps.reconciliation.urls")),
+    path("api/", include("apps.gst.urls")),
 ]
 
 if settings.DEBUG:

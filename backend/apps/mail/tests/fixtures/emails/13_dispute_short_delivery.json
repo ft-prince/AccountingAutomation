@@ -1,0 +1,21 @@
+{
+  "id": "13_dispute_short_delivery",
+  "from_address": "qa@shivamtextiles.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Dispute - invoice INV-2026-0160 short supply",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Sir,\n\nInvoice INV-2026-0160 bills 50 sensors but only 42 were delivered as per our GRN. We will not pay the full amount. Issue a credit note for 8 units or we will hold the entire payment.\n\nShivam Textiles",
+  "label": {
+    "intent": "dispute",
+    "priority": "high"
+  },
+  "recorded_reply": {
+    "intent": "dispute",
+    "priority": "high",
+    "sentiment": "negative",
+    "requires_finance_data": true,
+    "reason": "Classified as dispute."
+  }
+}

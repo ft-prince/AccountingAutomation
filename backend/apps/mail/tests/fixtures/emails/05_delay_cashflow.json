@@ -1,0 +1,21 @@
+{
+  "id": "05_delay_cashflow",
+  "from_address": "cfo@meridianautomation.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Delay in payment of overdue invoices",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Nexren team,\n\nDue to a delay in collections from our own customers we will not be able to clear INV-2026-0142 and INV-2026-0157 by the due date. We expect to release the funds in the second week of September. We regret the inconvenience.\n\nBest,\nAnand Kulkarni\nCFO, Meridian Automation",
+  "label": {
+    "intent": "payment_delay_notice",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "payment_delay_notice",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as payment_delay_notice."
+  }
+}

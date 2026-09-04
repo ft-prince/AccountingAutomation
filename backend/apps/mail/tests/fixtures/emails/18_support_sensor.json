@@ -1,0 +1,21 @@
+{
+  "id": "18_support_sensor",
+  "from_address": "maintenance@kaveriengg.co.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Sensor NX-VS200 showing offline",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi team,\n\nOne of the NX-VS200 sensors on compressor C-3 has been showing offline for two days. We have checked the power. What should we try next?\n\nMaintenance, Kaveri Engineering",
+  "label": {
+    "intent": "support",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "support",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as support."
+  }
+}

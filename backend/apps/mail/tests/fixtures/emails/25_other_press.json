@@ -1,0 +1,21 @@
+{
+  "id": "25_other_press",
+  "from_address": "editor@techdaily.example",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Interview request for feature on industrial AI",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hello,\n\nI am writing a feature on industrial AI in India and would love to include a quote from your founders. Would someone be available for a short interview?\n\nEditor, TechDaily",
+  "label": {
+    "intent": "other",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "other",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as other."
+  }
+}

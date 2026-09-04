@@ -1,0 +1,21 @@
+{
+  "id": "23_webinar_spam",
+  "from_address": "events@cloudcon.example",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "You're invited: CloudCon 2026 free pass",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Register now for CloudCon 2026 and get a free virtual pass. Limited seats. Click here.",
+  "label": {
+    "intent": "newsletter_or_spam",
+    "priority": "low"
+  },
+  "recorded_reply": {
+    "intent": "newsletter_or_spam",
+    "priority": "low",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as newsletter_or_spam."
+  }
+}

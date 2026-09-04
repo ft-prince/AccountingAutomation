@@ -21,6 +21,10 @@ app.conf.beat_schedule = {
         "task": "apps.mail.tasks.sync_all_mailboxes",
         "schedule": 120.0,  # PROJECT_SPECS §6.3: poll every 2 minutes
     },
+    "forecast-nightly": {
+        "task": "apps.forecasting.tasks.run_nightly_forecasts",
+        "schedule": crontab(hour=3, minute=0),  # PROJECT_SPECS §8.7, after overdue refresh
+    },
 }
 
 

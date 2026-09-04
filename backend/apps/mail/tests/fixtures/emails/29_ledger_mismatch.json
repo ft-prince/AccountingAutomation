@@ -1,0 +1,21 @@
+{
+  "id": "29_ledger_mismatch",
+  "from_address": "accounts@shivamtextiles.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Our ledger shows a different balance",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Sir,\n\nOur books show Rs 1,50,000 outstanding to you but your reminder says Rs 2,36,000. Please share your statement so we can reconcile the difference.\n\nShivam Textiles",
+  "label": {
+    "intent": "statement_request",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "invoice_query",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as statement_request."
+  }
+}

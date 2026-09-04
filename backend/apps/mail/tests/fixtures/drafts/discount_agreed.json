@@ -1,0 +1,51 @@
+{
+  "party": {
+    "legal_name": "Bharat Precision Tools Pvt Ltd",
+    "primary_email": "suresh.rao@bharatprecision.in",
+    "email_domains": [
+      "bharatprecision.in"
+    ],
+    "gstin": "27AAACB1234C1Z7"
+  },
+  "invoices": [
+    {
+      "invoice_number": "INV-2026-0142",
+      "invoice_date": "2026-07-15",
+      "due_date": "2026-08-15",
+      "total": "236000.00",
+      "amount_paid": "0.00",
+      "payment_status": "overdue",
+      "direction": "outward",
+      "status": "confirmed"
+    },
+    {
+      "invoice_number": "INV-2026-0157",
+      "invoice_date": "2026-07-31",
+      "due_date": "2026-08-30",
+      "total": "118000.00",
+      "amount_paid": "0.00",
+      "payment_status": "overdue",
+      "direction": "outward",
+      "status": "confirmed"
+    }
+  ],
+  "thread": {
+    "intent": "dispute",
+    "sentiment": "neutral",
+    "priority": "normal"
+  },
+  "inbound": {
+    "from_address": "suresh.rao@bharatprecision.in",
+    "subject": "Request for 10% discount on INV-2026-0142",
+    "body_text": "Dear Team,\n\nGiven the delayed delivery on our last order we request a 10% discount on invoice INV-2026-0142 before we release payment.\n\nRegards,\nSuresh Rao"
+  },
+  "recorded_reply": {
+    "body_text": "Dear Mr. Rao,\n\nThank you for your email. We are happy to offer the 10% discount you requested on invoice INV-2026-0142 (₹2,36,000.00). Please confirm and our team will update the invoice.\n\nRegards,\nAccounts Receivable\nNexren AI",
+    "tone": "friendly",
+    "confidence": 0.6,
+    "self_reported_flags": []
+  },
+  "expected_flags": [
+    "promises_discount_or_waiver"
+  ]
+}

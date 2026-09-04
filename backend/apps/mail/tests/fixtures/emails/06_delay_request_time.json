@@ -1,0 +1,21 @@
+{
+  "id": "06_delay_request_time",
+  "from_address": "accounts@shivamtextiles.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Request for 15 days extension",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Sir,\n\nOur bank limit is under renewal. We request 15 more days to pay the pending amount of Rs 2,36,000 against your invoice. Please do not stop the supply.\n\nThanking you,\nShivam Textiles",
+  "label": {
+    "intent": "payment_delay_notice",
+    "priority": "high"
+  },
+  "recorded_reply": {
+    "intent": "payment_delay_notice",
+    "priority": "high",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as payment_delay_notice."
+  }
+}

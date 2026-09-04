@@ -1,0 +1,49 @@
+{
+  "party": {
+    "legal_name": "Bharat Precision Tools Pvt Ltd",
+    "primary_email": "suresh.rao@bharatprecision.in",
+    "email_domains": [
+      "bharatprecision.in"
+    ],
+    "gstin": "27AAACB1234C1Z7"
+  },
+  "invoices": [
+    {
+      "invoice_number": "INV-2026-0142",
+      "invoice_date": "2026-07-15",
+      "due_date": "2026-08-15",
+      "total": "236000.00",
+      "amount_paid": "0.00",
+      "payment_status": "overdue",
+      "direction": "outward",
+      "status": "confirmed"
+    },
+    {
+      "invoice_number": "INV-2026-0157",
+      "invoice_date": "2026-07-31",
+      "due_date": "2026-08-30",
+      "total": "118000.00",
+      "amount_paid": "0.00",
+      "payment_status": "overdue",
+      "direction": "outward",
+      "status": "confirmed"
+    }
+  ],
+  "thread": {
+    "intent": "payment_delay_notice",
+    "sentiment": "neutral",
+    "priority": "normal"
+  },
+  "inbound": {
+    "from_address": "suresh.rao@bharatprecision.in",
+    "subject": "Delay in clearing INV-2026-0142 and INV-2026-0157",
+    "body_text": "Dear Team,\n\nOwing to a delay in our own collections we will not be able to clear invoices INV-2026-0142 and INV-2026-0157 on the due dates. We will revert with a firm payment date shortly.\n\nRegards,\nSuresh Rao\nBharat Precision Tools"
+  },
+  "recorded_reply": {
+    "body_text": "Dear Mr. Rao,\n\nThank you for letting us know about the delay. We have noted that payment for invoice INV-2026-0142 (₹2,36,000.00, due 15 Aug 2026) and invoice INV-2026-0157 (₹1,18,000.00, due 30 Aug 2026) is running later than the agreed terms. The total outstanding on your account is ₹3,54,000.00.\n\nPlease share the expected payment date and the UTR once the transfer is made, so we can update our records promptly.\n\nWarm regards,\nAccounts Receivable\nNexren AI",
+    "tone": "formal",
+    "confidence": 0.86,
+    "self_reported_flags": []
+  },
+  "expected_flags": []
+}

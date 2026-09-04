@@ -1,0 +1,261 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GSTR-1 (GSTN Save GSTR-1 API, schema label file/save v4.1) — subset emitted by Nexren Finance",
+  "type": "object",
+  "required": ["gstin", "fp", "gt", "cur_gt", "b2b", "b2cl", "b2cs", "cdnr", "exp", "hsn", "nil", "doc_issue"],
+  "additionalProperties": false,
+  "properties": {
+    "gstin": {"type": "string"},
+    "fp": {"type": "string"},
+    "gt": {"type": "number"},
+    "cur_gt": {"type": "number"},
+    "b2b": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ctin", "inv"],
+        "properties": {
+          "ctin": {"type": "string"},
+          "inv": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["inum", "idt", "val", "pos", "rchrg", "inv_typ", "itms"],
+              "properties": {
+                "inum": {"type": "string"},
+                "idt": {"type": "string"},
+                "val": {"type": "number"},
+                "pos": {"type": "string"},
+                "rchrg": {"type": "string", "enum": ["Y", "N"]},
+                "inv_typ": {"type": "string", "enum": ["R", "SEZWP", "SEZWOP", "DE"]},
+                "itms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["num", "itm_det"],
+                    "properties": {
+                      "num": {"type": "integer"},
+                      "itm_det": {
+                        "type": "object",
+                        "required": ["rt", "txval", "iamt", "camt", "samt", "csamt"],
+                        "properties": {
+                          "rt": {"type": "number"},
+                          "txval": {"type": "number"},
+                          "iamt": {"type": "number"},
+                          "camt": {"type": "number"},
+                          "samt": {"type": "number"},
+                          "csamt": {"type": "number"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "b2cl": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pos", "inv"],
+        "properties": {
+          "pos": {"type": "string"},
+          "inv": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["inum", "idt", "val", "itms"],
+              "properties": {
+                "inum": {"type": "string"},
+                "idt": {"type": "string"},
+                "val": {"type": "number"},
+                "itms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["num", "itm_det"],
+                    "properties": {
+                      "num": {"type": "integer"},
+                      "itm_det": {
+                        "type": "object",
+                        "required": ["rt", "txval", "iamt", "csamt"],
+                        "properties": {
+                          "rt": {"type": "number"},
+                          "txval": {"type": "number"},
+                          "iamt": {"type": "number"},
+                          "csamt": {"type": "number"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "b2cs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sply_ty", "pos", "typ", "rt", "txval", "iamt", "camt", "samt", "csamt"],
+        "properties": {
+          "sply_ty": {"type": "string", "enum": ["INTER", "INTRA"]},
+          "pos": {"type": "string"},
+          "typ": {"type": "string", "enum": ["OE"]},
+          "rt": {"type": "number"},
+          "txval": {"type": "number"},
+          "iamt": {"type": "number"},
+          "camt": {"type": "number"},
+          "samt": {"type": "number"},
+          "csamt": {"type": "number"}
+        }
+      }
+    },
+    "cdnr": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ctin", "nt"],
+        "properties": {
+          "ctin": {"type": "string"},
+          "nt": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ntty", "nt_num", "nt_dt", "val", "pos", "rchrg", "inv_typ", "itms"],
+              "properties": {
+                "ntty": {"type": "string", "enum": ["C", "D"]},
+                "nt_num": {"type": "string"},
+                "nt_dt": {"type": "string"},
+                "val": {"type": "number"},
+                "pos": {"type": "string"},
+                "rchrg": {"type": "string", "enum": ["Y", "N"]},
+                "inv_typ": {"type": "string", "enum": ["R", "SEZWP", "SEZWOP", "DE"]},
+                "itms": {"type": "array"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "exp": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["exp_typ", "inv"],
+        "properties": {
+          "exp_typ": {"type": "string", "enum": ["WPAY", "WOPAY"]},
+          "inv": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["inum", "idt", "val", "sbpcode", "sbnum", "sbdt", "itms"],
+              "properties": {
+                "inum": {"type": "string"},
+                "idt": {"type": "string"},
+                "val": {"type": "number"},
+                "sbpcode": {"type": "string"},
+                "sbnum": {"type": "string"},
+                "sbdt": {"type": "string"},
+                "itms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["txval", "rt", "iamt", "csamt"],
+                    "properties": {
+                      "txval": {"type": "number"},
+                      "rt": {"type": "number"},
+                      "iamt": {"type": "number"},
+                      "csamt": {"type": "number"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "hsn": {
+      "type": "object",
+      "required": ["data"],
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["num", "hsn_sc", "desc", "uqc", "qty", "txval", "iamt", "camt", "samt", "csamt", "rt"],
+            "properties": {
+              "num": {"type": "integer"},
+              "hsn_sc": {"type": "string"},
+              "desc": {"type": "string"},
+              "uqc": {"type": "string"},
+              "qty": {"type": "number"},
+              "txval": {"type": "number"},
+              "iamt": {"type": "number"},
+              "camt": {"type": "number"},
+              "samt": {"type": "number"},
+              "csamt": {"type": "number"},
+              "rt": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+    "nil": {
+      "type": "object",
+      "required": ["inv"],
+      "properties": {
+        "inv": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sply_ty", "nil_amt", "expt_amt", "ngsup_amt"],
+            "properties": {
+              "sply_ty": {"type": "string", "enum": ["INTRB2B", "INTRB2C", "INTRAB2B", "INTRAB2C"]},
+              "nil_amt": {"type": "number"},
+              "expt_amt": {"type": "number"},
+              "ngsup_amt": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+    "doc_issue": {
+      "type": "object",
+      "required": ["doc_det"],
+      "properties": {
+        "doc_det": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["doc_num", "docs"],
+            "properties": {
+              "doc_num": {"type": "integer"},
+              "docs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["num", "totnum", "cancel", "net_issue"],
+                  "properties": {
+                    "num": {"type": "integer"},
+                    "from": {"type": "string"},
+                    "to": {"type": "string"},
+                    "totnum": {"type": "integer"},
+                    "cancel": {"type": "integer"},
+                    "net_issue": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "24_other_hr",
+  "from_address": "careers@somecollege.edu.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Campus placement drive invitation",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Sir,\n\nWe invite Nexren AI to participate in our campus placement drive in October. Please share the job profiles and eligibility criteria.\n\nTraining and Placement Cell",
+  "label": {
+    "intent": "other",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "other",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as other."
+  }
+}

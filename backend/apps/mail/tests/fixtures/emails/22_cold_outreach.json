@@ -1,0 +1,21 @@
+{
+  "id": "22_cold_outreach",
+  "from_address": "growth@leadgenpro.example",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Boost your revenue by 300% with AI",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi there,\n\nI noticed Nexren is growing fast. We help companies like yours 3x their pipeline with AI-driven outreach. Can I get 15 minutes on your calendar?\n\nCheers,\nLeadGen Pro",
+  "label": {
+    "intent": "newsletter_or_spam",
+    "priority": "low"
+  },
+  "recorded_reply": {
+    "intent": "newsletter_or_spam",
+    "priority": "low",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as newsletter_or_spam."
+  }
+}

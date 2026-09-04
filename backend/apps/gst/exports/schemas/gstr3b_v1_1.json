@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GSTR-3B (GSTN gstr1_3b v1.1.0, offline utility manual 22-12-2025) — subset emitted by Nexren Finance",
+  "type": "object",
+  "required": ["gstin", "ret_period", "sup_details", "inter_sup", "itc_elg", "inward_sup"],
+  "additionalProperties": false,
+  "properties": {
+    "gstin": {"type": "string"},
+    "ret_period": {"type": "string"},
+    "sup_details": {
+      "type": "object",
+      "required": ["osup_det", "osup_zero", "osup_nil_exmp", "isup_rev", "osup_nongst"],
+      "properties": {
+        "osup_det": {
+          "type": "object",
+          "required": ["txval", "iamt", "camt", "samt", "csamt"],
+          "properties": {
+            "txval": {"type": "number"},
+            "iamt": {"type": "number"},
+            "camt": {"type": "number"},
+            "samt": {"type": "number"},
+            "csamt": {"type": "number"}
+          }
+        },
+        "osup_zero": {
+          "type": "object",
+          "required": ["txval", "iamt", "csamt"],
+          "properties": {
+            "txval": {"type": "number"},
+            "iamt": {"type": "number"},
+            "csamt": {"type": "number"}
+          }
+        },
+        "osup_nil_exmp": {
+          "type": "object",
+          "required": ["txval"],
+          "properties": {"txval": {"type": "number"}}
+        },
+        "isup_rev": {
+          "type": "object",
+          "required": ["txval", "iamt", "camt", "samt", "csamt"],
+          "properties": {
+            "txval": {"type": "number"},
+            "iamt": {"type": "number"},
+            "camt": {"type": "number"},
+            "samt": {"type": "number"},
+            "csamt": {"type": "number"}
+          }
+        },
+        "osup_nongst": {
+          "type": "object",
+          "required": ["txval"],
+          "properties": {"txval": {"type": "number"}}
+        }
+      }
+    },
+    "inter_sup": {
+      "type": "object",
+      "required": ["unreg_details", "comp_details", "uin_details"],
+      "properties": {
+        "unreg_details": {"$ref": "#/definitions/pos_rows"},
+        "comp_details": {"$ref": "#/definitions/pos_rows"},
+        "uin_details": {"$ref": "#/definitions/pos_rows"}
+      }
+    },
+    "itc_elg": {
+      "type": "object",
+      "required": ["itc_avl", "itc_rev", "itc_net", "itc_inelg"],
+      "properties": {
+        "itc_avl": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ty", "iamt", "camt", "samt", "csamt"],
+            "properties": {
+              "ty": {"type": "string", "enum": ["IMPG", "IMPS", "ISRC", "ISD", "OTH"]},
+              "iamt": {"type": "number"},
+              "camt": {"type": "number"},
+              "samt": {"type": "number"},
+              "csamt": {"type": "number"}
+            }
+          }
+        },
+        "itc_rev": {"$ref": "#/definitions/rul_oth_rows"},
+        "itc_net": {
+          "type": "object",
+          "required": ["iamt", "camt", "samt", "csamt"],
+          "properties": {
+            "iamt": {"type": "number"},
+            "camt": {"type": "number"},
+            "samt": {"type": "number"},
+            "csamt": {"type": "number"}
+          }
+        },
+        "itc_inelg": {"$ref": "#/definitions/rul_oth_rows"}
+      }
+    },
+    "inward_sup": {
+      "type": "object",
+      "required": ["isup_details"],
+      "properties": {
+        "isup_details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ty", "inter", "intra"],
+            "properties": {
+              "ty": {"type": "string", "enum": ["GST", "NONGST"]},
+              "inter": {"type": "number"},
+              "intra": {"type": "number"}
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "pos_rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pos", "txval", "iamt"],
+        "properties": {
+          "pos": {"type": "string"},
+          "txval": {"type": "number"},
+          "iamt": {"type": "number"}
+        }
+      }
+    },
+    "rul_oth_rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ty", "iamt", "camt", "samt", "csamt"],
+        "properties": {
+          "ty": {"type": "string", "enum": ["RUL", "OTH"]},
+          "iamt": {"type": "number"},
+          "camt": {"type": "number"},
+          "samt": {"type": "number"},
+          "csamt": {"type": "number"}
+        }
+      }
+    }
+  }
+}

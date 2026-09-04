@@ -1,0 +1,21 @@
+{
+  "id": "01_invoice_copy",
+  "from_address": "purchase@bharatprecision.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Request for copy of invoice INV-2026-0142",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Team,\n\nOur accounts department is unable to locate the original PDF of invoice INV-2026-0142 dated 15 July 2026 for the vibration sensors. Kindly resend a signed copy along with the e-invoice QR so that we can process the payment.\n\nRegards,\nSuresh Rao\nPurchase, Bharat Precision Tools Pvt Ltd",
+  "label": {
+    "intent": "invoice_query",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "invoice_query",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as invoice_query."
+  }
+}

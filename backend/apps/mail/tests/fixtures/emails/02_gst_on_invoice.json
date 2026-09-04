@@ -1,0 +1,21 @@
+{
+  "id": "02_gst_on_invoice",
+  "from_address": "finance@kaveriengg.co.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Query on IGST charged in NX/2026-27/0088",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi,\n\nInvoice NX/2026-27/0088 shows IGST at 18% but both our GSTINs are in Karnataka (29). Should this not be CGST+SGST? Please confirm so we can claim ITC correctly.\n\nThanks,\nPriya Menon\nKaveri Engineering Works",
+  "label": {
+    "intent": "invoice_query",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "invoice_query",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as invoice_query."
+  }
+}

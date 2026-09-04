@@ -1,0 +1,21 @@
+{
+  "id": "04_remittance_advice",
+  "from_address": "treasury@orionlogistics.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Remittance advice - Sept 2026",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Please find below the remittance advice for the payment made on 01/09/2026.\n\nInvoices: INV-2026-0130, INV-2026-0131\nTotal: INR 4,72,000\nMode: RTGS\nReference: SBIN0RTGS2026090100987\n\nKindly confirm.\n\nOrion Logistics - Treasury",
+  "label": {
+    "intent": "payment_confirmation",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "payment_confirmation",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as payment_confirmation."
+  }
+}

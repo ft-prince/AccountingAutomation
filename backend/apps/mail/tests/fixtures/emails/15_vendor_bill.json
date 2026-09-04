@@ -1,0 +1,21 @@
+{
+  "id": "15_vendor_bill",
+  "from_address": "billing@cloudhostindia.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Tax invoice CHI/2026/4451 for September hosting",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Customer,\n\nPlease find attached tax invoice CHI/2026/4451 for Rs 45,312.00 (incl. 18% GST) towards cloud hosting for September 2026. Payment is due within 15 days. Our bank details are printed on the invoice.\n\nCloudHost India",
+  "label": {
+    "intent": "vendor_bill_received",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "vendor_bill_received",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as vendor_bill_received."
+  }
+}

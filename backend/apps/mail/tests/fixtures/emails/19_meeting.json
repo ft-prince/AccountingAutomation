@@ -1,0 +1,21 @@
+{
+  "id": "19_meeting",
+  "from_address": "ceo@meridianautomation.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Catch-up call next week?",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi,\n\nCould we set up a 30-minute call next Tuesday or Wednesday afternoon to review the Q2 deployment and discuss the renewal? Let me know what works.\n\nAnand",
+  "label": {
+    "intent": "meeting_or_scheduling",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "meeting_or_scheduling",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": false,
+    "reason": "Classified as meeting_or_scheduling."
+  }
+}

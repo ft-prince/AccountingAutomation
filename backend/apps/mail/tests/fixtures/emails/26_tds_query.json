@@ -1,0 +1,21 @@
+{
+  "id": "26_tds_query",
+  "from_address": "tax@orionlogistics.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "TDS deduction on invoice INV-2026-0165",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Dear Team,\n\nWe have deducted TDS at 2% under section 194J on invoice INV-2026-0165 and paid the net amount. Please confirm the invoice is settled and share the TDS reconciliation you require.\n\nOrion Logistics",
+  "label": {
+    "intent": "invoice_query",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "invoice_query",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as invoice_query."
+  }
+}

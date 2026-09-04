@@ -1,0 +1,21 @@
+{
+  "id": "07_statement_request",
+  "from_address": "accounts@bharatprecision.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Statement of account FY 2026-27",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hello,\n\nFor our audit please share the ledger / statement of account for Bharat Precision Tools from 1 April 2026 to 31 August 2026 showing all invoices, payments and the closing balance.\n\nRegards,\nSuresh Rao",
+  "label": {
+    "intent": "statement_request",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "statement_request",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as statement_request."
+  }
+}

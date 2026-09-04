@@ -1,1 +1,1 @@
-"""Pure functions. No Django, no I/O, no network."""
+"""Pure functions: 2B parsing and matching. No Django, no I/O."""

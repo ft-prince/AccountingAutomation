@@ -12,6 +12,9 @@ pytestmark = pytest.mark.django_db
 
 
 def test_seed_categories_idempotent() -> None:
+    ExpenseCategory.objects.filter(
+        org__isnull=True
+    ).delete()  # module-scoped demo fixtures may have seeded
     out = StringIO()
     call_command("seed_categories", stdout=out)
     assert "16 created" in out.getvalue()

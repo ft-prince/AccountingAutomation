@@ -1,0 +1,21 @@
+{
+  "id": "12_order_confirmation",
+  "from_address": "buying@sunrisefoods.com",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Confirming order for 3 gateway units",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi,\n\nWe confirm the order for 3 gateway units as per your proposal dated 20 August. Please proceed and raise the tax invoice against GSTIN 27AAACS1234A1Z5.\n\nRegards,\nSunrise Foods",
+  "label": {
+    "intent": "po_or_order",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "po_or_order",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as po_or_order."
+  }
+}

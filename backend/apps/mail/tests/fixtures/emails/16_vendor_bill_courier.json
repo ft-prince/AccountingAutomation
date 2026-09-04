@@ -1,0 +1,21 @@
+{
+  "id": "16_vendor_bill_courier",
+  "from_address": "accounts@bluedartlike.in",
+  "to": [
+    "accounts@nexren.example"
+  ],
+  "subject": "Invoice BDX-88213 - courier charges Aug 2026",
+  "date": "2026-09-01T09:00:00+05:30",
+  "body_text": "Hi,\n\nAttached is our invoice BDX-88213 for courier and freight charges for August 2026 amounting to INR 12,980. Kindly process at the earliest.\n\nThanks,\nBlueDart-like Express",
+  "label": {
+    "intent": "vendor_bill_received",
+    "priority": "normal"
+  },
+  "recorded_reply": {
+    "intent": "vendor_bill_received",
+    "priority": "normal",
+    "sentiment": "neutral",
+    "requires_finance_data": true,
+    "reason": "Classified as vendor_bill_received."
+  }
+}
