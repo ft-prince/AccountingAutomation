@@ -202,3 +202,19 @@ class TemplateSerializer(serializers.ModelSerializer):
         model = ReplyTemplate
         fields = ["id", "intent", "name", "body", "created_at"]
         read_only_fields = ["id", "created_at"]
+
+
+class ProviderSetupSerializer(serializers.Serializer):  # type: ignore[type-arg]
+    """One row of the OAuth setup checklist (§6.3): what is configured and what is missing."""
+
+    provider = serializers.CharField()
+    configured = serializers.BooleanField()
+    redirect_uri = serializers.CharField(allow_blank=True)
+    read_scopes = serializers.ListField(child=serializers.CharField())
+    send_scope = serializers.CharField()
+    missing_env = serializers.ListField(child=serializers.CharField())
+
+
+class SetupStatusSerializer(serializers.Serializer):  # type: ignore[type-arg]
+    providers = ProviderSetupSerializer(many=True)
+    mailboxes = MailboxSerializer(many=True)

@@ -20,9 +20,13 @@ def _client() -> Any:
     )
 
 
-def put_object(key: str, data: bytes, content_type: str) -> None:
+def put_object(key: str, data: bytes, content_type: str, *, bucket: str | None = None) -> None:
+    """`bucket` overrides the default document bucket — backups keep their own (§12)."""
     _client().put_object(
-        Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=key, Body=data, ContentType=content_type
+        Bucket=bucket or settings.AWS_STORAGE_BUCKET_NAME,
+        Key=key,
+        Body=data,
+        ContentType=content_type,
     )
 
 

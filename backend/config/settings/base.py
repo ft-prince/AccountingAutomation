@@ -143,6 +143,12 @@ GROQ_BASE_URL = env("GROQ_BASE_URL", default="https://api.groq.com/openai/v1")
 GROQ_MODEL = env("GROQ_MODEL", default="llama-3.3-70b-versatile")
 # Groq models are text-in; a scanned PDF needs a vision-capable model or it is refused.
 GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
+# USD per million tokens. Groq's free tier is 0; set these when you move to a paid plan,
+# otherwise spend is recorded as zero and any cost report under-reports.
+GROQ_PRICE_USD_PER_MTOK = {
+    "input": Decimal(env("GROQ_PRICE_INPUT", default="0")),
+    "output": Decimal(env("GROQ_PRICE_OUTPUT", default="0")),
+}
 
 # --- Backups ----------------------------------------------------------------
 BACKUP_BUCKET = env("BACKUP_BUCKET", default="")

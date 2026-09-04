@@ -10,6 +10,7 @@ router.register("mail/drafts", views.DraftViewSet, basename="mail-draft")
 router.register("mail/templates", views.TemplateViewSet, basename="mail-template")
 
 urlpatterns = [
+    path("mail/setup-status", views.MailboxViewSet.as_view({"get": "setup_status"})),
     path("mail/connect/<str:provider>", views.MailboxViewSet.as_view({"post": "connect"})),
     path(
         "mail/connect/<str:provider>/callback",

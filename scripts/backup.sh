@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Nightly pg_dump to S3-compatible object storage. Run from cron or a Beat-triggered job.
+# MANUAL FALLBACK. The primary path is the Celery Beat task
+# apps.accounts.tasks.run_database_backup ("database-backup-nightly" in config/celery.py),
+# which records a BackupRun row and raises an in-app notification when a backup fails or
+# goes stale. Use this script for an ad-hoc dump, or when Beat is not running.
 # Requires: DATABASE_URL, BACKUP_BUCKET, S3_ENDPOINT_URL, S3_ACCESS_KEY, S3_SECRET_KEY (from .env).
 set -euo pipefail
 : "${DATABASE_URL:?}" "${BACKUP_BUCKET:?}"

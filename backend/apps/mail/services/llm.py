@@ -1,33 +1,25 @@
-"""Shared Anthropic tool-use call for classification and drafting. The API key is read from
-settings at call time and is never logged or stored."""
+"""Shared tool-use call for classification and drafting, delegating to the provider-neutral
+apps.core.llm. The API key is read from settings at call time and is never logged or stored."""
 
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import anthropic
 from django.conf import settings
 
-MAX_TOKENS = 4000
+from apps.core import llm as core_llm
+
+MAX_TOKENS = core_llm.DEFAULT_MAX_TOKENS
 PROMPTS_DIR = Path(settings.BASE_DIR) / "prompts"
 
-
-class LLMError(Exception):
-    pass
-
-
-@dataclass(frozen=True)
-class ToolReply:
-    tool_input: dict[str, Any] | None
-    stop_reason: str
-    input_tokens: int
-    output_tokens: int
+# Re-exported so callers (views, classification, drafting) keep one error type and one shape.
+LLMError = core_llm.LLMError
+SchemaError = core_llm.SchemaError
+ToolReply = core_llm.ToolReply
 
 
-def client() -> anthropic.Anthropic:
-    if not settings.ANTHROPIC_API_KEY:
-        raise LLMError("ANTHROPIC_API_KEY is not configured")
-    return anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY, max_retries=3)
+def client() -> Any:
+    """The provider transport for this org's configured LLM_PROVIDER."""
+    return core_llm.build_client()
 
 
 def prompt_text(prompt_version: str) -> str:
@@ -37,20 +29,8 @@ def prompt_text(prompt_version: str) -> str:
 def call_tool(
     llm: Any, *, system: str, messages: list[dict[str, Any]], tool: dict[str, Any]
 ) -> ToolReply:
-    resp = llm.messages.create(
-        model=settings.ANTHROPIC_MODEL,
-        max_tokens=MAX_TOKENS,
-        system=system,
-        tools=[tool],
-        tool_choice={"type": "tool", "name": tool["name"]},
-        messages=messages,
-    )
-    tool_input = next((b.input for b in resp.content if b.type == "tool_use"), None)
-    return ToolReply(
-        tool_input=tool_input,
-        stop_reason=resp.stop_reason or "",
-        input_tokens=resp.usage.input_tokens,
-        output_tokens=resp.usage.output_tokens,
+    return core_llm.call_tool(
+        system=system, messages=messages, tool=tool, max_tokens=MAX_TOKENS, client=llm
     )
 
 

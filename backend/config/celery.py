@@ -29,6 +29,14 @@ app.conf.beat_schedule = {
         "task": "apps.forecasting.tasks.run_nightly_forecasts",
         "schedule": crontab(hour=3, minute=0),  # PROJECT_SPECS §8.7, after overdue refresh
     },
+    "database-backup-nightly": {
+        "task": "apps.accounts.tasks.run_database_backup",
+        "schedule": crontab(hour=4, minute=15),  # quiet hour, clear of purge/forecast/reports
+    },
+    "check-backup-freshness": {
+        "task": "apps.accounts.tasks.check_backup_freshness",
+        "schedule": crontab(hour="*/6", minute=20),
+    },
 }
 
 

@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from django.conf import settings
 from django.db.models import Case, IntegerField, Value, When
 from django.utils import timezone
 from rest_framework import status
@@ -20,6 +21,7 @@ from apps.mail.models import (
     EmailThread,
     MailboxConnection,
     Priority,
+    Provider,
     ReplyTemplate,
     StyleGuide,
     ThreadStatus,
@@ -32,6 +34,7 @@ from apps.mail.serializers import (
     MailboxSerializer,
     ReasonSerializer,
     ReviewQueueSerializer,
+    SetupStatusSerializer,
     SnoozeSerializer,
     StyleGuideSerializer,
     TemplateSerializer,
@@ -44,6 +47,31 @@ from apps.mail.services.llm import LLMError
 from apps.mail.services.review import REVIEW_ROLES
 
 OWNER = (Role.OWNER,)
+OAUTH_ENV_VARS: dict[str, tuple[str, str]] = {
+    Provider.GMAIL: ("GOOGLE_OAUTH_CLIENT_ID", "GOOGLE_OAUTH_CLIENT_SECRET"),
+    Provider.MICROSOFT: ("MICROSOFT_OAUTH_CLIENT_ID", "MICROSOFT_OAUTH_CLIENT_SECRET"),
+}
+REDIRECT_BASE_ENV_VAR = "OAUTH_REDIRECT_BASE"
+
+
+def _provider_setup(provider: str) -> dict[str, Any]:
+    """Never echo a secret — only whether each env var is set. CLAUDE.md §4."""
+    missing = [name for name in OAUTH_ENV_VARS[provider] if not getattr(settings, name, "")]
+    try:
+        redirect_uri = oauth._redirect_uri(provider)  # noqa: SLF001 — one source of truth
+    except oauth.OAuthError:
+        redirect_uri = ""
+        missing.append(REDIRECT_BASE_ENV_VAR)
+    return {
+        "provider": provider,
+        "configured": not missing,
+        "redirect_uri": redirect_uri,
+        "read_scopes": oauth.read_scopes(provider),
+        "send_scope": oauth.send_scope(provider),
+        "missing_env": missing,
+    }
+
+
 PRIORITY_RANK = Case(
     *[
         When(thread__priority=p, then=Value(i))
@@ -82,6 +110,21 @@ class MailboxViewSet(MailViewSet):
         except oauth.OAuthError as exc:
             raise ValidationError(str(exc)) from exc
         return Response({"authorization_url": url, "provider": provider})
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="setup-status",
+        permission_classes=[require_role(*OWNER)],
+    )
+    def setup_status(self, request: Request) -> Response:
+        """Turn a silent OAuth misconfiguration into a checklist. PROJECT_SPECS §6.3."""
+        providers = [_provider_setup(p) for p in Provider.values]
+        payload = {
+            "providers": providers,
+            "mailboxes": MailboxSerializer(self.get_queryset(), many=True).data,
+        }
+        return Response(SetupStatusSerializer(payload).data)
 
     @action(detail=False, methods=["get"], permission_classes=[require_role(*OWNER)])
     def connect_callback(self, request: Request, provider: str) -> Response:
