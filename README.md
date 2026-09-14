@@ -12,6 +12,9 @@ cp .env.example .env            # fill in secrets; blank values fall back to dev
 docker compose up -d --build    # postgres, redis, minio, backend, worker, beat, frontend
 docker compose exec backend python manage.py generate_demo_data
 open http://localhost:3000      # login: demo@nexren.ai / demo1234
+
+Ports 3000/8000 taken? Set FRONTEND_PORT / BACKEND_PORT in .env (and match
+CSRF_TRUSTED_ORIGINS and OAUTH_REDIRECT_BASE), e.g. FRONTEND_PORT=8005.
 ```
 
 - API docs: http://localhost:8000/api/docs/ (dev only)
