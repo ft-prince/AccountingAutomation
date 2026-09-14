@@ -78,7 +78,9 @@ Symptom: `MailboxConnection.status = error`, sync task logs `invalid_grant` / 40
    Connect again (`POST /api/mail/connect/{provider}`), which stores fresh tokens.
 2. Send scope is requested again on the next approval (progressive consent).
 3. Sync resumes from `sync_cursor`; if the provider rejects the cursor the
-   connector re-lists the last 30 days and de-duplicates on `provider_message_id`.
+   connector re-lists the newest `MAIL_FIRST_SYNC_LIMIT` messages (default 50) from the
+   last `MAIL_FIRST_SYNC_DAYS` (default 2) and de-duplicates on `provider_message_id`.
+   Errored mailboxes are retried on every beat tick; a successful sync sets them active.
 
 ### Forecast bands miscalibrated
 Symptom: `/forecast` badge shows coverage outside 75–90%.

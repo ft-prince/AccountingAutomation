@@ -13,9 +13,10 @@ log = logging.getLogger(__name__)
 
 @shared_task
 def sync_all_mailboxes() -> int:
-    """Beat, every 2 minutes: fan out one sync per active mailbox (never org-wide)."""
+    """Beat, every 2 minutes: fan out one sync per connected mailbox (never org-wide).
+    Errored mailboxes are retried too — a successful sync flips them back to active."""
     ids = list(
-        MailboxConnection.objects.filter(status=MailboxStatus.ACTIVE)
+        MailboxConnection.objects.filter(status__in=[MailboxStatus.ACTIVE, MailboxStatus.ERROR])
         .exclude(encrypted_tokens="")
         .values_list("pk", flat=True)
     )

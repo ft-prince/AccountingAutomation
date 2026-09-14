@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/primitives/empty-state";
 export function NoDocument() {
   return (
     <div className="flex h-full items-center justify-center p-6">
-      <EmptyState icon={FileText} title="No document" description="This invoice has no source file to show. Review it from the extracted fields on the right." />
+      <EmptyState icon={FileText} title="No document" description="This invoice has no source file to show. Review it from the extracted fields alongside." />
     </div>
   );
 }

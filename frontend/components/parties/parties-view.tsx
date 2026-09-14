@@ -49,7 +49,7 @@ export function PartiesView() {
         }
       />
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-[16rem] flex-1">
+        <div className="relative min-w-[10rem] flex-1">
           <Search size={16} strokeWidth={ICON_STROKE} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
           <Input aria-label="Search parties" placeholder="Name, GSTIN, email…" className="pl-9" value={text} onChange={(event) => setText(event.target.value)} />
         </div>

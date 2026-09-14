@@ -273,7 +273,13 @@ def fetch_new(connection: Any) -> FetchResult:
 
     messages: list[RawMessage] = []
     for mid in ids:
-        msg = svc.users().messages().get(userId="me", id=mid, format="full").execute()
+        try:
+            msg = svc.users().messages().get(userId="me", id=mid, format="full").execute()
+        except HttpError as exc:  # deleted between listing and fetching: skip, keep syncing
+            if exc.resp.status != 404:
+                raise
+            log.info("gmail message vanished before fetch", extra={"message_id": mid})
+            continue
         messages.append(parse_message(msg, fetch_attachment))
     profile = svc.users().getProfile(userId="me").execute()
     refreshed = tokens_from_credentials(creds) if creds.token != tokens.get("token") else None

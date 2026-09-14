@@ -63,7 +63,7 @@ export function QueueHeader({ position, total, remaining, invoice, saveStatus, c
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span role="status" aria-live="polite" className={cn("text-xs tabular-nums", saveStatus.kind === "dirty" ? "text-warning" : "text-muted")}>
             {saveLabel(saveStatus)}
           </span>

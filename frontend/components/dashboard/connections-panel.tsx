@@ -37,7 +37,7 @@ export function ConnectionsPanel() {
               <StatusBadge status={mailbox.status} />
               <span>synced {timeAgo(mailbox.last_sync_at)}</span>
             </p>
-            {mailbox.last_error && <p className="break-words text-xs text-danger">{mailbox.last_error}</p>}
+            {mailbox.last_error && <p className="line-clamp-3 break-words text-xs text-danger" title={mailbox.last_error}>{mailbox.last_error}</p>}
           </div>
         ))}
       </Card>

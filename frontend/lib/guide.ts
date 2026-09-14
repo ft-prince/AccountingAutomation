@@ -94,7 +94,7 @@ export const MODULES: readonly GuideModule[] = [
     route: "/bank",
     what: "Bank rows are matched to open invoices, and payment status follows from the allocations.",
     how: [
-      "A statement is imported through a per-bank column mapping. Each row is hashed, so re-importing the same statement adds nothing.",
+      "A statement is imported through a per-bank column mapping (HDFC, ICICI, SBI, Axis, Kotak or generic) from CSV, XLSX, XLS or PDF — including password-locked PDFs, for which the wizard asks the password. Preamble rows above the table are skipped. Each row is hashed, so re-importing the same statement adds nothing.",
       "Auto-match scores each unmatched row on amount, party name in the narration, UTR or reference found in the invoice notes, and distance from the due date.",
       "It accepts only a single unambiguous high-confidence candidate and proposes the rest. A credit never settles a purchase bill, and a debit never settles a sale.",
       "Allocations drive amount_paid and payment status. Setting those directly is rejected by the model layer.",

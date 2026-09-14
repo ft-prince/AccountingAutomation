@@ -50,7 +50,7 @@ export function InvoiceFiltersBar({ filters, onChange }: InvoiceFiltersBarProps)
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-[16rem] flex-1">
+        <div className="relative min-w-[10rem] flex-1">
           <Search size={16} strokeWidth={ICON_STROKE} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
           <Input aria-label="Search invoices" placeholder="Invoice number, party, IRN…" className="pl-9" value={search} onChange={(event) => setSearch(event.target.value)} />
         </div>

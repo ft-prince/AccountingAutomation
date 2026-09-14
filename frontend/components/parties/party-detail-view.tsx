@@ -44,7 +44,7 @@ function AgingCard({ title, row, asOf }: { title: string; row: AgingRow | undefi
     <section aria-label={title} className="rounded-card border border-border bg-surface p-5">
       <h2 className="text-sm font-semibold">{title}</h2>
       <p className="text-xs text-muted">{asOf ? `as of ${formatDate(asOf)}` : "—"}</p>
-      <dl className="mt-3 grid grid-cols-4 gap-2 text-sm">
+      <dl className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
         {AGING_BUCKETS.map((bucket) => (
           <div key={bucket}>
             <dt className="text-xs text-muted">{bucket} d</dt>

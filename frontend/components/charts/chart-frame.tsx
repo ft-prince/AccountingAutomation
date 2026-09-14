@@ -25,7 +25,7 @@ export const CHART_HEIGHT = 240;
 export function ChartFrame({ title, meta, periodLabel, isPending = false, error, isEmpty = false, emptyText = "Nothing in this period", actions, className, children }: ChartFrameProps) {
   const period = periodLabel ?? (meta ? `${meta.period.from} → ${meta.period.to}` : "");
   return (
-    <section aria-label={title} className={cn("flex flex-col rounded-card border border-border bg-surface p-5", className)}>
+    <section aria-label={title} className={cn("flex min-w-0 flex-col rounded-card border border-border bg-surface p-5", className)}>
       <header className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{title}</h2>
@@ -36,7 +36,7 @@ export function ChartFrame({ title, meta, periodLabel, isPending = false, error,
           {meta && <BasisBadge basis={meta.basis} pendingCount={meta.pending_count} />}
         </div>
       </header>
-      <div className="mt-4 min-h-[240px] flex-1">
+      <div className="mt-4 min-h-[240px] min-w-0 flex-1">
         {isPending ? (
           <Skeleton className="h-[240px] w-full" aria-busy />
         ) : error ? (

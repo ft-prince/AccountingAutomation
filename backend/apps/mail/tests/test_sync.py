@@ -154,11 +154,12 @@ def test_sync_failure_is_recorded_then_raised(org_a, monkeypatch) -> None:  # ty
 
 def test_tasks_fan_out_and_skip_revoked(org_a, monkeypatch) -> None:  # type: ignore[no-untyped-def]
     active = MailboxFactory(org=org_a.org)
+    errored = MailboxFactory(org=org_a.org, status=MailboxStatus.ERROR)
     MailboxFactory(org=org_a.org, status=MailboxStatus.REVOKED, encrypted_tokens="")
     queued: list[str] = []
     monkeypatch.setattr(sync_mailbox, "delay", lambda pk: queued.append(pk))
-    assert sync_all_mailboxes() == 1
-    assert queued == [str(active.pk)]
+    assert sync_all_mailboxes() == 2  # errored mailboxes are retried, revoked are not
+    assert sorted(queued) == sorted([str(active.pk), str(errored.pk)])
     revoked = MailboxFactory(org=org_a.org, status=MailboxStatus.REVOKED)
     assert sync_mailbox(str(revoked.pk)) == "skipped:revoked"
     assert sync_mailbox("00000000-0000-0000-0000-000000000000") == "missing"
@@ -274,6 +275,13 @@ class FakeGmailService:
     def get(self, **kw):  # type: ignore[no-untyped-def]
         if "messageId" in kw:
             return SimpleNamespace(execute=lambda: {"data": b64(b"%PDF")})
+        if kw.get("id") == "gone":
+            from googleapiclient.errors import HttpError
+
+            def vanished():  # type: ignore[no-untyped-def]
+                raise HttpError(SimpleNamespace(status=404, reason="notFound"), b"")
+
+            return SimpleNamespace(execute=vanished)
         return SimpleNamespace(execute=lambda: GMAIL_MSG)
 
     def send(self, **kw):  # type: ignore[no-untyped-def]
@@ -292,6 +300,18 @@ def test_gmail_fetch_new_history_and_full_resync(org_a, monkeypatch) -> None:  #
     monkeypatch.setattr(gmail, "build", lambda *a, **k: FakeGmailService(history_ok=False))
     result = gmail.fetch_new(mailbox)
     assert len(result.messages) == 2  # full resync lists the recent window
+
+
+def test_gmail_skips_messages_deleted_before_fetch(org_a, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    svc = FakeGmailService()
+    monkeypatch.setattr(
+        svc,
+        "list",
+        lambda **kw: SimpleNamespace(execute=lambda: {"messages": [{"id": "gone"}, {"id": "18f"}]}),
+    )
+    monkeypatch.setattr(gmail, "build", lambda *a, **k: svc)
+    result = gmail.fetch_new(MailboxFactory(org=org_a.org, sync_cursor=""))
+    assert [m.provider_message_id for m in result.messages] == ["18f"]
 
 
 def test_gmail_first_sync_is_capped(org_a, monkeypatch, settings) -> None:  # type: ignore[no-untyped-def]

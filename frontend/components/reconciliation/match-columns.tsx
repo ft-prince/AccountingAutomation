@@ -127,11 +127,11 @@ export function MatchColumns({ detail, canEdit }: { detail: BatchDetail; canEdit
               <p className="px-4 py-3 text-xs text-muted">None.</p>
             ) : (
               <ol className="divide-y divide-border">
-                <li className="grid grid-cols-3 gap-4 px-4 py-1.5 text-[11px] uppercase tracking-wide text-muted"><span>2B record</span><span>Books</span><span>IMS action</span></li>
+                <li className="hidden grid-cols-3 gap-4 px-4 py-1.5 text-[11px] uppercase tracking-wide text-muted md:grid"><span>2B record</span><span>Books</span><span>IMS action</span></li>
                 {rows.map((match) => {
                   const record = (match.record as GroupedMatch["record"] | null) ? recordsById.get(match.record.id) ?? match.record : undefined;
                   return (
-                    <li key={match.id} className={cn("grid grid-cols-3 gap-4 px-4 py-3", match.resolved_at && "bg-secondary/40")}>
+                    <li key={match.id} className={cn("grid gap-3 px-4 py-3 md:grid-cols-3 md:gap-4", match.resolved_at && "bg-secondary/40")}>
                       <RecordCell record={record} />
                       <BooksCell match={match} canEdit={canEdit} />
                       <div className="space-y-1">
