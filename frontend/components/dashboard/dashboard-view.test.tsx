@@ -40,6 +40,9 @@ function mockFetch() {
     if (url.includes("/api/forecast/anomalies")) return json({ as_of: "2026-09-04", window_days: 90, expenses: [], duplicates: [{ invoice: "inv9", kind: "duplicate", party: "p", party_name: "Acme", category: null, category_name: "", z: null, detail: "same amount within 7 days", related_invoice: "inv8" }], concentration: { top1_party: null, top1_party_name: "", top1_share: "0", top3_parties: [], top3_share: "0", is_top1_flagged: false, is_top3_flagged: false } });
     if (url.includes("/api/forecast/risk/customers")) return json([{ party: "p7", party_name: "Slowpay Ltd", score: "0.91", band: "high", drivers: ["share overdue 60%"], mean_days: "70", std_days: "10", trend_days: "5", share_overdue: "0.6", utilisation: null }]);
     if (url.includes("/api/mail/review-queue")) return json([{ id: "d1" }, { id: "d2" }, { id: "d3" }]);
+    if (url.includes("/api/mail/mailboxes")) return json({ count: 1, results: [{ id: "m1", provider: "gmail", email_address: "accounts@nexren.example", scopes: [], status: "active", has_send_scope: false, needs_send_scope: false, last_sync_at: new Date().toISOString(), last_error: "", connected_by: null }] });
+    if (url.includes("/api/bank/statements")) return json({ count: 1, results: [{ id: "i1", bank_account: "a", filename: "hdfc-aug.pdf", format: "pdf", mapping: "hdfc", rows_total: 40, rows_imported: 38, rows_duplicate: 2, created_at: "2026-09-04T10:00:00Z" }] });
+    if (url.includes("/api/notifications")) return json({ count: 1, results: [{ id: "n1", level: "warning", code: "backup_stale", title: "Backup is stale", body: "Last good backup 30 h ago", entity_type: "", entity_id: null, dedupe_key: "backup_stale", read_at: null, dismissed_at: null, created_at: "2026-09-04T10:00:00Z" }] });
     const name = /\/api\/reports\/([a-z-]+)/.exec(url)?.[1] ?? "";
     const body = REPORTS[name];
     if (!body) return new Response(JSON.stringify({ title: "Not found", status: 404 }), { status: 404 });
@@ -50,6 +53,17 @@ function mockFetch() {
 afterEach(() => vi.restoreAllMocks());
 
 describe("DashboardView", () => {
+  test("shows mailbox sync, last statement import and open reminders", async () => {
+    mockFetch();
+    renderWithClient(<DashboardView today="2026-09-04" />);
+    expect(await screen.findByText("accounts@nexren.example")).toBeInTheDocument();
+    expect(screen.getByText(/synced just now/)).toBeInTheDocument();
+    expect(await screen.findByText("hdfc-aug.pdf")).toBeInTheDocument();
+    expect(screen.getByText(/38 new · 2 duplicate of 40 · HDFC/)).toBeInTheDocument();
+    expect(await screen.findByText("Backup is stale")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Mark read: Backup is stale" })).toBeInTheDocument();
+  });
+
   test("renders KPI tiles from the reports and states the pending count on every chart", async () => {
     // Arrange
     const fetchSpy = mockFetch();

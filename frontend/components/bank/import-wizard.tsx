@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Field } from "@/components/primitives/field";
 import { NativeSelect } from "@/components/primitives/native-select";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
@@ -15,7 +16,8 @@ import { toastApiError } from "@/lib/toast";
 import type { BankAccount } from "@/lib/types";
 
 const PREVIEW_BYTES = 64 * 1024;
-const MAPPING_LABEL: Record<BankMapping, string> = { auto: "Detect automatically", hdfc: "HDFC", icici: "ICICI", sbi: "SBI", generic: "Generic (date, description, amount)" };
+const MAPPING_LABEL: Record<BankMapping, string> = { auto: "Detect automatically", hdfc: "HDFC", icici: "ICICI", sbi: "SBI", axis: "Axis", kotak: "Kotak", generic: "Generic (date, description, amount)" };
+const isPdf = (file: File | null) => file !== null && (/\.pdf$/i.test(file.name) || file.type === "application/pdf");
 
 export interface ImportWizardProps {
   accounts: readonly BankAccount[];
@@ -31,6 +33,7 @@ export function ImportWizard({ accounts, defaultAccountId, open, onOpenChange, o
   const [accountId, setAccountId] = useState(defaultAccountId);
   const [mapping, setMapping] = useState<BankMapping>("auto");
   const [preview, setPreview] = useState<ImportPreview | null>(null);
+  const [password, setPassword] = useState("");
   const importStatement = useImportStatement();
 
   const choose = async (chosen: File | null) => {
@@ -46,7 +49,7 @@ export function ImportWizard({ accounts, defaultAccountId, open, onOpenChange, o
   const submit = () => {
     if (!file || !accountId) return;
     importStatement.mutate(
-      { file, account: accountId, mapping },
+      { file, account: accountId, mapping, password: isPdf(file) ? password : undefined },
       {
         onSuccess: (result) => {
           toast({ title: `${result.rows_imported} rows imported`, description: `${result.rows_duplicate} duplicates skipped of ${result.rows_total} · mapping ${result.mapping}` });
@@ -65,12 +68,17 @@ export function ImportWizard({ accounts, defaultAccountId, open, onOpenChange, o
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Import bank statement</DialogTitle>
-          <DialogDescription>CSV or XLSX from your bank. Rows already imported are skipped by their hash.</DialogDescription>
+          <DialogDescription>CSV, XLSX, XLS or PDF from net banking (HDFC, ICICI, SBI, Axis, Kotak or a generic date/description/amount file). Header rows above the table are skipped; rows already imported are skipped by their hash.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-3">
           <Field id="import-file" label="Statement file" required className="sm:col-span-3">
-            <input id="import-file" type="file" accept=".csv,.xlsx,.xls,text/csv" className="block w-full text-sm file:mr-3 file:rounded-full file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-sm" onChange={(event) => choose(event.target.files?.[0] ?? null)} />
+            <input id="import-file" type="file" accept=".csv,.txt,.xlsx,.xls,.pdf,text/csv,application/pdf" className="block w-full text-sm file:mr-3 file:rounded-full file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-sm" onChange={(event) => choose(event.target.files?.[0] ?? null)} />
           </Field>
+          {isPdf(file) && (
+            <Field id="import-password" label="PDF password" hint="Only if the bank locked the statement. Sent once, never stored." className="sm:col-span-3">
+              <Input id="import-password" type="password" autoComplete="off" value={password} onChange={(event) => setPassword(event.target.value)} />
+            </Field>
+          )}
           <Field id="import-account" label="Account" required>
             <NativeSelect id="import-account" value={accountId} onChange={(event) => setAccountId(event.target.value)}>
               <option value="">Choose…</option>

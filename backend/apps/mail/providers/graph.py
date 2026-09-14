@@ -19,7 +19,6 @@ AUTHORITY = "https://login.microsoftonline.com/common"
 GRAPH = "https://graph.microsoft.com/v1.0"
 READ_SCOPES = ["Mail.Read", "User.Read"]  # msal adds offline_access / openid / profile itself
 SEND_SCOPE = "Mail.Send"
-FIRST_SYNC_DAYS = 30
 HTTP_TIMEOUT = 30
 SELECT = (
     "id,conversationId,subject,from,toRecipients,ccRecipients,receivedDateTime,"
@@ -158,10 +157,11 @@ def parse_message(item: dict[str, Any], attachments: list[dict[str, Any]]) -> Ra
 
 
 def _first_sync_url() -> str:
-    since = (datetime.now(tz=UTC) - timedelta(days=FIRST_SYNC_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    days = int(settings.MAIL_FIRST_SYNC_DAYS)
+    since = (datetime.now(tz=UTC) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
     return (
         f"{GRAPH}/me/mailFolders/inbox/messages/delta?$select={SELECT}"
-        f"&$filter=receivedDateTime ge {since}"
+        f"&$filter=receivedDateTime ge {since}&$top={int(settings.MAIL_FIRST_SYNC_LIMIT)}"
     )
 
 
@@ -172,11 +172,14 @@ def fetch_new(connection: Any) -> FetchResult:
     bearer, refreshed = access_token(tokens)
     url = connection.sync_cursor or _first_sync_url()
     messages: list[RawMessage] = []
+    first_sync = not connection.sync_cursor
     while True:
         page = _get(url, bearer)
         for item in page.get("value", []):
             if "@removed" in item:
                 continue
+            if first_sync and len(messages) >= int(settings.MAIL_FIRST_SYNC_LIMIT):
+                break
             attachments: list[dict[str, Any]] = []
             if item.get("hasAttachments"):
                 attachments = _get(f"{GRAPH}/me/messages/{item['id']}/attachments", bearer).get(

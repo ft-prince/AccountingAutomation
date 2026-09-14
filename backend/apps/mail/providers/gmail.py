@@ -28,7 +28,7 @@ READ_SCOPES = [READONLY_SCOPE, LABELS_SCOPE]
 TOKEN_URI = "https://oauth2.googleapis.com/token"
 AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 REVOKE_URI = "https://oauth2.googleapis.com/revoke"
-FIRST_SYNC_QUERY = "newer_than:30d -in:spam -in:trash -in:draft"
+FIRST_SYNC_FILTER = "-in:spam -in:trash -in:draft"
 PAGE_SIZE = 100
 HTTP_TIMEOUT = 15
 
@@ -223,19 +223,25 @@ def _history_ids(svc: Any, cursor: str) -> list[str]:
 
 
 def _recent_ids(svc: Any) -> list[str]:
+    """First sync: newest MAIL_FIRST_SYNC_LIMIT messages from the last MAIL_FIRST_SYNC_DAYS."""
+    limit = int(settings.MAIL_FIRST_SYNC_LIMIT)
+    query = f"newer_than:{int(settings.MAIL_FIRST_SYNC_DAYS)}d {FIRST_SYNC_FILTER}"
     ids: list[str] = []
     token: str | None = None
-    while True:
+    while len(ids) < limit:
         resp = (
             svc.users()
             .messages()
-            .list(userId="me", q=FIRST_SYNC_QUERY, pageToken=token, maxResults=PAGE_SIZE)
+            .list(
+                userId="me", q=query, pageToken=token, maxResults=min(PAGE_SIZE, limit - len(ids))
+            )
             .execute()
         )
         ids.extend(str(m["id"]) for m in resp.get("messages", []))
         token = resp.get("nextPageToken")
         if not token:
-            return ids
+            break
+    return ids[:limit]
 
 
 def fetch_new(connection: Any) -> FetchResult:

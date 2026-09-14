@@ -1,8 +1,7 @@
 """Bank statement import: per-bank column mappings, sha256 per row, signed amounts."""
 
-import csv
 import hashlib
-import io
+import re
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
@@ -16,6 +15,15 @@ from apps.payments.models import (
     BankStatementImport,
     BankTransaction,
 )
+from apps.payments.services.statement_readers import (
+    StatementError,
+    find_header,
+    grid_to_rows,
+    normalise_header,
+    read_grid,
+)
+
+__all__ = ["MAPPINGS", "StatementError", "import_statement", "parse_rows", "read_rows"]
 
 
 @dataclass(frozen=True)
@@ -31,7 +39,21 @@ class ColumnMapping:
     date_formats: tuple[str, ...]
 
 
-# Column headers as they appear in the bank's own export. Registry, not if-statements.
+# Column headers as they appear in the bank's own export (matched after normalise_header).
+# Registry, not if-statements.
+DATE_FORMATS = (
+    "%d/%m/%y",
+    "%d/%m/%Y",
+    "%d-%m-%Y",
+    "%d-%m-%y",
+    "%Y-%m-%d",
+    "%d %b %Y",
+    "%d-%b-%Y",
+    "%d-%b-%y",
+    "%d %B %Y",
+    "%d/%m/%Y %H:%M:%S",
+    "%d-%m-%Y %H:%M:%S",
+)
 MAPPINGS: dict[str, ColumnMapping] = {
     "hdfc": ColumnMapping(
         "hdfc",
@@ -42,7 +64,7 @@ MAPPINGS: dict[str, ColumnMapping] = {
         None,
         "Chq./Ref.No.",
         "Closing Balance",
-        ("%d/%m/%y", "%d/%m/%Y"),
+        DATE_FORMATS,
     ),
     "icici": ColumnMapping(
         "icici",
@@ -53,7 +75,7 @@ MAPPINGS: dict[str, ColumnMapping] = {
         None,
         "Cheque Number",
         "Balance (INR )",
-        ("%d/%m/%Y",),
+        DATE_FORMATS,
     ),
     "sbi": ColumnMapping(
         "sbi",
@@ -64,7 +86,29 @@ MAPPINGS: dict[str, ColumnMapping] = {
         None,
         "Ref No./Cheque No.",
         "Balance",
-        ("%d %b %Y", "%d-%m-%Y"),
+        DATE_FORMATS,
+    ),
+    "axis": ColumnMapping(
+        "axis",
+        "Tran Date",
+        "Particulars",
+        "Debit",
+        "Credit",
+        None,
+        "Chq No",
+        "Balance",
+        DATE_FORMATS,
+    ),
+    "kotak": ColumnMapping(
+        "kotak",
+        "Transaction Date",
+        "Description",
+        "Debit",
+        "Credit",
+        None,
+        "Chq / Ref number",
+        "Balance",
+        DATE_FORMATS,
     ),
     "generic": ColumnMapping(
         "generic",
@@ -75,23 +119,23 @@ MAPPINGS: dict[str, ColumnMapping] = {
         "amount",
         "reference",
         "balance",
-        ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"),
+        DATE_FORMATS,
     ),
 }
+DATE_ONLY = re.compile(r"^\s*(\d{1,2}[-/ ]\w{2,4}[-/ ]\d{2,4}|\d{4}-\d{2}-\d{2})")
 
 
-class StatementError(ValueError):
-    pass
-
-
-def _dec(v: Any) -> Decimal | None:
+def _dec(v: Any, *, signed: bool = False) -> Decimal | None:
+    """`signed` applies a trailing Dr/Cr marker as sign; debit/credit columns carry their own."""
     if v is None:
         return None
-    s = str(v).strip().replace(",", "").replace("₹", "")
+    s = str(v).strip().replace(",", "").replace("₹", "").replace("INR", "").strip()
     if not s or s in {"-", "–"}:
         return None
+    sign = -1 if signed and s.lower().rstrip(".").endswith("dr") else 1
+    s = re.sub(r"(?i)\s*(cr|dr)\.?$", "", s)
     try:
-        return Decimal(s)
+        return Decimal(s) * sign
     except InvalidOperation as exc:
         raise StatementError(f"not a number: {v!r}") from exc
 
@@ -110,30 +154,36 @@ def _date(v: Any, formats: tuple[str, ...]) -> date:
     raise StatementError(f"unparseable date: {v!r}")
 
 
-def read_rows(data: bytes, fmt: str) -> list[dict[str, Any]]:
-    if fmt == "csv":
-        text = data.decode("utf-8-sig", errors="replace")
-        reader = csv.DictReader(io.StringIO(text))
-        return [{(k or "").strip(): v for k, v in r.items()} for r in reader]
-    if fmt == "xlsx":
-        from openpyxl import load_workbook
+def _is_data_row(r: dict[str, Any], mapping: ColumnMapping) -> bool:
+    """Skip preamble/summary/separator rows ('Opening Balance', '****', narration wrap-arounds)."""
+    v = r.get(normalise_header(mapping.date))
+    if isinstance(v, (date, datetime)):
+        return True
+    return bool(v) and DATE_ONLY.match(str(v)) is not None
 
-        ws = load_workbook(io.BytesIO(data), read_only=True, data_only=True).active
-        rows = list(ws.iter_rows(values_only=True))
-        if not rows:
-            return []
-        header = [str(h).strip() if h is not None else "" for h in rows[0]]
-        return [
-            dict(zip(header, r, strict=False)) for r in rows[1:] if any(c is not None for c in r)
-        ]
-    raise StatementError(f"unsupported format {fmt}")
+
+def read_rows(
+    data: bytes, fmt: str, *, password: str | None = None
+) -> tuple[list[dict[str, Any]], ColumnMapping | None]:
+    """Rows keyed by normalised header, plus the mapping whose header row was found (if any)."""
+    required = [
+        (normalise_header(m.date), normalise_header(m.description)) for m in MAPPINGS.values()
+    ]
+    grid = read_grid(data, fmt, password=password, required=required)
+    idx = find_header(grid, required)
+    if idx is None:
+        if not grid:
+            return [], None
+        return grid_to_rows(grid, 0), None
+    rows = grid_to_rows(grid, idx)
+    return rows, detect_mapping(set(rows[0].keys())) if rows else None
 
 
 def detect_mapping(headers: set[str]) -> ColumnMapping:
     for m in MAPPINGS.values():
-        if m.date in headers and m.description in headers:
+        if normalise_header(m.date) in headers and normalise_header(m.description) in headers:
             return m
-    raise StatementError(f"No bank mapping matches columns: {sorted(headers)}")
+    raise StatementError(f"No bank mapping matches columns: {sorted(h for h in headers if h)}")
 
 
 @dataclass(frozen=True)
@@ -149,18 +199,25 @@ class ParsedRow:
 def parse_rows(
     rows: list[dict[str, Any]], mapping: ColumnMapping, account_id: str
 ) -> list[ParsedRow]:
+    col = {
+        name: normalise_header(getattr(mapping, name))
+        for name in ("date", "description", "reference", "amount", "debit", "credit", "balance")
+        if getattr(mapping, name)
+    }
     out: list[ParsedRow] = []
     for r in rows:
-        d = _date(r.get(mapping.date), mapping.date_formats)
-        desc = str(r.get(mapping.description) or "").strip()
-        ref = str(r.get(mapping.reference) or "").strip() if mapping.reference else ""
-        if mapping.amount and r.get(mapping.amount) not in (None, ""):
-            amount = _dec(r.get(mapping.amount)) or Decimal("0")
+        if not _is_data_row(r, mapping):
+            continue
+        d = _date(r.get(col["date"]), mapping.date_formats)
+        desc = str(r.get(col["description"]) or "").strip()
+        ref = str(r.get(col["reference"]) or "").strip() if "reference" in col else ""
+        if "amount" in col and r.get(col["amount"]) not in (None, ""):
+            amount = _dec(r.get(col["amount"]), signed=True) or Decimal("0")
         else:
-            debit = _dec(r.get(mapping.debit)) if mapping.debit else None
-            credit = _dec(r.get(mapping.credit)) if mapping.credit else None
+            debit = _dec(r.get(col["debit"])) if "debit" in col else None
+            credit = _dec(r.get(col["credit"])) if "credit" in col else None
             amount = (credit or Decimal("0")) - (debit or Decimal("0"))
-        bal = _dec(r.get(mapping.balance)) if mapping.balance else None
+        bal = _dec(r.get(col["balance"])) if "balance" in col else None
         key = f"{account_id}|{d.isoformat()}|{amount}|{desc}|{ref}"
         out.append(
             ParsedRow(
@@ -178,12 +235,21 @@ def import_statement(
     fmt: str,
     actor: Any = None,
     mapping_key: str | None = None,
+    password: str | None = None,
 ) -> BankStatementImport:
-    rows = read_rows(data, fmt)
+    rows, detected = read_rows(data, fmt, password=password)
     if not rows:
         raise StatementError("No rows found.")
-    mapping = MAPPINGS[mapping_key] if mapping_key else detect_mapping(set(rows[0].keys()))
+    if mapping_key:
+        mapping = MAPPINGS[mapping_key]
+    else:
+        mapping = detected or detect_mapping(set(rows[0].keys()))
     parsed = parse_rows(rows, mapping, str(account.pk))
+    if not parsed:
+        raise StatementError(
+            "Found the header row but no transaction rows under it — "
+            f"expected dates in the '{mapping.date}' column."
+        )
     with transaction.atomic():
         imp = BankStatementImport.objects.create(
             bank_account=account,

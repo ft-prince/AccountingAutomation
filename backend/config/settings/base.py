@@ -153,6 +153,11 @@ GROQ_VISION_MODEL = env("GROQ_VISION_MODEL", default="")
 # Celery rate limit for email classification, matched to the provider's tokens-per-minute
 # budget (Groq's free tier is 8k TPM and one classification costs roughly 3-4k).
 CLASSIFY_RATE_LIMIT = env("CLASSIFY_RATE_LIMIT", default="2/m")
+# First sync after connecting a mailbox: only the newest messages, so a fresh connection does
+# not queue hundreds of classifications at once. Later syncs are incremental (new mail only)
+# and each thread is classified one at a time under CLASSIFY_RATE_LIMIT.
+MAIL_FIRST_SYNC_DAYS = env.int("MAIL_FIRST_SYNC_DAYS", default=2)
+MAIL_FIRST_SYNC_LIMIT = env.int("MAIL_FIRST_SYNC_LIMIT", default=50)
 # One extraction is ~5-8k tokens; Groq's free tier allows 8k per minute, so one a minute is
 # the honest default there. Raise it on a paid tier or on Anthropic.
 EXTRACTION_RATE_LIMIT = env(

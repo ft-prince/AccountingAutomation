@@ -39,7 +39,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <ThemeFromQuery />
       </Suspense>
       <Sidebar me={me} mode={mode} onToggle={toggle} />
-      <main className="min-w-0 flex-1 px-6 py-6 lg:px-10">
+      <main className="min-w-0 flex-1 px-3 py-4 sm:px-6 sm:py-6 lg:px-10">
         {isPending && !isPublic ? <ShellSkeleton /> : <ErrorBoundary>{children}</ErrorBoundary>}
       </main>
     </div>

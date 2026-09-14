@@ -291,7 +291,25 @@ def test_gmail_fetch_new_history_and_full_resync(org_a, monkeypatch) -> None:  #
     assert result.messages[0].attachments[0].data == b"%PDF"
     monkeypatch.setattr(gmail, "build", lambda *a, **k: FakeGmailService(history_ok=False))
     result = gmail.fetch_new(mailbox)
-    assert len(result.messages) == 2  # full resync lists the last 30 days
+    assert len(result.messages) == 2  # full resync lists the recent window
+
+
+def test_gmail_first_sync_is_capped(org_a, monkeypatch, settings) -> None:  # type: ignore[no-untyped-def]
+    settings.MAIL_FIRST_SYNC_LIMIT = 1
+    settings.MAIL_FIRST_SYNC_DAYS = 2
+    seen: list[dict[str, object]] = []
+    svc = FakeGmailService()
+    original = svc.list
+
+    def spy(**kw):  # type: ignore[no-untyped-def]
+        seen.append(kw)
+        return original(**kw)
+
+    monkeypatch.setattr(svc, "list", spy)
+    monkeypatch.setattr(gmail, "build", lambda *a, **k: svc)
+    result = gmail.fetch_new(MailboxFactory(org=org_a.org, sync_cursor=""))
+    assert len(result.messages) == 1
+    assert seen[0]["q"].startswith("newer_than:2d") and seen[0]["maxResults"] == 1
 
 
 def test_gmail_profile_and_revoke(monkeypatch) -> None:  # type: ignore[no-untyped-def]

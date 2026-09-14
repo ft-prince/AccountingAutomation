@@ -12,6 +12,7 @@ import { horizonLabel } from "@/lib/forecast-data";
 import { useReviewQueue } from "@/lib/mail";
 import { useReport, type ReportParams } from "@/lib/reports";
 import { AlertsFeed } from "./alerts-feed";
+import { ConnectionsPanel } from "./connections-panel";
 import { KpiRow } from "./kpi-row";
 
 const DASHBOARD_BASIS = "accrual";
@@ -41,6 +42,8 @@ export function DashboardView({ today }: { today?: string }) {
   return (
     <div className="space-y-6">
       <PageHeader title="Cashflow," emphasis="forecast" description={`${period.label} · ${DASHBOARD_BASIS} basis`} actions={<PeriodPicker onChange={setPeriod} defaultPreset="fy_to_date" today={today} />} />
+
+      <ConnectionsPanel />
 
       <KpiRow periodLabel={period.label} cash={cash.data} arAging={arAging.data} apAging={apAging.data} summary={summary.data} tax={tax.data} forecast={forecast.isError && !hasNoRun ? null : latestRun} />
 

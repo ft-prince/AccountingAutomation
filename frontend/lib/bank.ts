@@ -3,12 +3,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { buildQuery, type Paginated } from "@/lib/query";
-import type { BankAccount, BankTransaction, MatchStatus } from "@/lib/types";
+import type { BankAccount, BankTransaction, MatchStatus, StatementImport } from "@/lib/types";
 
 export const BANK_KEY = "bank";
 const TRANSACTIONS_PAGE_SIZE = 100;
 
-export const BANK_MAPPINGS = ["auto", "hdfc", "icici", "sbi", "generic"] as const;
+export const BANK_MAPPINGS = ["auto", "hdfc", "icici", "sbi", "axis", "kotak", "generic"] as const;
 export type BankMapping = (typeof BANK_MAPPINGS)[number];
 
 export function useBankAccounts() {
@@ -38,14 +38,24 @@ export interface ImportResult {
 export function useImportStatement() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: { file: File; account: string; mapping: BankMapping }) => {
+    mutationFn: (input: { file: File; account: string; mapping: BankMapping; password?: string }) => {
       const form = new FormData();
       form.append("file", input.file);
       form.append("account", input.account);
       if (input.mapping !== "auto") form.append("mapping", input.mapping);
+      if (input.password) form.append("password", input.password);
       return api<ImportResult>("/api/bank/statements/import", { method: "POST", body: form });
     },
     onSuccess: () => client.invalidateQueries({ queryKey: [BANK_KEY] }),
+  });
+}
+
+const IMPORT_HISTORY_SIZE = 10;
+
+export function useStatementImports() {
+  return useQuery({
+    queryKey: [BANK_KEY, "imports"],
+    queryFn: () => api<Paginated<StatementImport>>(`/api/bank/statements/${buildQuery({ page_size: IMPORT_HISTORY_SIZE })}`),
   });
 }
 

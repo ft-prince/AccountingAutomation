@@ -15,6 +15,7 @@ from apps.invoices.models import Invoice
 from apps.payments.models import (
     BankAccount,
     BankBalanceSnapshot,
+    BankStatementImport,
     BankTransaction,
     MatchStatus,
     Payment,
@@ -30,7 +31,8 @@ from apps.payments.serializers import (
 )
 from apps.payments.services import matching
 from apps.payments.services.allocation import AllocationError, allocate
-from apps.payments.services.statements import StatementError, import_statement
+from apps.payments.services.statement_readers import format_for
+from apps.payments.services.statements import MAPPINGS, StatementError, import_statement
 
 WRITE = (Role.OWNER, Role.ACCOUNTANT)
 
@@ -98,6 +100,21 @@ class SnapshotViewSet(OrgScopedViewSet):
     queryset = BankBalanceSnapshot.objects.none()
     serializer_class = SnapshotSerializer
     http_method_names = ["get", "post", "head", "options"]
+
+
+class ImportViewSet(OrgScopedViewSet):
+    """Statement import history, newest first (org-scoped through the bank account)."""
+
+    queryset = BankStatementImport.objects.none()
+    serializer_class = ImportSerializer
+    http_method_names = ["get", "head", "options"]
+
+    def get_queryset(self):  # type: ignore[no-untyped-def]
+        return (
+            BankStatementImport.objects.filter(bank_account__org=current_org(self.request))
+            .select_related("bank_account")
+            .order_by("-created_at")
+        )
 
 
 class TransactionViewSet(OrgScopedViewSet):
@@ -199,15 +216,19 @@ class TransactionViewSet(OrgScopedViewSet):
         )
         if upload is None or account is None:
             raise ValidationError({"file": "required", "account": "required"})
-        fmt = "xlsx" if upload.name.lower().endswith(".xlsx") else "csv"
+        data = upload.read()
+        mapping_key = form.get("mapping") or None
+        if mapping_key and mapping_key not in MAPPINGS:
+            raise ValidationError({"mapping": f"unknown mapping {mapping_key!r}"})
         try:
             imp = import_statement(
                 account,
-                data=upload.read(),
+                data=data,
                 filename=upload.name,
-                fmt=fmt,
+                fmt=format_for(upload.name, data),
                 actor=request.user,
-                mapping_key=form.get("mapping") or None,
+                mapping_key=mapping_key,
+                password=str(form.get("password") or "") or None,
             )
         except StatementError as exc:
             raise ValidationError(str(exc)) from exc

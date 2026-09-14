@@ -177,6 +177,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/bank/statements/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Statement import history, newest first (org-scoped through the bank account). */
+        get: operations["bank_statements_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank/statements/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Statement import history, newest first (org-scoped through the bank account). */
+        get: operations["bank_statements_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/bank/statements/import": {
         parameters: {
             query?: never;
@@ -2396,6 +2430,20 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
         };
+        Import: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            bank_account: string;
+            filename: string;
+            format: string;
+            mapping: string;
+            rows_total?: number;
+            rows_imported?: number;
+            rows_duplicate?: number;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
         /**
          * @description * `accept` - Accept
          *     * `reject` - Reject
@@ -2933,6 +2981,19 @@ export interface components {
              */
             previous?: string | null;
             results: components["schemas"]["GSTINProfile"][];
+        };
+        PaginatedImportList: {
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cD00ODY%3D"
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+             */
+            previous?: string | null;
+            results: components["schemas"]["Import"][];
         };
         PaginatedInvoiceListList: {
             /**
@@ -4134,6 +4195,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Snapshot"];
+                };
+            };
+        };
+    };
+    bank_statements_list: {
+        parameters: {
+            query?: {
+                /** @description The pagination cursor value. */
+                cursor?: string;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedImportList"];
+                };
+            };
+        };
+    };
+    bank_statements_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this bank statement import. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Import"];
                 };
             };
         };
