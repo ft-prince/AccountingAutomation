@@ -185,3 +185,5 @@ MICROSOFT_OAUTH_CLIENT_ID = env("MICROSOFT_OAUTH_CLIENT_ID", default="")
 MICROSOFT_OAUTH_CLIENT_SECRET = env("MICROSOFT_OAUTH_CLIENT_SECRET", default="")
 FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY", default="")  # Fernet key (urlsafe base64)
 OAUTH_REDIRECT_BASE = env("OAUTH_REDIRECT_BASE", default="")  # e.g. http://localhost:8000
+# Where the browser is sent back after an OAuth consent: the frontend origin.
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:3000")

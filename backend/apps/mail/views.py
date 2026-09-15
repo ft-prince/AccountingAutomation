@@ -1,9 +1,11 @@
 """HTTP only; thin. PROJECT_SPECS §10 Mail. Every viewset is org-scoped (§12)."""
 
 from typing import Any
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.db.models import Case, IntegerField, Value, When
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import action
@@ -127,7 +129,10 @@ class MailboxViewSet(MailViewSet):
         return Response(SetupStatusSerializer(payload).data)
 
     @action(detail=False, methods=["get"], permission_classes=[require_role(*OWNER)])
-    def connect_callback(self, request: Request, provider: str) -> Response:
+    def connect_callback(self, request: Request, provider: str) -> HttpResponseRedirect:
+        """The browser lands here from the provider's consent screen, so the answer is a
+        redirect back to Settings → Mail, not JSON."""
+        settings_url = f"{settings.FRONTEND_BASE_URL}/settings"
         try:
             mailbox = oauth.complete_connect(
                 request.session,
@@ -137,8 +142,10 @@ class MailboxViewSet(MailViewSet):
                 query={k: str(v) for k, v in request.query_params.items()},
             )
         except oauth.OAuthError as exc:
-            raise ValidationError(str(exc)) from exc
-        return Response(MailboxSerializer(mailbox).data, status=status.HTTP_201_CREATED)
+            query = urlencode({"tab": "mail", "mailbox_error": str(exc)})
+            return HttpResponseRedirect(f"{settings_url}?{query}")
+        query = urlencode({"tab": "mail", "connected": mailbox.email_address})
+        return HttpResponseRedirect(f"{settings_url}?{query}")
 
     @action(detail=True, methods=["post"], permission_classes=[require_role(*OWNER)])
     def revoke(self, request: Request, pk: str) -> Response:

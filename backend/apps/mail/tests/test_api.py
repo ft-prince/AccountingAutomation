@@ -2,6 +2,7 @@
 Roles per §4/§12: connect + style guide are owner-only; viewer changes nothing; cross-org is 404."""
 
 from datetime import timedelta
+from urllib.parse import unquote_plus
 
 import pytest
 from django.utils import timezone
@@ -49,8 +50,9 @@ def connect_gmail(client, google):  # type: ignore[no-untyped-def]
     assert resp.status_code == 200, resp.content
     state = google["state"]
     resp = client.get(f"/api/mail/connect/gmail/callback?code=the-code&state={state}")
-    assert resp.status_code == 201, resp.content
-    return MailboxConnection.objects.get(pk=resp.json()["id"])
+    assert resp.status_code == 302, resp.content
+    assert resp["Location"].startswith("http://localhost:3000/settings?tab=mail&connected=")
+    return MailboxConnection.objects.get(email_address="accounts@nexren.example")
 
 
 def test_owner_connects_gmail_and_tokens_are_encrypted(client_a, org_a, google) -> None:  # type: ignore[no-untyped-def]
@@ -80,14 +82,19 @@ def test_viewer_and_accountant_cannot_connect(org_a, viewer_client) -> None:  # 
 
 
 def test_callback_rejects_bad_state_missing_flow_and_provider_error(client_a, google) -> None:  # type: ignore[no-untyped-def]
-    assert client_a.get("/api/mail/connect/gmail/callback?code=x&state=y").status_code == 400
+    def failed(url: str) -> str:
+        resp = client_a.get(url)
+        assert resp.status_code == 302 and "mailbox_error=" in resp["Location"], resp.content
+        return str(resp["Location"])
+
+    failed("/api/mail/connect/gmail/callback?code=x&state=y")
     client_a.post("/api/mail/connect/gmail")
-    assert client_a.get("/api/mail/connect/gmail/callback?code=x&state=wrong").status_code == 400
+    failed("/api/mail/connect/gmail/callback?code=x&state=wrong")
     client_a.post("/api/mail/connect/gmail")
-    resp = client_a.get(
+    location = failed(
         f"/api/mail/connect/gmail/callback?error=access_denied&state={google['state']}"
     )
-    assert resp.status_code == 400 and "access_denied" in resp.json()["detail"]
+    assert "access_denied" in location
     assert client_a.post("/api/mail/connect/yahoo").status_code == 400
     assert client_a.post("/api/mail/mailboxes/").status_code == 400
 
@@ -124,7 +131,7 @@ def test_microsoft_connect_flow(client_a, org_a, monkeypatch) -> None:  # type: 
     assert resp.status_code == 200
     state = client_a.session[SESSION_KEY]["state"]
     resp = client_a.get(f"/api/mail/connect/microsoft/callback?code=c&state={state}")
-    assert resp.status_code == 201
+    assert resp.status_code == 302 and "connected=ops%40contoso.example" in resp["Location"]
     mailbox = MailboxConnection.objects.get(org=org_a.org, provider="microsoft")
     assert mailbox.email_address == "ops@contoso.example" and mailbox.scopes == [
         "Mail.Read",
@@ -138,7 +145,7 @@ def test_grant_send_scope_second_consent(client_a, org_a, google) -> None:  # ty
     assert resp.status_code == 200
     assert gmail.SEND_SCOPE in google["scopes"] and gmail.READONLY_SCOPE in google["scopes"]
     resp = client_a.get(f"/api/mail/connect/gmail/callback?code=the-code&state={google['state']}")
-    assert resp.status_code == 201
+    assert resp.status_code == 302 and "connected=" in resp["Location"]
     mailbox.refresh_from_db()
     assert mailbox.has_send_scope is True and mailbox.needs_send_scope is False
     assert MailboxConnection.objects.for_org(org_a.org).count() == 1
@@ -149,7 +156,7 @@ def test_grant_send_scope_rejects_a_different_mailbox(client_a, google, monkeypa
     client_a.post(f"/api/mail/mailboxes/{mailbox.pk}/grant-send-scope/")
     monkeypatch.setattr(gmail, "profile_email", lambda tokens: "someone-else@nexren.example")
     resp = client_a.get(f"/api/mail/connect/gmail/callback?code=the-code&state={google['state']}")
-    assert resp.status_code == 400
+    assert resp.status_code == 302 and "mailbox_error=" in resp["Location"]
     mailbox.refresh_from_db()
     assert mailbox.has_send_scope is False
 
@@ -287,6 +294,6 @@ def test_provider_failure_becomes_a_readable_message_not_a_traceback(client_a, g
         )
     finally:
         pass
-    assert resp.status_code == 400, resp.content[:200]
-    detail = str(resp.json())
+    assert resp.status_code == 302, resp.content[:200]
+    detail = unquote_plus(resp["Location"])
     assert "Gmail API is not enabled" in detail and "451364275103" not in detail

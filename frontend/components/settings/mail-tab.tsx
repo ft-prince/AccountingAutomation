@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Plus } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/primitives/empty-state";
 import { Field } from "@/components/primitives/field";
@@ -29,7 +30,22 @@ function openAuthorization(url: string): void {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
+/** The OAuth callback lands the browser on /settings?tab=mail&connected=… or &mailbox_error=…. */
+function useCallbackOutcome(): void {
+  const params = useSearchParams();
+  const router = useRouter();
+  const connected = params.get("connected");
+  const error = params.get("mailbox_error");
+  useEffect(() => {
+    if (!connected && !error) return;
+    if (connected) toast({ title: `Connected ${connected}`, description: "First sync runs within two minutes." });
+    if (error) toast({ title: "Mailbox not connected", description: error, variant: "destructive" });
+    router.replace("/settings?tab=mail");
+  }, [connected, error, router]);
+}
+
 function MailboxesSection({ isOwner }: { isOwner: boolean }) {
+  useCallbackOutcome();
   const mailboxes = useMailboxes();
   const connect = useConnectMailbox();
   const revoke = useRevokeMailbox();
