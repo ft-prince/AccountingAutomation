@@ -3,6 +3,7 @@ Send lives in `_provider_send_gmail`, called ONLY from apps.mail.services.send_v
 
 import base64
 import logging
+import os
 from collections.abc import Callable
 from datetime import UTC, datetime
 from email.message import EmailMessage as MimeMessage
@@ -74,6 +75,9 @@ def exchange_code(
     flow = _flow(scopes, redirect_uri)
     if code_verifier:
         flow.code_verifier = code_verifier
+    # Google returns every scope the user has ever granted this app (e.g. gmail.send from an
+    # earlier consent), which oauthlib treats as an error unless told the superset is fine.
+    os.environ.setdefault("OAUTHLIB_RELAX_TOKEN_SCOPE", "1")
     flow.fetch_token(code=code)
     return tokens_from_credentials(flow.credentials)
 

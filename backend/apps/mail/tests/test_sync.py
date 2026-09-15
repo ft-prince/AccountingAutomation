@@ -500,3 +500,28 @@ def test_graph_http_helpers_raise_on_error(monkeypatch) -> None:  # type: ignore
     monkeypatch.setattr(graph.requests, "post", lambda *a, **k: SimpleNamespace(status_code=400))
     with pytest.raises(graph.GraphError):
         graph._post("u", "b", {})
+
+
+def test_gmail_exchange_code_tolerates_superset_scopes(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """Google replies with every scope ever granted; oauthlib must not reject the superset."""
+    import os
+
+    monkeypatch.delenv("OAUTHLIB_RELAX_TOKEN_SCOPE", raising=False)
+    calls: list[str] = []
+
+    class Flow:
+        credentials = SimpleNamespace(
+            token="at",
+            refresh_token="rt",
+            token_uri="u",
+            client_id="c",
+            client_secret="s",
+            scopes=["a", "b", "send"],
+        )
+
+        def fetch_token(self, *, code):  # type: ignore[no-untyped-def]
+            calls.append(os.environ.get("OAUTHLIB_RELAX_TOKEN_SCOPE", "unset"))
+
+    monkeypatch.setattr(gmail, "_flow", lambda scopes, redirect_uri: Flow())
+    tokens = gmail.exchange_code("code", scopes=["a", "b"], redirect_uri="r")
+    assert calls == ["1"] and tokens["scopes"] == ["a", "b", "send"]
