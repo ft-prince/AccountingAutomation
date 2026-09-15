@@ -4,6 +4,7 @@ from typing import Any
 
 import boto3
 from botocore.config import Config
+from botocore.exceptions import ClientError
 from django.conf import settings
 
 SIGNED_URL_TTL_SECONDS = 300
@@ -21,13 +22,18 @@ def _client() -> Any:
 
 
 def put_object(key: str, data: bytes, content_type: str, *, bucket: str | None = None) -> None:
-    """`bucket` overrides the default document bucket — backups keep their own (§12)."""
-    _client().put_object(
-        Bucket=bucket or settings.AWS_STORAGE_BUCKET_NAME,
-        Key=key,
-        Body=data,
-        ContentType=content_type,
-    )
+    """`bucket` overrides the default document bucket — backups keep their own (§12).
+    A missing bucket is created on first use so a fresh deployment needs no console step."""
+    client = _client()
+    name = bucket or settings.AWS_STORAGE_BUCKET_NAME
+    params = {"Bucket": name, "Key": key, "Body": data, "ContentType": content_type}
+    try:
+        client.put_object(**params)
+    except ClientError as exc:
+        if exc.response.get("Error", {}).get("Code") != "NoSuchBucket":
+            raise
+        client.create_bucket(Bucket=name)
+        client.put_object(**params)
 
 
 def get_object(key: str) -> bytes:
